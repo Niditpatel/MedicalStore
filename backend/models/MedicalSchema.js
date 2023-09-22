@@ -5,23 +5,18 @@ const mongoose = require("mongoose");
 const medicalStoreSchema = new mongoose.Schema({
     storeName: {
         type: String,
-        require: [true, "Please enter your Store name"],
+        require: [true, "Please enter Store name"],
     },
     contactNumber: {
         type: String,
         required: false,
     },
     isDeleted: {
-        type: Boolean,
-        require: [true, "Please enter your Contact Number"],
+        type: Boolean
     },
-    userName: {
-        type: String,
-        require: [true, "Please enter your user Name"],
-    },
-    createdAt:{
-        type:Date,
-        default:Date.now
+    createdAt: {
+        type: Date,
+        default: Date.now
     },
     timestamps: true
 })
