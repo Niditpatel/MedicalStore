@@ -22,4 +22,4 @@ const medicalStoreSchema = new mongoose.Schema({
 })
 
 
-module.exports = mongoose.model("MedicalStore", medicalStoreSchema);
+module.exports = mongoose.model("Store", medicalStoreSchema);
