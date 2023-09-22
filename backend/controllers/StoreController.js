@@ -6,13 +6,13 @@ exports.createStore = async (req, res) => {
     const store = await Store.create({
         storeName,contactNumber,isDeleted,
     });
-    res.status(201).json({
+    res.status(200).json({
         sucess: true,
-        store
+        store:store
     })
 }
 
-exports.updateStore = async (req, res, next) => {
+exports.updateStore = async (req, res) => {
     let store = await Store.findById(req.params.id)
     if (!store) {
         return res.status(500).json({

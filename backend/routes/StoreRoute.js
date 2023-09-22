@@ -1,15 +1,58 @@
 const express =require("express");
-const { createUser } = require("../controllers/StoreController");
-const { allUser } = require("../controllers/StoreController");
-const { updateUser } = require("../controllers/StoreController");
-const { deleteUser } = require("../controllers/StoreController");
-
 const router = express.Router();
-
-router.route("/store/new").post(createUser);
-router.route("/stores").get(allUser);
-router.route("/store/:id").put(updateUser);
-router.route("/store/:id").delete(deleteUser);
+const StoreController = require("../controllers/StoreController");
 
 
-module.exports  = router
+router.post("/store/new",async (req, res) => {
+    const{storeName,contactNumber,isDeleted} = req.body;
+    const store = await Store.create({
+        storeName,contactNumber,isDeleted,
+    });
+    res.status(200).json({
+        sucess: true,
+        store:store
+    })
+}
+);
+
+router.get("/stores", async (req, res) => {
+    const stores = await Store.find();
+    res.status(200).json({
+        sucess: true,
+        stores
+    })
+});
+
+router.put("/store/:id",async (req, res) => {
+    let store = await Store.findById(req.params.id)
+    if (!store) {
+        return res.status(500).json({
+            sucess: false,
+            message: "store not found"
+        })
+    }
+    store = await Store.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        useFindAndModify: false
+    })
+    res.status(200).json({
+        sucess: true,
+    })
+});
+router.delete("/store/:id",
+    async (req, res, next) => {
+    const store = await Store.findById(req.params.id);
+
+    if (!store) {
+        return next('store does not exist')
+    }
+    await Store.deleteOne();
+
+    res.status(200).json({
+        sucess: true,
+        message: `Store deleted succesfully `
+    })
+});
+
+
+module.exports  = router;

@@ -11,8 +11,8 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    store:{ type: mongoose.Schema.Types.ObjectId, ref: 'MedicalStore', required: true },
-    supplier:[{type:mongoose.Schema.Types.ObjectId, ref: 'MedicalStore'}],
+    store:{ type: mongoose.Schema.Types.ObjectId, ref: 'Store', required: true },
+    supplier:[{type:mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: true}],
     isDeleted: {
         type: Boolean  },
     createdAt:{
