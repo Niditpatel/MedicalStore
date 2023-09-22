@@ -44,14 +44,17 @@ router.delete("/store/:id",
     const store = await Store.findById(req.params.id);
 
     if (!store) {
-        return next('store does not exist')
+        res.status(200).json({
+            sucess: true,
+            message: `Store not Found`
+        })
+    }else{
+        await Store.deleteOne();
+        res.status(200).json({
+            sucess: true,
+            message: `Store deleted succesfully `
+        })
     }
-    await Store.deleteOne();
-
-    res.status(200).json({
-        sucess: true,
-        message: `Store deleted succesfully `
-    })
 });
 
 
