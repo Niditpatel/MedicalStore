@@ -12,13 +12,14 @@ const medicalStoreSchema = new mongoose.Schema({
         required: false,
     },
     isDeleted: {
-        type: Boolean
+        type: Boolean,
+        required: false
     },
     createdAt: {
         type: Date,
         default: Date.now
-    },
-    timestamps: true
+    }
+    // timestamps: true
 })
 
 

@@ -10,9 +10,8 @@ app.use(cors());
 app.use(express.json())
 
 
-
-
-
+const Store = require("./routes/StoreRoute")
+app.use("/api/v1", Store)
 
 
 module.exports = app

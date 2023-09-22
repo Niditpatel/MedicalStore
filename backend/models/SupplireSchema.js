@@ -11,13 +11,12 @@ const supplierSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    isDeleted: {
-        type: Boolean  },
+    isDeleted: Boolean,
     createdAt:{
         type:Date,
         default:Date.now
-    },
-    timestamps: true
+    }
+    // timestamps: true
 })
 
 
