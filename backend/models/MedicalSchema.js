@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-// const validator = require("vali")
-
 
 const medicalStoreSchema = new mongoose.Schema({
     storeName: {
@@ -14,10 +12,6 @@ const medicalStoreSchema = new mongoose.Schema({
     isDeleted: {
         type: Boolean,
         required: false
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
     }
 },{timestamps:true})
 

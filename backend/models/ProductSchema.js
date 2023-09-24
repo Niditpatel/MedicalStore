@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-// const validator = require("vali")
-
 
 const productSchema = new mongoose.Schema({
     productName: {

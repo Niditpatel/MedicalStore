@@ -1,21 +1,15 @@
 const mongoose = require("mongoose");
-// const validator = require("vali")
-
 
 const supplierSchema = new mongoose.Schema({
     supplierName: {
         type: String,
-        require: [true, "Please enter your Store name"],
+        require: [true, "Please enter your Supplier name"],
     },
     contactNumber: {
         type: String,
         required: false,
     },
-    isDeleted: Boolean,
-    createdAt:{
-        type:Date,
-        default:Date.now
-    }
+    isDeleted: {type:Boolean}
 },{timestamps:true})
 
 

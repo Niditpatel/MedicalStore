@@ -57,5 +57,22 @@ router.delete("/product/:id",
     }
 });
 
+router.get("/search",
+    async (req, res) => {
+        const {productName,supplierName,storeName} = req.query;
+        const product = productName ? productName :''
+        const supplier = supplierName ? supplierName :''
+        const store = storeName? storeName : '' 
+
+    const data = await Products.find({productName: {'$regex':product,'$options':'i'}})
+    .populate({path:'store',storeName:{'$regex':store,'$option':'i',select:'storeName contactNumber -_id'}})
+    .populate({path:'supplier',supplierName:{'$regex':supplier,'$option':'i',select:'supplierName contactNumber -_id -__v'}});
+   
+        res.status(200).json({
+            sucess: true,
+            data:data
+        })
+});
+
 
 module.exports  = router;
