@@ -14,13 +14,8 @@ const productSchema = new mongoose.Schema({
     store:{ type: mongoose.Schema.Types.ObjectId, ref: 'Store', required: true },
     supplier:[{type:mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: true}],
     isDeleted: {
-        type: Boolean  },
-    createdAt:{
-        type:Date,
-        default:Date.now
-    },
-    timestamps: true
-})
+        type: Boolean  }
+},{timestamps:true})
 
 
 module.exports = mongoose.model("Products", productSchema);

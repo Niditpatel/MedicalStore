@@ -19,8 +19,7 @@ const medicalStoreSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-    // timestamps: true
-})
+},{timestamps:true})
 
 
 module.exports = mongoose.model("Store", medicalStoreSchema);

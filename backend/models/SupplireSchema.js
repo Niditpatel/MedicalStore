@@ -16,8 +16,7 @@ const supplierSchema = new mongoose.Schema({
         type:Date,
         default:Date.now
     }
-    // timestamps: true
-})
+},{timestamps:true})
 
 
 module.exports = mongoose.model("Supplier", supplierSchema);

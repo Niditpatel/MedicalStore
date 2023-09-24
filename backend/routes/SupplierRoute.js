@@ -15,7 +15,7 @@ router.post("/supplier/new",async (req, res) => {
 }
 );
 
-router.get("/stores", async (req, res) => {
+router.get("/suppliers", async (req, res) => {
     const stores = await Supplier.find();
     res.status(200).json({
         sucess: true,
