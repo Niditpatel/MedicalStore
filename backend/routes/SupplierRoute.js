@@ -1,37 +1,37 @@
 const express =require("express");
 const router = express.Router();
-const Store = require("../models/MedicalSchema");
+const Supplier = require("../models/SupplireSchema");
 
 
-router.post("/store/new",async (req, res) => {
+router.post("/supplier/new",async (req, res) => {
     const{storeName,contactNumber,isDeleted} = req.body;
-    const store = await Store.create({
+    const supplier = await Supplier.create({
         storeName,contactNumber,isDeleted,
     });
     res.status(200).json({
         sucess: true,
-        store:store
+        supplier:supplier
     })
 }
 );
 
 router.get("/stores", async (req, res) => {
-    const stores = await Store.find();
+    const stores = await Supplier.find();
     res.status(200).json({
         sucess: true,
         stores
     })
 });
 
-router.put("/store/:id",async (req, res) => {
-    let store = await Store.findById(req.params.id)
-    if (!store) {
+router.put("/supplier/:id",async (req, res) => {
+    let supplier = await Supplier.findById(req.params.id)
+    if (!supplier) {
         return res.status(500).json({
             sucess: false,
-            message: "store not found"
+            message: "supplier not found"
         })
     }
-    store = await Store.findByIdAndUpdate(req.params.id, req.body, {
+    supplier = await Supplier.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         useFindAndModify: false
     })
@@ -39,20 +39,20 @@ router.put("/store/:id",async (req, res) => {
         sucess: true,
     })
 });
-router.delete("/store/:id",
+router.delete("/supplier/:id",
     async (req, res) => {
-    const store = await Store.findById(req.params.id);
+    const supplier = await Supplier.findById(req.params.id);
 
-    if (!store) {
+    if (!supplier) {
         res.status(200).json({
             sucess: true,
-            message: `Store not Found`
+            message: `Supplier not Found`
         })
     }else{
-        await Store.deleteOne();
+        await Supplier.deleteOne();
         res.status(200).json({
             sucess: true,
-            message: `Store deleted succesfully `
+            message: `Supplier deleted succesfully `
         })
     }
 });
