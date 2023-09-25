@@ -27,8 +27,7 @@ export function StickyNavbar() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="p-1 font-normal"
-      >
+        className="p-1 font-normal">
         <Link to="/">
           Home
         </Link>
@@ -60,13 +59,13 @@ export function StickyNavbar() {
         </Typography>
         <div className="flex items-center gap-4">
           <div className="mr-4 hidden lg:block">{navList}</div>
-          {/* <Button
+          <Button
             variant="gradient"
             size="sm"
             className="hidden lg:inline-block"
             onClick={((e) => { navigate("/"); })}
           >
-            <span>Home</span>
+            <span>Store</span>
           </Button>
           <Button
             variant="gradient"
@@ -75,7 +74,7 @@ export function StickyNavbar() {
             onClick={((e) => { navigate("/cart"); })}
           >
             <span>Cart</span>
-          </Button> */}
+          </Button>
           <IconButton
             variant="text"
             className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
@@ -117,9 +116,9 @@ export function StickyNavbar() {
       </div>
       <Collapse open={openNav}>
         {navList}
-        {/* <Button variant="gradient" size="sm" fullWidth className="mb-2">
+        <Button variant="gradient" size="sm" fullWidth className="mb-2">
           <span>Buy Now</span>
-        </Button> */}
+        </Button>
       </Collapse>
     </Navbar>
   );

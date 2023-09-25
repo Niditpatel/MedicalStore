@@ -12,6 +12,8 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import axios from 'axios';
+
 
 const Store = () => {
   const navigate = useNavigate();
@@ -21,13 +23,11 @@ const Store = () => {
 
   const getData = async () => {
     try {
-      const res = await fetch(
-        `${BASE_URL}?_format=index`
+      const res = await axios.get(
+        `${BASE_URL}stores`
       );
-      const data = await res.json();
-      const realData = Object.keys(data).map((key) => data[key])
-      setData(realData.filter(item => item?.isDeleted?.toString() !== 'TRUE'))
-      localStorage.setItem("maxStoreId", realData.length);
+      console.log("res", res.data.stores);
+      setData(res.data.stores)
     } catch (error) {
       console.log(error);
     }
@@ -37,24 +37,16 @@ const Store = () => {
     getData();
   }, []);
 
-  const handleDelete = async (e, item) => {
-    e.preventDefault();
+  const handleDelete = async (e, id) => {
     try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/MedicalStores/storeId/${item?.storeId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...item, isDeleted: true }),
-        }
-      );
-      if (res.ok) {
-        getData();
+      const data = await axios.delete(`${BASE_URL}store/${id}`)
+      getData();
+      if (data.data.success) {
+        // alert(data.data.message);
       }
-    } catch (error) {
-      console.log(error);
+    }
+    catch (e) {
+      alert(e.message);
     }
   };
 
@@ -81,7 +73,7 @@ const Store = () => {
     navigate(`/edit-store/${index}`)
   }
 
-  const TABLE_HEAD = ["Store Name", "Contact Number", "Description", "Create Date", "Modified Date", "", ""];
+  const TABLE_HEAD = ["Store Name", "Contact Number", "", ""];
 
   return (
     <div className="container ">
@@ -91,27 +83,27 @@ const Store = () => {
       <div className="flex items-center justify-center">
         <Card className="h-full w-11/12	">
           <CardHeader floated={false} shadow={false} className="	 rounded-none">
-            <div className="w-full flex justify-between mb-3 items-center" style={{justifyContent:'space-between'}}>
-            <Typography> Store List</Typography>
-            <Button size="sm" className="mt-6 m-0" onClick={handleAdd}>Add Store</Button>
+            <div className="w-full flex justify-between mb-3 items-center" style={{ justifyContent: 'space-between' }}>
+              <Typography> Store List</Typography>
+              <Button size="sm" className="mt-6 m-0" onClick={handleAdd}>Add Store</Button>
             </div>
             <div className="w-full flex justify-between gap-10 items-center">
-            <Input
-              type="text"
-              size="md"
-              className="form-control border rounded "
-              label="Store Name"
-              name="storeName"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handlesearch();
-                }
-              }}
-              value={searchData.storeName}
-              onChange={handleChange}
-            />
-        <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button>
-        </div>
+              <Input
+                type="text"
+                size="md"
+                className="form-control border rounded "
+                label="Store Name"
+                name="storeName"
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handlesearch();
+                  }
+                }}
+                value={searchData.storeName}
+                onChange={handleChange}
+              />
+              <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button>
+            </div>
           </CardHeader>
           <CardBody className="p-4 overflow-hidden px-0">
             <table className="w-full min-w-max table-auto text-left">
@@ -161,16 +153,7 @@ const Store = () => {
                           {item?.contactNumber}
                         </Typography>
                       </td>
-                      <td className={classes} >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.description}
-                        </Typography>
-                      </td>
-                      <td className={classes} >
+                      {/* <td className={classes} >
                         <Typography
                           variant="small"
                           color="blue-gray"
@@ -178,23 +161,14 @@ const Store = () => {
                         >
                           {item?.createdDate ? (item?.createdDate) : '-'}
                         </Typography>
-                      </td>
-                      <td className={classes} >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.modifiedDate ? (item?.modifiedDate) : '-'}
-                        </Typography>
-                      </td>
+                      </td> */}
                       <td className={classes}>
                         <Button
                           className="btn btn-sm btn-danger ms-1"
                           variant="gradient"
                           size="sm"
                           color='blue'
-                          onClick={() => handleEdit(item?.storeId)}
+                          onClick={() => handleEdit(item?._id)}
                         >
                           &#x1F589;
                         </Button>
@@ -205,7 +179,7 @@ const Store = () => {
                           variant="gradient"
                           size="sm"
                           color='red'
-                          onClick={(e) => handleDelete(e, item)}
+                          onClick={(e) => handleDelete(e, item._id)}
                         >
                           X
                         </Button>

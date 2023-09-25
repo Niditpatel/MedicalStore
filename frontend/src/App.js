@@ -23,7 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route exact path="/cart" element={<Cart />} />
-        {/* <Route exact path="/stores" element={<Store />} />
+        <Route exact path="/stores" element={<Store />} />
         <Route exact path="/entries" element={<EntriesList />} />
         <Route exact path="/add-store" element={<AddStore />} />
         <Route exact path="/edit-store/:rowIndex" element={<EditStore />} />
@@ -35,7 +35,7 @@ function App() {
         <Route path="/edit-supplier/:rowIndex" element={<EditSupplier />} />
         <Route exact path="/entries" element={<EntriesList />} />
         <Route path="/add-entry" element={<AddEntries />} />
-        <Route path="/edit-entry/:rowIndex" element={<EditEntries />} /> */}
+        <Route path="/edit-entry/:rowIndex" element={<EditEntries />} />
       </Routes>
     </BrowserRouter>
   );

@@ -9,11 +9,16 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    store:{ type: mongoose.Schema.Types.ObjectId, ref: 'Store', required: true },
-    supplier:[{type:mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: true}],
+    store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store', required: true },
+    supplier: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: true }],
     isDeleted: {
-        type: Boolean  }
-},{timestamps:true})
+        type: Boolean
+    },
+    isCart: {
+        type: Boolean
+    },
+
+}, { timestamps: true })
 
 
 module.exports = mongoose.model("Products", productSchema);

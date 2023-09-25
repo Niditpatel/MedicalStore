@@ -9,46 +9,30 @@ import {
   CardHeader,
   Typography
 } from "@material-tailwind/react";
-
 import moment from "moment/moment";
+import axios from 'axios';
 
 const Add = () => {
   const navigate = useNavigate();
   const [data, setData] = useState({
     storeName: "",
-    contactNumber: "",
-    description: "",
-    isDeleted: "FALSE",
-    createdDate: moment(new Date().toString()).format("DD-MM-YYYY"),
+    contactNumber: ""
   });
 
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    let storeId = localStorage.getItem('maxStoreId')
-    if (storeId) {
-      storeId = parseInt(storeId) + 1
-      try {
-        const res = await fetch(
-          `${BASE_URL}/tabs/MedicalStores`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ...data, storeId: storeId }),
-          }
-        );
-        if (res.ok) {
-          navigate("/stores");
-        }
-      } catch (error) {
-        console.log(error);
+    e.preventDefault()
+    navigate("/stores")
+    try {
+      const submiData = await axios.post(`${BASE_URL}store/new`, data)
+      if(submiData.success) {
       }
-    } else {
-      navigate("/stores")
+      // getAllUsers()
+    }
+    catch (e) {
+      alert(e.message);
     }
   };
   return (
@@ -76,15 +60,6 @@ const Add = () => {
                 name="contactNumber"
                 label="Contact Number"
                 value={data.contactNumber}
-                onChange={handleChange}
-              />
-              <Input
-                size="sm"
-                type="text"
-                className="form-control"
-                name="description"
-                label="Description"
-                value={data.description}
                 onChange={handleChange}
               />
             </div>
