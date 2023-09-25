@@ -18,11 +18,9 @@ const Edit = () => {
   const navigate = useNavigate();
   const { rowIndex } = useParams();
   const [data, setData] = useState({
+    _id:"",
     storeName: "",
-    contactNumber: "",
-    description: "",
-    isDeleted:"FALSE",
-    modifiedDate: moment(new Date().toString()).format("DD-MM-YYYY"),
+    contactNumber: ""
   });
 
   const getData = async () => {
