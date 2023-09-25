@@ -29,8 +29,8 @@ export function StickyNavbar() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <Link to="/stores">
-          Stores
+        <Link to="/">
+          Home
         </Link>
       </Typography>
       <Typography
@@ -39,18 +39,8 @@ export function StickyNavbar() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <Link to="/products">
-          Products
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-normal"
-      >
-        <Link to="/suppliers">
-          Suppliers
+        <Link to="/cart">
+          Cart
         </Link>
       </Typography>
     </ul>
@@ -70,13 +60,13 @@ export function StickyNavbar() {
         </Typography>
         <div className="flex items-center gap-4">
           <div className="mr-4 hidden lg:block">{navList}</div>
-          <Button
+          {/* <Button
             variant="gradient"
             size="sm"
             className="hidden lg:inline-block"
-            onClick={((e) => { navigate("/entries"); })}
+            onClick={((e) => { navigate("/"); })}
           >
-            <span>Entries</span>
+            <span>Home</span>
           </Button>
           <Button
             variant="gradient"
@@ -85,7 +75,7 @@ export function StickyNavbar() {
             onClick={((e) => { navigate("/cart"); })}
           >
             <span>Cart</span>
-          </Button>
+          </Button> */}
           <IconButton
             variant="text"
             className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
@@ -127,9 +117,9 @@ export function StickyNavbar() {
       </div>
       <Collapse open={openNav}>
         {navList}
-        <Button variant="gradient" size="sm" fullWidth className="mb-2">
+        {/* <Button variant="gradient" size="sm" fullWidth className="mb-2">
           <span>Buy Now</span>
-        </Button>
+        </Button> */}
       </Collapse>
     </Navbar>
   );

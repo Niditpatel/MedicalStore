@@ -64,9 +64,11 @@ router.get("/search",
         const supplier = supplierName ? supplierName :''
         const store = storeName? storeName : '' 
 
-    const data = await Products.find({productName: {'$regex':product,'$options':'i'}})
-    .populate({path:'store',storeName:{'$regex':store,'$option':'i',select:'storeName contactNumber -_id'}})
-    .populate({path:'supplier',supplierName:{'$regex':supplier,'$option':'i',select:'supplierName contactNumber -_id -__v'}});
+    const data = await Products.find({$and:[{productName: {'$regex':product,'$options':'i'}},
+    {'store.storeName':{'$regex':store,'$option':'i'}},
+    {'supplier.supplierName':{'$regex':supplier,'$option':'i'}}]})
+    .populate({path:'store',storeName:{'$regex':store,'$option':'i'},select:'storeName contactNumber -_id'})
+    .populate({path:'supplier',supplierName:{'$regex':supplier,'$option':'i'},select:'supplierName contactNumber -_id'});
    
         res.status(200).json({
             sucess: true,
