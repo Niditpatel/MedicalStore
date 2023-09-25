@@ -19,7 +19,16 @@ router.get("/suppliers", async (req, res) => {
     const supplierName = req.params.supplierName?req.params.supplierName:''
     const pageNo = req.params.pageNo ? req.params.pageNo:0
     const pageSize = req.params.pageSize?req.params.pageSize:5
-    const suppliers = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).skip(pageNo*pageSize).limit(5);
+    const suppliers = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
+    res.status(200).json({
+        sucess: true,
+        suppliers
+    })
+});
+
+router.get("/suppliersSelect", async (req, res) => {
+    const supplierName = req.params.supplierName?req.params.supplierName:''
+    const suppliers = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).limit(10);
     res.status(200).json({
         sucess: true,
         suppliers

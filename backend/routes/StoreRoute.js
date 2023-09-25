@@ -19,7 +19,16 @@ router.get("/stores", async (req, res) => {
     const storeName = req.params.storeName?req.params.storeName:''
     const pageNo = req.params.pageNo ? req.params.pageNo:0
     const pageSize = req.params.pageSize?req.params.pageSize:5
-    const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).skip(pageNo*pageSize).limit(5);
+    const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
+    res.status(200).json({
+        sucess: true,
+        stores
+    })
+});
+
+router.get("/storesSelect", async (req, res) => {
+    const storeName = req.params.storeName?req.params.storeName:''
+    const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).limit(10);
     res.status(200).json({
         sucess: true,
         stores
