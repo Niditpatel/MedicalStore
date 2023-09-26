@@ -72,7 +72,7 @@ export function StickyNavbar() {
             variant="gradient"
             size="sm"
             className="hidden lg:inline-block"
-            onClick={((e) => { navigate("/"); })}
+            onClick={((e) => { navigate("/stores"); })}
           >
             <span>Store</span>
           </Button>
