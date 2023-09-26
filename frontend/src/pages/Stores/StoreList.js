@@ -12,10 +12,10 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import axios from 'axios';
 import {
   Pagination
 } from "@mui/material";
-import axios from 'axios';
 import Stack from '@mui/material/Stack';
 
 
@@ -27,17 +27,6 @@ const Store = () => {
   const [page_Index, setPage_Index] = useState(1);
   const [searchData, setSearchData] = useState({ storeName: '' });
 
-  const getData = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}stores/?storeName=${searchData.storeName}&pageNo=${page_Index}`
-      );
-      console.log("res", res.data.stores);
-      setData(res.data.stores)
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const getTotalStores = async () => {
     try {
       const res = await axios.get(
@@ -48,15 +37,28 @@ const Store = () => {
       console.log(error);
     }
   };
+  const getData = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}stores/?` + 'storeName=' + searchData.storeName + '&pageNo=' + page_Index
+      );
+      console.log("res", res.data.stores);
+      setData(res.data.stores)
+    } catch (error) {
+      console.log(error);
+    }
+    getTotalStores();
+
+  };
+
 
   useEffect(() => {
-    getTotalStores();
     getData();
-  }, []);
+  }, [searchData]);
 
   const handleDelete = async (e, id) => {
     try {
-      const data = await axios.delete(`${BASE_URL}store/${id}`)
+      const data = await axios.delete(`${BASE_URL}store / ${id}`)
       getData();
       if (data.data.success) {
         alert("deleted successfully");
@@ -74,7 +76,7 @@ const Store = () => {
     navigate('/add-store');
   }
   const handleEdit = (index) => {
-    navigate(`/edit-store/${index}`)
+    navigate(`/ edit - store / ${index}`)
   }
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
