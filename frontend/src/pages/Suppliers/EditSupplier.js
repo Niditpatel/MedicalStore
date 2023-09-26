@@ -11,6 +11,7 @@ import {
 } from "@material-tailwind/react";
 import { BASE_URL } from "../../Common";
 import moment from "moment/moment";
+import axios from "axios";
 
 
 export default function EditSupplier() {
@@ -18,20 +19,22 @@ export default function EditSupplier() {
   const { rowIndex } = useParams();
   const [data, setData] = useState({
     supplierName: "",
-    email: "",
-    message: "",
-    modifiedDate:(moment(new Date()).format("DD-MM-YYYY")),
+    contactNumber: ""
   });
+
   const getData = async () => {
+    debugger
     try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/Suppliers/search?supplierId=${rowIndex}`
+      const res = await axios.get(
+        `${BASE_URL}supplier/`+rowIndex
       );
-      const data = await res.json();
-      setData(data[0]);
+      if(res.data.success){
+        setData(res.data.supplier)
+      }
     } catch (error) {
       console.log(error);
     }
+    
   };
 
   useEffect(() => {
@@ -41,22 +44,15 @@ export default function EditSupplier() {
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/Suppliers/supplierId/${rowIndex}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
+      const res = await axios.put(
+        `${BASE_URL}supplier/`+rowIndex,
+        data
       );
-      if (res.ok) {
-        navigate("/suppliers");
-      }
+        if(res.data.success){
+          navigate('/suppliers')
+        }
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +65,10 @@ export default function EditSupplier() {
           <Typography className="text-center text-2xl">Supplier</Typography>
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e)=>{
+            e.preventDefault();
+            handleSubmit();
+          }}>
             <div className="mb-4 flex flex-col gap-6">
               <Input
                 size="sm"
@@ -84,18 +83,9 @@ export default function EditSupplier() {
                 size="sm"
                 type="text"
                 className="form-control"
-                name="email"
-                label="Email"
-                value={data.email}
-                onChange={handleChange}
-              />
-              <Input
-                size="sm"
-                type="text"
-                className="form-control"
-                name="message"
-                label="Message"
-                value={data.message}
+                name="contactNumber"
+                label="Contact Number"
+                value={data.contactNumber}
                 onChange={handleChange}
               />
             </div>

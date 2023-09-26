@@ -10,45 +10,39 @@ import {
 } from "@material-tailwind/react";
 import { BASE_URL } from "../../Common";
 import moment from "moment/moment";
+import  axios  from "axios";
 
 
 export default function AddSupplier() {
+
   const navigate = useNavigate();
+  
   const [data, setData] = useState({
     supplierName: "",
-    email: "",
-    message: "",
-    createdDate: (moment(new Date()).format("DD-MM-YYYY")),
+    contactNumber: "",
+    isDeleted: false
   });
+
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    let supplierId = localStorage.getItem('maxSupplierId')
-    if (supplierId) {
-      supplierId = parseInt(supplierId) + 1
-      try {
-        const res = await fetch(
-          `${BASE_URL}/tabs/Suppliers`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ...data, supplierId: supplierId }),
-          }
-        );
-        if (res.ok) {
-          navigate("/suppliers");
-        }
-      } catch (error) {
-        console.log(error);
+  const handleSubmit = async () => {
+    debugger
+    try {
+      const res = await axios.post(
+        `${BASE_URL}supplier/new`,
+        data
+      );
+      if(res.data.success){
+        navigate('/suppliers');
       }
-    }else{
-      navigate("/suppliers")
+    } catch (error) {
+      console.log(error);
     }
+    
   };
+
+
   return (
     <div class="flex items-center justify-center">
       <Card className="w-96">
@@ -56,7 +50,10 @@ export default function AddSupplier() {
           <Typography className="text-center text-2xl">Supplier</Typography>
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e)=>{
+            e.preventDefault();
+            handleSubmit();
+          }}>
             <div className="mb-4 flex flex-col gap-6">
               <Input
                 size="sm"
@@ -71,18 +68,9 @@ export default function AddSupplier() {
                 size="sm"
                 type="text"
                 className="form-control"
-                name="email"
-                label="Email"
+                name="contactNumber"
+                label="Contact Number"
                 value={data.email}
-                onChange={handleChange}
-              />
-              <Input
-                size="sm"
-                type="text"
-                className="form-control"
-                name="message"
-                label="Message"
-                value={data.message}
                 onChange={handleChange}
               />
             </div>

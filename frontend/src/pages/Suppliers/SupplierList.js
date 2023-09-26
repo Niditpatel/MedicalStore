@@ -32,74 +32,20 @@ export default function SupplierList() {
     }
   };
 
-  const handleDelete = async (e,item) => {
-    e.preventDefault();
+  const handleDelete = async (id) => {
     try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/Suppliers/supplierId/${item?.supplierId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...item, isDeleted: true }),
-        }
+      const res = await axios.delete(
+        `${BASE_URL}supplier/`+id
       );
-      if (res.ok) {
-        getData();
-      }
+      console.log(res);
     } catch (error) {
       console.log(error);
     }
+    getData();
   };
   const handleChange = (e) =>
     setSearchData({ ...searchData, [e.target.name]: e.target.value });
 
-  const handlesearch = async () => {
-    try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/Suppliers/search?supplierName=*${searchData.supplierName}*`
-      );
-      const data = await res.json();
-      setData(data.filter(item => item?.isDeleted?.toString() !== 'TRUE'))
-    } catch (error) {
-      console.log(error);
-    }
-    console.log(data);
-  }
-
-  const addForCart = (maal) => {
-    const isExists = dataForSheet.find(item => item.rowNo === maal.rowNo)
-    if (isExists !== null && isExists) {
-      const newData = dataForSheet.filter(item => item.rowNo !== maal.rowNo)
-      console.log("newData", newData);
-      setDataForSheet(newData);
-    } else {
-      console.log("newData", maal);
-      setDataForSheet([...dataForSheet, maal])
-    }
-  }
-  const addFinalCart = async (e) => {
-    console.log("dataForSheet", dataForSheet);
-    e.preventDefault();
-    try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/Carts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataForSheet),
-        }
-      );
-      if (res.ok) {
-        navigate("/cart");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
   const handleEdit = (index) => {
     navigate(`/edit-supplier/${index}`)
   }
@@ -108,11 +54,9 @@ useEffect(()=>{
   getData()
 },[searchData])
 
-  const TABLE_HEAD = ["Supplier Name", "Email", "Created Date", "Modified Date", "Message", "", ""];
   return (
     <div className="container">
-
-      <Card className="h-full w-11/12	">
+      <Card className="h-full w-full	">
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="flex justify-between items-center mb-3">
           <Typography> SupplierList</Typography>
@@ -129,27 +73,57 @@ useEffect(()=>{
               value={searchData.supplierName}
               onChange={handleChange}
             />
-            <Button  size="sm" className="btn btn-primary m-0" onClick={handlesearch}>search</Button>
+            {/* <Button  size="sm" className="btn btn-primary m-0" onClick={handlesearch}>search</Button> */}
           </div>
         </CardHeader>
         <CardBody className="p-4 overflow-hidden overflow-x-scroll px-0">
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                {TABLE_HEAD.map((head) => (
                   <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%]"
                   >
                     <Typography
                       variant="small"
                       color="blue-gray"
                       className="font-normal leading-none opacity-70"
                     >
-                      {head}
+                      Name
                     </Typography>
                   </th>
-                ))}
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%] "
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70 w-[10%]"
+                    >
+                      Contact
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[10%]"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      edit
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      delete
+                    </Typography>
+                  </th>
               </tr>
             </thead>
             {loading === false ?
@@ -178,52 +152,25 @@ useEffect(()=>{
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {item?.email}
+                          {item?.contactNumber}
                         </Typography>
                       </td>
-                      <td className={classes} >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.createdDate ? (item?.createdDate) : '-'}
-                        </Typography>
-                      </td>
-                      <td className={classes} >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.modifiedDate ? (item?.modifiedDate) : '-'}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.message}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
+                      <td className={classes+' w-[12px]'}>
                         <Button
                           className="btn btn-sm btn-danger ms-1"
                           variant="gradient"
                           color='blue'
                           size="sm"
-                          onClick={() => handleEdit(item?.supplierId)}
+                          onClick={() => handleEdit(item?._id)}
                         >
                           &#x1F589;
                         </Button>
                       </td>
-                      <td className={classes}>
+                      <td className={classes+'w-[12px]'}>
                         <Button
                           variant="gradient" 
                           size="sm" color='red' className="btn btn-danger"
-                          onClick={(e) => handleDelete(e,item)}
+                          onClick={(e) => handleDelete(item?._id)}
                         >X
                         </Button>
                       </td>
