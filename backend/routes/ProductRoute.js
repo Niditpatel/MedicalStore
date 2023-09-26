@@ -9,7 +9,7 @@ router.post("/product/new",async (req, res) => {
         productName,packing,store,supplier,isDeleted
     });
     res.status(200).json({
-        sucess: true,
+        success: true,
         product:product
     })
 }
@@ -18,8 +18,17 @@ router.post("/product/new",async (req, res) => {
 router.get("/products", async (req, res) => {
     const products = await Products.find();
     res.status(200).json({
-        sucess: true,
+        success: true,
         products
+    })
+});
+
+
+router.get("/totalProducts", async (req, res) => {
+    const total = await Products.find().count();
+    res.status(200).json({
+        success: true,
+        total
     })
 });
 
@@ -27,7 +36,7 @@ router.put("/product/:id",async (req, res) => {
     let product = await Products.findById(req.params.id)
     if (!product) {
         return res.status(500).json({
-            sucess: false,
+            success: false,
             message: "Product not found"
         })
     }
@@ -36,7 +45,7 @@ router.put("/product/:id",async (req, res) => {
         useFindAndModify: false
     })
     res.status(200).json({
-        sucess: true,
+        success: true,
     })
 });
 router.delete("/product/:id",
@@ -45,13 +54,13 @@ router.delete("/product/:id",
 
     if (!product) {
         res.status(200).json({
-            sucess: true,
+            success: true,
             message: `Product not Found`
         })
     }else{
-        await Products.deleteOne();
+        await Products.findByIdAndDelete(req.params.id);
         res.status(200).json({
-            sucess: true,
+            success: true,
             message: `Product deleted succesfully `
         })
     }
@@ -74,7 +83,7 @@ router.delete("/product/:id",
 //     .populate({path:'supplier',supplierName:{'$regex':supplier,'$options':'i'},select:'supplierName contactNumber -_id'});
    
 //         res.status(200).json({
-//             sucess: true,
+//             success: true,
 //             data:data
 //         })
 // });
@@ -111,13 +120,13 @@ router.get("/search",
                     ]
                 },
             },
-            {
-                $unwind: {
-                    path: '$supplier',
-                    // for not showing not matched doc 
-                     preserveNullAndEmptyArrays: false
-                }
-            }
+            // {
+            //     $unwind: {
+            //         path: '$supplier',
+            //         // for not showing not matched doc 
+            //          preserveNullAndEmptyArrays: false
+            //     }
+            // }
         ]
 
         const lookupQuery2 = [
@@ -179,8 +188,8 @@ router.get("/search",
     ])
    
         res.status(200).json({
-            sucess: true,
-            data:data
+            success: true,
+            data:data[0].data
         })
 });
 
