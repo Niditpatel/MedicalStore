@@ -48,6 +48,25 @@ router.put("/product/:id",async (req, res) => {
         success: true,
     })
 });
+
+
+router.get("/product/:id",async (req, res) => {
+    let product = await Products.findById(req.params.id)
+    if (!product) {
+        return res.status(500).json({
+            success: false,
+            message: "Product not found"
+        })
+    }else{
+        res.status(200).json({
+            success: true,
+            product
+        })
+    }
+    
+    
+});
+
 router.delete("/product/:id",
     async (req, res) => {
     const product = await Products.findById(req.params.id);
