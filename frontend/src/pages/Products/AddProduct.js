@@ -66,7 +66,7 @@ export default function AddProduct() {
         data
       );
       if(res.data.success){
-        navigate('/products');
+        navigate('/');
       }
     } catch (error) {
       console.log(error);

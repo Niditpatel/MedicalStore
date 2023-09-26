@@ -79,7 +79,7 @@ const Store = () => {
     navigate('/add-store');
   }
   const handleEdit = (index) => {
-    navigate(`/ edit - store / ${index}`)
+    navigate(`/edit-store/${index}`)
   }
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);

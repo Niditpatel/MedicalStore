@@ -16,7 +16,9 @@ router.post("/product/new",async (req, res) => {
 );
 
 router.get("/products", async (req, res) => {
-    const products = await Products.find();
+    const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
+    const pageSize = req.query.pageSize?req.query.pageSize:5
+    const products = await Products.find().skip(pageNo*pageSize).limit(pageSize);
     res.status(200).json({
         success: true,
         products
@@ -112,9 +114,6 @@ router.get("/search",
         // const {productName,supplierName,storeName} = req.query;
         const { productName,supplierName,storeName, offset, limit, sort_by, order } = req.query;
         const product = productName !== undefined ? productName :''
-
-
-
         const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
         const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
         const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);

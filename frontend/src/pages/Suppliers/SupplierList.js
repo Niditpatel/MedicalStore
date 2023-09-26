@@ -97,7 +97,7 @@ export default function SupplierList() {
             {/* <Button  size="sm" className="btn btn-primary m-0" onClick={handlesearch}>search</Button> */}
           </div>
         </CardHeader>
-        <CardBody className="p-4 overflow-hidden overflow-x-scroll px-0">
+        <CardBody className="p-4 overflow-hidden px-0">
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
