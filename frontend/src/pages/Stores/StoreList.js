@@ -11,6 +11,9 @@ import {
   CardFooter,
   Button,
   Typography,
+  Dialog,
+  DialogBody,
+  DialogFooter
 } from "@material-tailwind/react";
 import {
   Pagination
@@ -26,6 +29,8 @@ const Store = () => {
   const [totalStore, setTotalStore] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
   const [searchData, setSearchData] = useState({ storeName: '' });
+
+  const [dialog,setDialog] = useState({open:false,item:{}})
 
   const getData = async () => {
     try {
@@ -178,7 +183,7 @@ const Store = () => {
                           variant="gradient"
                           size="sm"
                           color='red'
-                          onClick={(e) => handleDelete(e, item._id)}
+                          onClick={(e) => setDialog({open:true,item:item})}
                         >
                           X
                         </Button>
@@ -233,6 +238,35 @@ const Store = () => {
           </CardFooter>
         </Card>
       </div>
+
+      <Dialog
+        open={dialog.open}
+        handler={(e)=>{setDialog({open:false,item:{}})}}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogBody divider>
+          Are you sure you Want to delete store <span className="font-bold">{dialog?.item?.storeName}</span>.
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="grey"
+            variant='gradient'
+            onClick={(e)=>{setDialog({open:false,item:{}})}}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button variant="gradient" color="red" onClick={(e)=>{setDialog({open:false,item:{}})
+                    handleDelete(dialog.item?._id)}}>
+            <span>Confirm</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
 
       {/* <div className="mb-5 flex justify-between">
         <div className="text-2xl">Stores</div>
