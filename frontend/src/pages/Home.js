@@ -26,7 +26,7 @@ import axios from "axios";
 const Home = () => {
   const navigate = useNavigate();
 
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [searchData, setSearchData] = useState({ storeName: '',supplierName:'',productName:'' });
