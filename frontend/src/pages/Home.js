@@ -19,25 +19,27 @@ import { DateRange, DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import moment from "moment";
+import { BASE_URL } from "../Common";
+import axios from "axios";
 
 
 const Home = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState();
-  const [dataForSheet, setDataForSheet] = useState([]);  
   const [loading, setLoading] = useState(false);
 
   const [searchData, setSearchData] = useState({ storeName: '',supplierName:'',productName:'' });
 
   const getData = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/v1/search?`+'supplierName='+
+      const data = await axios.get(
+        `${BASE_URL}/search/?`+'supplierName='+
         searchData.supplierName+'&storeName='+searchData.storeName+'&productName='+searchData.productName
       );
-      const data = await res.json();
-      setData(data?.data)
+      if(data.data.success){
+        setData(data.data.data)
+      }
     } catch (error) {
       console.log(error);
     }
@@ -48,78 +50,37 @@ const Home = () => {
     getData();
   }, [searchData]);
 
-  const handleDelete = async (rowIndex) => {
+  const handleDelete = async (id) => {
     try {
-      const res = await fetch(
-        `https://sheet.best/api/sheets/77d76d92-bbd0-4a20-bf70-8b63e67900b5/${rowIndex}`,
-        {
-          method: "DELETE",
-        }
+      const data = await axios.delete(
+        `${BASE_URL}/product`+id
       );
-      if (res.ok) {
-        const updatedData = data.filter((_, i) => i !== rowIndex);
-        setData(updatedData);
+      if(data.data.success){
+        console.log(data.data.message)
       }
     } catch (error) {
       console.log(error);
     }
+    getData();
   };
 
   const handleChange = (e) =>{
     setSearchData({ ...searchData, [e.target.name]: e.target.value });
   }
 
-  const handlesearch = async () => {
-    try {
-      const res = await fetch(
-        `https://sheet.best/api/sheets/77d76d92-bbd0-4a20-bf70-8b63e67900b5/search?name=*${searchData.name}*`
-      );
-      const data = await res.json();
-      setData(data?.data)
-    } catch (error) {
-      console.log(error);
-    }
+  const handleEdit =(id)=>{
+    navigate('/edit-product/'+id)
   }
 
-  const addForCart = (maal) => {
-    const isExists = dataForSheet.find(item => item.rowNo === maal.rowNo)
-    if (isExists !== null && isExists) {
-      const newData = dataForSheet.filter(item => item.rowNo !== maal.rowNo)
-      setDataForSheet(newData);
-    } else {
-      setDataForSheet([...dataForSheet, maal])
-    }
-  }
-  const addFinalCart = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(
-        "https://sheet.best/api/sheets/77d76d92-bbd0-4a20-bf70-8b63e67900b5/tabs/cart",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataForSheet),
-        }
-      );
-      if (res.ok) {
-        navigate("/cart");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const TABLE_HEAD = ["", "Store Name", "Product Name", "Packing", "Supplier", ""];
+  const TABLE_HEAD = ["","Product Name", "Packing", "Supplier", "",""];
   return (
 
     <div className="container">
-    <div className="flex items-center justify-end">
-        <Card className="h-full w-11/12	">
+        <Card className="h-full w-full	">
             <CardHeader floated={false} shadow={false} className=" rounded-none">
                 <div className="mb-3 flex justify-between items-center">
-                    <Typography> List</Typography>
+                    <Typography> Products </Typography>
+
                     {/* <div className="items-end ">
                         <Popover animate={{
                             mount: { scale: 1, y: 0 },
@@ -138,10 +99,19 @@ const Home = () => {
                             </PopoverContent>
                         </Popover>
                         <Button className="mt-6 m-0 mr-3" onClick={addFinalCart}>Add to cart</Button>
-                        <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-entry") }}>Add Entry</Button>
-                    </div> */}
+                      </div> */}
+                      <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-product") }}>Add Product</Button>
                 </div>
                 <div className="w-full flex gap-5 justify-between items-center">
+                      <Input
+                        type="text"
+                        size="sm"
+                        className="form-control border rounded"
+                        label="Store Name"
+                        name="storeName"
+                        value={searchData.storeName}
+                        onChange={handleChange}
+                    />
                     <Input
                         type="text"
                         size="sm"
@@ -160,7 +130,7 @@ const Home = () => {
                         value={searchData.supplierName}
                         onChange={handleChange}
                     />
-                    <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button>
+                    {/* <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button> */}
                 </div>
             </CardHeader>
             <CardBody className="p-4 overflow-hidden overflow-x-scroll px-0">
@@ -194,19 +164,7 @@ const Home = () => {
                                     <tr className="h-4" key={index}>
                                         <td className={classes}>
                                             <div className="flex items-center gap-3">
-                                                <Checkbox onChange={(e) => { addForCart(item) }} />
-                                            </div>
-                                        </td>
-                                        {console.log(item)}
-                                        <td className={classes}>
-                                            <div className="flex items-center gap-3">
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-bold"
-                                                >
-                                                    {item?.store?.storeName}
-                                                </Typography>
+                                                {/* <Checkbox onChange={(e) => { addForCart(item) }} /> */}
                                             </div>
                                         </td>
                                         <td className={classes}>
@@ -233,24 +191,15 @@ const Home = () => {
                                                 color="blue-gray"
                                                 className="font-normal"
                                             >
-                                                {item?.supplier?.map((item)=>item?.supplierName)?.join(' ,')}
+                                                {item?.supplier?.map((item)=>item?.supplierName)?.join(', ')}
                                             </Typography>
                                         </td>
-                                        <td className={classes} >
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.message}
-                                            </Typography>
-                                        </td>
-                                        {/* <td className={classes}>
+                                        <td className={classes}>
                                             <Button
                                                 variant="gradient"
                                                 color='blue'
                                                 size="sm"
-                                                onClick={() => handleEdit(item?.productId)}
+                                                onClick={() => handleEdit(item?._id)}
                                             >
                                                 &#x1F589;
                                             </Button>
@@ -258,10 +207,10 @@ const Home = () => {
                                         <td className={classes}>
                                             <Button
                                                 variant="gradient" size="sm" color='red' className="btn btn-danger"
-                                                onClick={(e) => handleDelete(e, item)}
+                                                onClick={(e) => handleDelete(item?._id)}
                                             >X
                                             </Button>
-                                        </td> */}
+                                        </td>
                                     </tr>
                                 );
                             },
@@ -303,7 +252,6 @@ const Home = () => {
   </Button>
 </CardFooter> */}
         </Card>
-    </div>
 </div>
 
   );
