@@ -30,7 +30,6 @@ const Store = () => {
   const [page_Index, setPage_Index] = useState(1);
   const [searchData, setSearchData] = useState({ storeName: '' });
 
-<<<<<<< HEAD
   const [dialog,setDialog] = useState({open:false,item:{}})
 
   const getData = async () => {
@@ -44,8 +43,6 @@ const Store = () => {
       console.log(error);
     }
   };
-=======
->>>>>>> 900b8ca09fad8f216d5403b4e8f8fb0677b97192
   const getTotalStores = async () => {
     try {
       const res = await axios.get(
@@ -55,19 +52,6 @@ const Store = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-  const getData = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}stores/?` + 'storeName=' + searchData.storeName + '&pageNo=' + page_Index
-      );
-      console.log("res", res.data.stores);
-      setData(res.data.stores)
-    } catch (error) {
-      console.log(error);
-    }
-    getTotalStores();
-
   };
 
 
