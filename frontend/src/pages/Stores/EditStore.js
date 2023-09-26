@@ -47,9 +47,9 @@ const Edit = () => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `${BASE_URL}store/${rowIndex}`,data
+        `${BASE_URL}store/${rowIndex}`, data
       );
-      if(res.data.success) {
+      if (res.data.success) {
         navigate("/stores")
       }
     } catch (error) {
@@ -71,9 +71,14 @@ const Edit = () => {
                 <Input size="sm" label="Contact Number" name="contactNumber" value={data?.contactNumber}
                   onChange={handleChange} />
               </div>
-              <Button className="mt-6" fullWidth onClick={handleSubmit}>
-                Update
-              </Button>
+              <div className="flex justify-evenly">
+                <Button size="sm" className="mt-6" type="submit"  >
+                  Update
+                </Button>
+                <Button size="sm" className="mt-6" onClick={((e) => { navigate("/stores"); })}>
+                  Cancle
+                </Button>
+              </div>
             </form>
           </CardBody>
         </Card>

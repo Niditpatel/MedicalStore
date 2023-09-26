@@ -13,29 +13,48 @@ import {
   CardFooter,
   Input
 } from "@material-tailwind/react";
+import {
+  Pagination
+} from "@mui/material";
+import Stack from '@mui/material/Stack';
 
 export default function SupplierList() {
   const navigate = useNavigate();
   const [data, setData] = useState();
-  const [dataForSheet, setDataForSheet] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchData, setSearchData] = useState({ supplierName: '' });
+  const [totalSupplier, setTotalSupplier] = useState(0);
+  const [page_Index, setPage_Index] = useState(1);
 
+
+  const getTotalSupplier = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}totalSupplier`
+      );
+      setTotalSupplier(res.data.total)
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const getData = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}suppliers/?supplierName=`+searchData.supplierName
+        `${BASE_URL}suppliers/?` + 'supplierName=' + searchData.supplierName + '&pageNo=' + page_Index
       );
       setData(res.data.suppliers)
     } catch (error) {
       console.log(error);
     }
+    getTotalSupplier()
   };
+
+
 
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `${BASE_URL}supplier/`+id
+        `${BASE_URL}supplier/` + id
       );
       console.log(res);
     } catch (error) {
@@ -50,18 +69,20 @@ export default function SupplierList() {
     navigate(`/edit-supplier/${index}`)
   }
 
-useEffect(()=>{
-  getData()
-},[searchData])
-
+  useEffect(() => {
+    getData()
+  }, [searchData])
+  const handleChangePageNew = (e, value) => {
+    setPage_Index(value);
+  }
   return (
     <div className="container">
       <Card className="h-full w-full	">
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="flex justify-between items-center mb-3">
-          <Typography> SupplierList</Typography>
-          {/* <Button size="sm" className="mt-6" onClick={addFinalCart}>Add to cart</Button> */}
-          <Button size="sm" className="mt-6 m-0" onClick={(e) => { navigate("/add-supplier") }}>Add Supplier</Button>
+            <Typography> SupplierList</Typography>
+            {/* <Button size="sm" className="mt-6" onClick={addFinalCart}>Add to cart</Button> */}
+            <Button size="sm" className="mt-6 m-0" onClick={(e) => { navigate("/add-supplier") }}>Add Supplier</Button>
           </div>
           <div className="w-full flex gap-10 justify-between items-center">
             <Input
@@ -80,50 +101,50 @@ useEffect(()=>{
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%]"
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      Name
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%] "
+                    Name
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%] "
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70 w-[10%]"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70 w-[10%]"
-                    >
-                      Contact
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[10%]"
+                    Contact
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[10%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      edit
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
+                    edit
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      delete
-                    </Typography>
-                  </th>
+                    delete
+                  </Typography>
+                </th>
               </tr>
             </thead>
             {loading === false ?
@@ -155,7 +176,7 @@ useEffect(()=>{
                           {item?.contactNumber}
                         </Typography>
                       </td>
-                      <td className={classes+' w-[12px]'}>
+                      <td className={classes + ' w-[12px]'}>
                         <Button
                           className="btn btn-sm btn-danger ms-1"
                           variant="gradient"
@@ -166,9 +187,9 @@ useEffect(()=>{
                           &#x1F589;
                         </Button>
                       </td>
-                      <td className={classes+'w-[12px]'}>
+                      <td className={classes + 'w-[12px]'}>
                         <Button
-                          variant="gradient" 
+                          variant="gradient"
                           size="sm" color='red' className="btn btn-danger"
                           onClick={(e) => handleDelete(item?._id)}
                         >X
@@ -182,7 +203,15 @@ useEffect(()=>{
               : <>Wait </>}
           </table>
         </CardBody>
-
+        <CardFooter className="pt-0 ">
+          <Stack>
+            <Pagination
+              count={Math.ceil(totalSupplier / 10)}
+              page={page_Index}
+              onChange={handleChangePageNew}
+            />
+          </Stack>
+        </CardFooter>
         {/* <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Button variant="outlined" size="sm">
             Previous
