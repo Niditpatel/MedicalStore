@@ -12,19 +12,26 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import {
+  Pagination
+} from "@mui/material";
 import axios from 'axios';
+import Stack from '@mui/material/Stack';
 
 
 const Store = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState();
+  const [totalStore, setTotalStore] = useState(0);
+  const [page_Index, setPage_Index] = useState(1);
   const [searchData, setSearchData] = useState({ storeName: '' });
 
   const getData = async () => {
+    debugger
     try {
       const res = await axios.get(
-        `${BASE_URL}stores`
+        `${BASE_URL}stores/?storeName=${searchData.storeName}&pageNo=${page_Index}`
       );
       console.log("res", res.data.stores);
       setData(res.data.stores)
@@ -32,8 +39,19 @@ const Store = () => {
       console.log(error);
     }
   };
+  const getTotalStores = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}totalStores`
+      );
+      setTotalStore(res.data.total)
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    getTotalStores();
     getData();
   }, []);
 
@@ -42,7 +60,7 @@ const Store = () => {
       const data = await axios.delete(`${BASE_URL}store/${id}`)
       getData();
       if (data.data.success) {
-        // alert(data.data.message);
+        alert("deleted successfully");
       }
     }
     catch (e) {
@@ -53,28 +71,16 @@ const Store = () => {
   const handleChange = (e) =>
     setSearchData({ ...searchData, [e.target.name]: e.target.value });
 
-  const handlesearch = async () => {
-    try {
-      const res = await fetch(
-        `${BASE_URL}/search?storeName=*${searchData.storeName}*`
-      );
-      const data = await res.json();
-      setData(data.filter(item => item?.isDeleted?.toString() !== 'TRUE'))
-    } catch (error) {
-      console.log(error);
-    }
-    console.log(data);
-  }
-
   const handleAdd = () => {
     navigate('/add-store');
   }
   const handleEdit = (index) => {
     navigate(`/edit-store/${index}`)
   }
-
+  const handleChangePageNew = (e, value) => {
+    setPage_Index(value);
+  }
   const TABLE_HEAD = ["Store Name", "Contact Number", "", ""];
-
   return (
     <div className="container ">
       <div className="mb-3 flex gap-2 justify-end">
@@ -94,15 +100,9 @@ const Store = () => {
                 className="form-control border rounded "
                 label="Store Name"
                 name="storeName"
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    handlesearch();
-                  }
-                }}
                 value={searchData.storeName}
                 onChange={handleChange}
               />
-              <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button>
             </div>
           </CardHeader>
           <CardBody className="p-4 overflow-hidden px-0">
@@ -224,7 +224,13 @@ const Store = () => {
           </Button>
         </CardFooter> */}
           <CardFooter className="pt-0 ">
-            {/* <Button size="sm" onClick={addFinalCart}>Add to cart</Button> */}
+            <Stack>
+              <Pagination
+                count={Math.ceil(totalStore / 10)}
+                page={page_Index}
+                onChange={handleChangePageNew}
+              />
+            </Stack>
           </CardFooter>
         </Card>
       </div>
