@@ -35,6 +35,14 @@ router.get("/storesSelect", async (req, res) => {
     })
 });
 
+router.get("/totalStores", async (req, res) => {
+    const total = await Store.find({}).count();
+    res.status(200).json({
+        sucess: true,
+        total
+    })
+});
+
 router.put("/store/:id",async (req, res) => {
     let store = await Store.findById(req.params.id)
     if (!store) {
