@@ -24,19 +24,13 @@ export default function SupplierList() {
   const getData = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}suppliers`
+        `${BASE_URL}suppliers/?supplierName=`+searchData.supplierName
       );
-      console.log("res", res.data.suppliers);
       setData(res.data.suppliers)
     } catch (error) {
       console.log(error);
     }
   };
-
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   const handleDelete = async (e,item) => {
     e.preventDefault();
@@ -109,6 +103,11 @@ export default function SupplierList() {
   const handleEdit = (index) => {
     navigate(`/edit-supplier/${index}`)
   }
+
+useEffect(()=>{
+  getData()
+},[searchData])
+
   const TABLE_HEAD = ["Supplier Name", "Email", "Created Date", "Modified Date", "Message", "", ""];
   return (
     <div className="container">
@@ -128,11 +127,6 @@ export default function SupplierList() {
               label="Supplier Name"
               name="supplierName"
               value={searchData.supplierName}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handlesearch();
-                }
-              }}
               onChange={handleChange}
             />
             <Button  size="sm" className="btn btn-primary m-0" onClick={handlesearch}>search</Button>
