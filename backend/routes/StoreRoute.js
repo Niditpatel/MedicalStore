@@ -9,7 +9,7 @@ router.post("/store/new",async (req, res) => {
         storeName,contactNumber,isDeleted,
     });
     res.status(200).json({
-        sucess: true,
+        success: true,
         store:store
     })
 }
@@ -21,7 +21,7 @@ router.get("/stores", async (req, res) => {
     const pageSize = req.query.pageSize?req.query.pageSize:5
     const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
     res.status(200).json({
-        sucess: true,
+        success: true,
         stores
     })
 });
@@ -30,7 +30,7 @@ router.get("/storesSelect", async (req, res) => {
     const storeName = req.params.storeName?req.params.storeName:''
     const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).limit(10);
     res.status(200).json({
-        sucess: true,
+        success: true,
         stores
     })
 });
@@ -38,7 +38,7 @@ router.get("/storesSelect", async (req, res) => {
 router.get("/totalStores", async (req, res) => {
     const total = await Store.find({}).count();
     res.status(200).json({
-        sucess: true,
+        success: true,
         total
     })
 });
@@ -47,7 +47,7 @@ router.put("/store/:id",async (req, res) => {
     let store = await Store.findById(req.params.id)
     if (!store) {
         return res.status(500).json({
-            sucess: false,
+            success: false,
             message: "store not found"
         })
     }
@@ -56,19 +56,19 @@ router.put("/store/:id",async (req, res) => {
         useFindAndModify: false
     })
     res.status(200).json({
-        sucess: true,
+        success: true,
     })
 });
 router.get("/store/:id",async (req, res) => {
     let store = await Store.findById(req.params.id)
     if (!store) {
         return res.status(500).json({
-            sucess: false,
+            success: false,
             message: "store not found"
         })
     }
     res.status(200).json({
-        sucess: true,
+        success: true,
         store
     })
 });
@@ -78,13 +78,13 @@ router.delete("/store/:id",
 
     if (!store) {
         res.status(200).json({
-            sucess: true,
+            success: true,
             message: `Store not Found`
         })
     }else{
         await Store.findByIdAndDelete(req.params.id);
         res.status(200).json({
-            sucess: true,
+            success: true,
             message: `Store deleted succesfully `
         })
     }
