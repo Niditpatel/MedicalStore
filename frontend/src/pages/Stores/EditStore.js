@@ -49,9 +49,7 @@ const Edit = () => {
       const res = await axios.put(
         `${BASE_URL}store/${rowIndex}`,data
       );
-      console.log("res.data.success",res.data.sucess);
       if(res.data.success) {
-        debugger
         navigate("/stores")
       }
     } catch (error) {
