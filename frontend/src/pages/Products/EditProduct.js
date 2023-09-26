@@ -1,6 +1,5 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate ,useParams} from "react-router-dom";
 import {
   Card,
   Input,
@@ -11,66 +10,117 @@ import {
 } from "@material-tailwind/react";
 import { BASE_URL } from "../../Common";
 import moment from "moment/moment";
-
+import axios from 'axios';
+import AsyncSelect from 'react-select/async';
 
 export default function EditProduct() {
   const navigate = useNavigate();
   const { rowIndex } = useParams();
   const [data, setData] = useState({
-    productId:0,
     productName: "",
     packing: "",
-    message: "",
-    modifiedDate:(moment(new Date()).format("DD-MM-YYYY")),
+    store: '',
+    supplier:[]
   });
-  const getData = async () => {
-    try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/Products/search?productId=${rowIndex}`
-      );
-      const data = await res.json();
-      setData(data[0]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const [stores,setStores] = useState([]);
+  const [suppliers,setSuppliers] = useState([]);
 
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const getStores = async (inputValue) => {
     try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/Products/search?productId=${rowIndex}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
+      const res = await axios.get(
+        `${BASE_URL}storesSelect/?storeName=`+ inputValue
       );
-      if (res.ok) {
-        navigate("/products");
+      if(res.data.success){
+          setStores(res.data.stores?.map(item=>
+            {
+            return {...item,value:item?._id,label:item.storeName}
+          }))
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const getSuppliers = async (inputValue) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
+      );
+      if(res.data.success){
+        setSuppliers(res.data.suppliers?.map((item=>{
+          return {...item,value:item._id,label:item.supplierName}
+        })))
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const res = await axios.put(
+        `${BASE_URL}product/`+rowIndex,
+        data
+      );
+      if(res.data.success){
+        navigate('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const searchStore =  async (inputValue) => {
+      const res = await getStores(inputValue);
+      const institutes = res.map((val) => {
+        return { label: val.storeName, value: val._id };
+      });
+      return institutes;
+  };
+
+  const searchSupplier =  async (inputValue) => {
+      const res = await getSuppliers(inputValue);
+      const institutes = res.map((val) => {
+        return { label: val.supplierName, value: val._id };
+      });
+      return institutes;
+  };
+
+  const getData = async ()=>{
+    debugger
+    try {
+      const res = await axios.get(
+        `${BASE_URL}product/`+rowIndex
+      );
+      if(res.data.success){
+        setData(res.data.product)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(()=>{
+    getStores('')
+    getSuppliers('')
+    getData()
+  },[])
+  
   return (
     <div class="flex items-center justify-center">
       <Card className="w-96">
         <CardHeader floated={false}>
-          <Typography className="text-center text-2xl">Products</Typography>
+          <Typography className="text-center text-2xl">Product</Typography>
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e)=>{
+            e.preventDefault();
+            handleSubmit();
+          }}>
             <div className="mb-4 flex flex-col gap-6">
               <Input
                 size="sm"
@@ -90,21 +140,58 @@ export default function EditProduct() {
                 value={data.packing}
                 onChange={handleChange}
               />
-              <Input
-                size="sm"
-                type="text"
-                className="form-control"
-                name="description"
-                label="Description"
-                value={data.description}
-                onChange={handleChange}
+              <AsyncSelect
+                cacheOptions
+                defaultOptions={stores}
+                isClearable
+                placeholder="Select Store"
+                loadOptions={searchStore}
+                getOptionValue={(option) => option.value}
+                getOptionLabel={(option) => option.label}
+                value={stores?.find(item=>item?._id === data.store)}
+                onChange={(e)=>{
+                  setData({...data,store:e?e.value:''})
+                }}
+                noOptionsMessage={({ inputValue }) =>
+                  !inputValue
+                    ? "Start Typing to View Results"
+                    : inputValue.length > 0
+                    ? "No Result Are Found Matching This Value"
+                    : "Type At Least Three Character to View Result"
+                }
+              />
+                <AsyncSelect
+                cacheOptions
+                isMulti
+                defaultOptions={suppliers}
+                isClearable
+                placeholder="Select Suppliers"
+                loadOptions={searchSupplier}
+                onChange={(e)=>{
+                 if(e.length >0){
+                  const suppliers = e.map(item=>item._id)
+                    setData({...data,supplier:suppliers})
+                 }else{
+                  setData({...data,supplier:[]})
+                 }
+                }}
+                value={suppliers?.filter(item=>data.supplier?.includes(item?._id))}
+                getOptionValue={(option) => option.value}
+                getOptionLabel={(option) => option.label}
+                noOptionsMessage={({ inputValue }) =>
+                  !inputValue
+                    ? "Start Typing to View Results"
+                    : inputValue.length > 0
+                    ? "No Result Are Found Matching This Value"
+                    : "Type At Least Three Character to View Result"
+                }
               />
             </div>
             <div className="flex justify-evenly">
-              <Button size="sm" className="mt-6" type="submit"  >
-                Update
+              <Button size="sm" className="mt-6" type="submit">
+                Save
               </Button>
-              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/products"); })}>
+              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/"); })}>
                 Cancle
               </Button>
             </div>

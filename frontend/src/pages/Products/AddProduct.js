@@ -170,10 +170,10 @@ export default function AddProduct() {
               />
             </div>
             <div className="flex justify-evenly">
-              <Button size="sm" className="mt-6" type="submit"  >
+              <Button size="sm" className="mt-6" type="submit">
                 Save
               </Button>
-              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/suppliers"); })}>
+              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/products"); })}>
                 Cancle
               </Button>
             </div>
