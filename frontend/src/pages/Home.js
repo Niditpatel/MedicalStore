@@ -77,7 +77,7 @@ const Home = () => {
 
     <div className="container">
         <Card className="h-full w-full	">
-            <CardHeader floated={false} shadow={false} className=" rounded-none">
+            <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
                 <div className="mb-3 flex justify-between items-center">
                     <Typography> Products </Typography>
 
@@ -199,6 +199,7 @@ const Home = () => {
                                                 variant="gradient"
                                                 color='blue'
                                                 size="sm"
+                                                className="print:hidden"
                                                 onClick={() => handleEdit(item?._id)}
                                             >
                                                 &#x1F589;
@@ -206,7 +207,7 @@ const Home = () => {
                                         </td>
                                         <td className={classes}>
                                             <Button
-                                                variant="gradient" size="sm" color='red' className="btn btn-danger"
+                                                variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
                                                 onClick={(e) => handleDelete(item?._id)}
                                             >X
                                             </Button>

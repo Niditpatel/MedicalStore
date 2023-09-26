@@ -41,21 +41,11 @@ export function StickyNavbar() {
           Home
         </Link>
       </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-normal"
-      >
-        <Link to="/cart">
-          Cart
-        </Link>
-      </Typography>
     </ul>
   );
 
   return (
-    <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none py-2 px-4 lg:px-8 lg:py-4 mb-6">
+    <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none py-2 px-4 lg:px-8 lg:py-4 mb-6 print:hidden">
       <div className="flex items-center justify-between text-blue-gray-900">
         <Typography
           as="a"
