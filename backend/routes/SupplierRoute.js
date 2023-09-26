@@ -26,6 +26,14 @@ router.get("/suppliers", async (req, res) => {
     })
 });
 
+router.get("/totalSupplier", async (req, res) => {
+    const total = await Supplier.find({}).count();
+    res.status(200).json({
+        sucess: true,
+        total
+    })
+});
+
 router.get("/suppliersSelect", async (req, res) => {
     const supplierName = req.params.supplierName?req.params.supplierName:''
     const suppliers = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).limit(10);
