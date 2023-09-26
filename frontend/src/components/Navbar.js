@@ -28,6 +28,15 @@ export function StickyNavbar() {
         variant="small"
         color="blue-gray"
         className="p-1 font-normal">
+        <Link to="/suppliers">
+          Supplier
+        </Link>
+      </Typography>
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="p-1 font-normal">
         <Link to="/">
           Home
         </Link>

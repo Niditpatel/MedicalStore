@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../Common";
+import axios from 'axios';
 
 import {
   Card,
@@ -21,19 +22,15 @@ export default function SupplierList() {
   const [searchData, setSearchData] = useState({ supplierName: '' });
 
   const getData = async () => {
-    setLoading(true);
     try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/Suppliers?_format=index`
+      const res = await axios.get(
+        `${BASE_URL}suppliers`
       );
-      const data = await res.json();
-      const realData = Object.keys(data).map((key) => data[key])
-      setData(realData.filter(item => item?.isDeleted?.toString() !== 'TRUE'))
-      localStorage.setItem("maxSupplierId", realData.length);
+      console.log("res", res.data.suppliers);
+      setData(res.data.suppliers)
     } catch (error) {
       console.log(error);
     }
-    setLoading(false);
   };
 
 
