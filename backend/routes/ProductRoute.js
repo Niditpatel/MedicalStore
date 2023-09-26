@@ -208,8 +208,8 @@ router.get("/search",
    
         res.status(200).json({
             success: true,
-            data:data[0].data,
-            total:data[0].metadata[0].total
+            data:data[0]?.data ? data[0]?.data :[],
+            total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
         })
 });
 
