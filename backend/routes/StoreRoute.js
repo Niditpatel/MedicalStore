@@ -27,7 +27,7 @@ router.get("/stores", async (req, res) => {
 });
 
 router.get("/storesSelect", async (req, res) => {
-    const storeName = req.params.storeName?req.params.storeName:''
+    const storeName = req.query.storeName?req.query.storeName:''
     const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).limit(10);
     res.status(200).json({
         success: true,
