@@ -16,7 +16,8 @@ const Add = () => {
   const navigate = useNavigate();
   const [data, setData] = useState({
     storeName: "",
-    contactNumber: ""
+    contactNumber: "",
+    _id:""
   });
 
   const handleChange = (e) =>

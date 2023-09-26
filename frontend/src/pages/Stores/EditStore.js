@@ -11,25 +11,26 @@ import {
   CardHeader,
   Typography
 } from "@material-tailwind/react";
-
+import axios from 'axios';
 import moment from "moment/moment";
 
 const Edit = () => {
   const navigate = useNavigate();
   const { rowIndex } = useParams();
   const [data, setData] = useState({
-    _id:"",
+    _id: "",
     storeName: "",
     contactNumber: ""
   });
 
   const getData = async () => {
     try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/MedicalStores/search?storeId=${rowIndex}`
+      const res = await axios.get(
+        `${BASE_URL}store/${rowIndex}`
       );
-      const data = await res.json();
-      setData(data[0]);
+      console.log("ssdsata", res.data.store);
+
+      setData(res.data.store);
     } catch (error) {
       console.log(error);
     }
@@ -45,30 +46,24 @@ const Edit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(
-        `${BASE_URL}/tabs/MedicalStores/storeId/${rowIndex}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
+      const res = await axios.put(
+        `${BASE_URL}store/${rowIndex}`,data
       );
-      if (res.ok) {
-        navigate('/stores')
+      console.log("res.data.success",res.data.sucess);
+      if(res.data.success) {
+        debugger
+        navigate("/stores")
       }
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
     <div className="flex items-center justify-center">
       <form style={{ maxWidth: 600, margin: "auto" }}>
         <Card className="w-96">
           <CardHeader floated={false}>
-          <Typography className="text-center text-2xl">Store</Typography>
+            <Typography className="text-center text-2xl">Store</Typography>
           </CardHeader>
           <CardBody>
             <form className="mb-2  max-w-screen-lg ">
@@ -76,8 +71,6 @@ const Edit = () => {
                 <Input size="sm" label="Name" name="storeName" value={data?.storeName}
                   onChange={handleChange} />
                 <Input size="sm" label="Contact Number" name="contactNumber" value={data?.contactNumber}
-                  onChange={handleChange} />
-                <Input size="sm" label="Description" name="description" value={data?.description}
                   onChange={handleChange} />
               </div>
               <Button className="mt-6" fullWidth onClick={handleSubmit}>

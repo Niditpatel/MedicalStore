@@ -59,6 +59,19 @@ router.put("/store/:id",async (req, res) => {
         sucess: true,
     })
 });
+router.get("/store/:id",async (req, res) => {
+    let store = await Store.findById(req.params.id)
+    if (!store) {
+        return res.status(500).json({
+            sucess: false,
+            message: "store not found"
+        })
+    }
+    res.status(200).json({
+        sucess: true,
+        store
+    })
+});
 router.delete("/store/:id",
     async (req, res) => {
     const store = await Store.findById(req.params.id);
