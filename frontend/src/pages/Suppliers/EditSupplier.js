@@ -23,7 +23,6 @@ export default function EditSupplier() {
   });
 
   const getData = async () => {
-    debugger
     try {
       const res = await axios.get(
         `${BASE_URL}supplier/`+rowIndex

@@ -91,7 +91,6 @@ export default function EditProduct() {
   };
 
   const getData = async ()=>{
-    debugger
     try {
       const res = await axios.get(
         `${BASE_URL}product/`+rowIndex

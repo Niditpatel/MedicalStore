@@ -28,7 +28,6 @@ const Store = () => {
   const [searchData, setSearchData] = useState({ storeName: '' });
 
   const getData = async () => {
-    debugger
     try {
       const res = await axios.get(
         `${BASE_URL}stores/?storeName=${searchData.storeName}&pageNo=${page_Index}`
