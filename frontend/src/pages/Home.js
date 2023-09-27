@@ -51,7 +51,7 @@ const Home = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}/search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +'&pageNo=' + page_Index
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +'&offset=' + page_Index
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -59,13 +59,13 @@ const Home = () => {
     } catch (error) {
       console.log(error);
     }
-    getTotalProducts()
   };
 
 
   useEffect(() => {
     getData();
-  }, [searchData]);
+    getTotalProducts();
+  }, [searchData,page_Index]);
 
   const handleDelete = async (id) => {
     try {
