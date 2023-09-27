@@ -17,7 +17,7 @@ router.post("/product/new",async (req, res) => {
 
 router.get("/products", async (req, res) => {
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
-    const pageSize = req.query.pageSize?req.query.pageSize:5
+    const pageSize = req.query.pageSize?req.query.pageSize:15
     const products = await Products.find().skip(pageNo*pageSize).limit(pageSize);
     res.status(200).json({
         success: true,

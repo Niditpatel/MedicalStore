@@ -18,7 +18,7 @@ router.post("/supplier/new",async (req, res) => {
 router.get("/suppliers", async (req, res) => {
     const supplierName = req.query.supplierName?req.query.supplierName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
-    const pageSize = req.query.pageSize?req.query.pageSize:5
+    const pageSize = req.query.pageSize?req.query.pageSize:15
     const suppliers = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
     res.status(200).json({
         success: true,
