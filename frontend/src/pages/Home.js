@@ -239,7 +239,7 @@ const Home = () => {
               : <>Wait </>}
           </table>
         </CardBody>
-        <CardFooter className="pt-0 ">
+        <CardFooter className="pt-0 print:hidden">
           <Stack>
             <Pagination
               count={Math.ceil(totalProducts / 10)}
