@@ -5,7 +5,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         require: [true, "Please enter your Store name"],
     },
-    packing: {
+    packing: {  
         type: String,
         required: false,
     },
