@@ -29,7 +29,7 @@ export default function AddSupplier() {
   const handleSubmit = async () => {
     try {
       const res = await axios.post(
-        `${BASE_URL}supplier/new`,
+        `/api/v1/supplier/new`,
         data
       );
       if(res.data.success){

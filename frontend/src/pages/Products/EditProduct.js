@@ -32,7 +32,7 @@ export default function EditProduct() {
   const getStores = async (inputValue) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}storesSelect/?storeName=`+ inputValue
+        `/api/v1/storesSelect/?storeName=`+ inputValue
       );
       if(res.data.success){
           setStores(res.data.stores?.map(item=>
@@ -48,7 +48,7 @@ export default function EditProduct() {
   const getSuppliers = async (inputValue) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
+        `/api/v1/suppliersSelect/?supplierName=`+inputValue
       );
       if(res.data.success){
         setSuppliers(res.data.suppliers?.map((item=>{
@@ -63,7 +63,7 @@ export default function EditProduct() {
   const handleSubmit = async () => {
     try {
       const res = await axios.put(
-        `${BASE_URL}product/`+rowIndex,
+        `/api/v1/product/`+rowIndex,
         data
       );
       if(res.data.success){
@@ -93,7 +93,7 @@ export default function EditProduct() {
   const getData = async ()=>{
     try {
       const res = await axios.get(
-        `${BASE_URL}product/`+rowIndex
+        `/api/v1/product/`+rowIndex
       );
       if(res.data.success){
         setData(res.data.product)

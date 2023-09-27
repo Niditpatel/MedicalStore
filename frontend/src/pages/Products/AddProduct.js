@@ -31,7 +31,7 @@ export default function AddProduct() {
   const getStores = async (inputValue) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}storesSelect/?storeName=`+ inputValue
+        `/api/v1/storesSelect/?storeName=`+ inputValue
       );
       if(res.data.success){
           setStores(res.data.stores?.map(item=>
@@ -47,7 +47,7 @@ export default function AddProduct() {
   const getSuppliers = async (inputValue) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
+        `/api/v1/suppliersSelect/?supplierName=`+inputValue
       );
       if(res.data.success){
         setSuppliers(res.data.suppliers?.map((item=>{
@@ -62,7 +62,7 @@ export default function AddProduct() {
   const handleSubmit = async () => {
     try {
       const res = await axios.post(
-        `${BASE_URL}product/new`,
+        `/api/v1/product/new`,
         data
       );
       if(res.data.success){

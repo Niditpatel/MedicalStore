@@ -25,7 +25,7 @@ export default function EditSupplier() {
   const getData = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}supplier/`+rowIndex
+        `/api/v1/supplier/`+rowIndex
       );
       if(res.data.success){
         setData(res.data.supplier)
@@ -46,7 +46,7 @@ export default function EditSupplier() {
   const handleSubmit = async () => {
     try {
       const res = await axios.put(
-        `${BASE_URL}supplier/`+rowIndex,
+        `/api/v1/supplier/`+rowIndex,
         data
       );
         if(res.data.success){

@@ -40,7 +40,7 @@ const Add = () => {
       entryId = parseInt(entryId) + 1
       try {
         const res = await fetch(
-          `${BASE_URL}/tabs/Entries`,
+          `/api/v1//tabs/Entries`,
           {
             method: "POST",
             headers: {
@@ -63,7 +63,7 @@ const Add = () => {
   const getSupplierData = async () => {
     try {
       const res = await fetch(
-        `${BASE_URL}/tabs/Suppliers?_format=index`
+        `/api/v1//tabs/Suppliers?_format=index`
       );
       const data = await res.json();
       const realData = Object.keys(data).map((key) => data[key])
@@ -78,7 +78,7 @@ const Add = () => {
   const getStoreData = async () => {
     try {
       const res = await fetch(
-        `${BASE_URL}?_format=index`
+        `/api/v1/?_format=index`
       );
       const data = await res.json();
       const realData = Object.keys(data).map((key) => data[key])
@@ -93,7 +93,7 @@ const Add = () => {
   const getProductData = async () => {
     try {
         const res = await fetch(
-            `${BASE_URL}/tabs/Products?_format=index`
+            `/api/v1//tabs/Products?_format=index`
         );
         const data = await res.json();
         const realData = Object.keys(data).map((key) => data[key])

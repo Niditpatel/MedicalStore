@@ -30,7 +30,7 @@ export default function SupplierList() {
   const getTotalSupplier = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}totalSupplier`
+        `/api/v1/totalSupplier`
       );
       setTotalSupplier(res.data.total)
     } catch (error) {
@@ -40,7 +40,7 @@ export default function SupplierList() {
   const getData = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}suppliers/?` + 'supplierName=' + searchData.supplierName + '&pageNo=' + page_Index
+        `/api/v1/suppliers/?` + 'supplierName=' + searchData.supplierName + '&pageNo=' + page_Index
       );
       setData(res.data.suppliers)
     } catch (error) {
@@ -54,7 +54,7 @@ export default function SupplierList() {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `${BASE_URL}supplier/` + id
+        `/api/v1/supplier/` + id
       );
       console.log(res);
     } catch (error) {

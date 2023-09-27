@@ -26,7 +26,7 @@ const Edit = () => {
   const getData = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}store/${rowIndex}`
+        `/api/v1/store/${rowIndex}`
       );
       console.log("ssdsata", res.data.store);
 
@@ -47,7 +47,7 @@ const Edit = () => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `${BASE_URL}store/${rowIndex}`, data
+        `/api/v1/store/${rowIndex}`, data
       );
       if (res.data.success) {
         navigate("/stores")
