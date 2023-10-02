@@ -104,6 +104,7 @@ const Cart = () => {
     } catch (error) {
       console.log(error);
     }
+    getData();
   }
   const TABLE_HEAD = ["", "Product Name", "Packing", "Supplier", ""];
   return (
