@@ -58,18 +58,16 @@ router.delete("/cart/:id",
 
 router.delete("/carts",
     async (req, res) => {
-    const cart = await Carts.findById(req.params.id);
-
-    if (!cart) {
-        res.status(200).json({
-            success: true,
-            message: `cart not Found`
-        })
-    }else{
-        await Carts.findByIdAndDelete(req.params.id);
+    try{
+        const cart = await Carts.deleteMany({});
         res.status(200).json({
             success: true,
             message: `cart deleted succesfully `
+        })
+    }catch(e){
+        res.status(400).json({
+            success:false,
+            message:'something was wrong'
         })
     }
 });
@@ -102,13 +100,6 @@ router.get("cart/search",
                     ]
                 },
             },
-            // {
-            //     $unwind: {
-            //         path: '$supplier',
-            //         // for not showing not matched doc 
-            //          preserveNullAndEmptyArrays: false
-            //     }
-            // }
         ]
 
         const lookupQuery2 = [
