@@ -41,6 +41,7 @@ const Cart = () => {
   const [page_Index, setPage_Index] = useState(1);
 
   const [dialog,setDialog] = useState({open:false,item:{}})
+  const [claerAll,setClaerAll] = useState(false);
 
   const getTotalProducts = async () => {
     try {
@@ -114,7 +115,7 @@ const Cart = () => {
             <Typography> Products </Typography>
             <div className="flex gap-3">
               <Button className="mt-6 m-0 " onClick={(e) => { navigate("/") }}>Add In Cart</Button>
-              <Button className="mt-6 m-0 " onClick={handleClearCart}>claer Cart</Button>
+              <Button className="mt-6 m-0 " onClick={(e)=>{setClaerAll(true)}}>claer Cart</Button>
             </div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
@@ -170,7 +171,9 @@ const Cart = () => {
             </thead>
             {loading === false ?
               <tbody>
-                {data?.map((item, index,) => {
+                {data && data.length >0 ?
+                <>
+                 {data?.map((item, index,) => {
                   const isLast = index === data.length - 1;
                   const classes = isLast
                     ? "p-1"
@@ -220,6 +223,14 @@ const Cart = () => {
                   );
                 },
                 )}
+                </>
+                :<>
+                <tr>
+                  <td colSpan={9} style={{textAlign:'center'}}>There is nothing to show.</td>
+                </tr>
+                </>
+                }
+               
               </tbody>
               : <>Wait </>}
           </table>
@@ -256,6 +267,33 @@ const Cart = () => {
           </Button>
           <Button variant="gradient" color="red" onClick={(e)=>{setDialog({open:false,item:{}})
                     handleDelete(dialog.item?._id)}}>
+            <span>Confirm</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+      <Dialog
+        open={claerAll}
+        handler={(e)=>{setClaerAll(false)}}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogBody divider>
+          Are you sure you Want to clear cart.
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            color="grey"
+            variant='gradient'
+            onClick={(e)=>{setClaerAll(false)}}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button variant="gradient" color="red" onClick={(e)=>{
+                    setClaerAll(false)
+                    handleClearCart()}}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
