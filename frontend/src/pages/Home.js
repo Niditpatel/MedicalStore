@@ -114,7 +114,22 @@ const Home = () => {
     //   setDataForCart([...dataForCart, maal])
     // }
   }
-  console.log("dataForCart",dataForCart);
+
+const handleAddCart = async() =>{
+  try {
+    const data = await axios.post(
+      `${BASE_URL}/cart/new`,
+      dataForCart
+    );
+    if (data.data.success) {
+      console.log(data.data.message)
+      navigate('/cart');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
   const TABLE_HEAD = [ <Checkbox onChange={(e) => {addAll(e.target.checked) }} />, "Product Name", "Packing", "Supplier", "", ""];
   return (
 
@@ -123,28 +138,8 @@ const Home = () => {
         <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
           <div className="mb-3 flex justify-between items-center">
             <Typography> Products </Typography>
-
-            {/* <div className="items-end ">
-                        <Popover animate={{
-                            mount: { scale: 1, y: 0 },
-                            unmount: { scale: 0, y: 25 },
-                        }} placement="bottom" >
-                            <PopoverHandler>
-                                {/* <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button> 
-                            </PopoverHandler>
-                            <PopoverContent className="w-96">
-                                {/* <DateRange
-                                    editableDateInputs={true}
-                                    onChange={handleSelect}
-                                    moveRangeOnFirstSelection={false}
-                                    ranges={[selectionRange]}
-                                /> 
-                            </PopoverContent>
-                        </Popover>
-                        <Button className="mt-6 m-0 mr-3" onClick={addFinalCart}>Add to cart</Button>
-                      </div> */}
            <div style={{display:'flex',gap:5}}> <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-product") }}>Add Product</Button>
-           <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-product") }}>Add Product</Button></div>
+           <Button className="mt-6 m-0 " onClick={(e) => { handleAddCart(); }}>Add to Cart</Button></div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
             <Input
