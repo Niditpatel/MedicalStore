@@ -91,7 +91,6 @@ const Home = () => {
     navigate('/edit-product/' + id)
   }
   const addForCart = (maal) => {
-    debugger
     const isExists = dataForCart?.find(item => item._id == maal._id)
     if (isExists !== null && isExists) {
       const newData = dataForCart?.filter(item => item._id !== maal._id)
@@ -101,7 +100,6 @@ const Home = () => {
     }
   }
   const addAll = (e) => {
-    debugger
     if(e === true){
       setDataForCart(data)
     }
@@ -145,7 +143,8 @@ const Home = () => {
                         </Popover>
                         <Button className="mt-6 m-0 mr-3" onClick={addFinalCart}>Add to cart</Button>
                       </div> */}
-            <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-product") }}>Add Product</Button>
+           <div style={{display:'flex',gap:5}}> <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-product") }}>Add Product</Button>
+           <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-product") }}>Add Product</Button></div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
             <Input
@@ -209,7 +208,9 @@ const Home = () => {
                     <tr className="h-4" key={index}>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
-                          <Checkbox onChange={(e) => { addForCart(item) }} />
+                          <Checkbox onChange={(e) => { addForCart(item) }}
+                          checked={dataForCart.find(A=>A._id === item._id) ? true :false}
+                          value={dataForCart.find(A=>A._id === item._id) ? true :false} />
                         </div>
                       </td>
                       <td className={classes}>
