@@ -13,7 +13,10 @@ import {
   Popover,
   PopoverHandler,
   PopoverContent,
-  CardFooter
+  CardFooter,
+  Dialog,
+  DialogBody,
+  DialogFooter
 } from "@material-tailwind/react";
 import { DateRange, DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
@@ -36,6 +39,8 @@ const Cart = () => {
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
+
+  const [dialog,setDialog] = useState({open:false,item:{}})
 
   const getTotalProducts = async () => {
     try {
@@ -207,7 +212,7 @@ const Cart = () => {
                       <td className={classes}>
                         <Button
                           variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
-                          onClick={(e) => handleDelete(item?._id)}
+                          onClick={(e) => setDialog({open:true,item:item})}
                         >X
                         </Button>
                       </td>
@@ -228,38 +233,33 @@ const Cart = () => {
             />
           </Stack>
         </CardFooter>
-        {/* <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-  <Button variant="outlined" size="sm">
-    Previous
-  </Button>
-  <div className="flex items-center gap-2">
-    <IconButton variant="outlined" size="sm">
-      1
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      2
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      3
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      ...
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      8
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      9
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      10
-    </IconButton>
-  </div>
-  <Button variant="outlined" size="sm">
-    Next
-  </Button>
-</CardFooter> */}
       </Card>
+      <Dialog
+        open={dialog.open}
+        handler={(e)=>{setDialog({open:false,item:{}})}}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogBody divider>
+          Are you sure you Want to delete this item <span className="font-bold">{dialog?.item?.productName}</span>.
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            color="grey"
+            variant='gradient'
+            onClick={(e)=>{setDialog({open:false,item:{}})}}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button variant="gradient" color="red" onClick={(e)=>{setDialog({open:false,item:{}})
+                    handleDelete(dialog.item?._id)}}>
+            <span>Confirm</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </div>
 
   );
