@@ -40,7 +40,7 @@ const Home = () => {
   const getTotalProducts = async () => {
     try {
       const res = await axios.get(
-        `/api/v1/totalProducts`
+        `${BASE_URL}totalProducts`
       );
       setTotalProduct(res.data.total)
     } catch (error) {
@@ -50,7 +50,7 @@ const Home = () => {
   const getData = async () => {
     try {
       const data = await axios.get(
-        `/api/v1//search/?` + 'supplierName=' +
+        `${BASE_URL}search/?` + 'supplierName=' +
         searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +'&offset=' + page_Index
       );
       if (data.data.success) {
@@ -70,7 +70,7 @@ const Home = () => {
   const handleDelete = async (id) => {
     try {
       const data = await axios.delete(
-        `/api/v1//product` + id
+        `${BASE_URL}/product` + id
       );
       if (data.data.success) {
         console.log(data.data.message)

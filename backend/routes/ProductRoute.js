@@ -87,27 +87,6 @@ router.delete("/product/:id",
     }
 });
 
-// router.get("/search",
-//     async (req, res) => {
-//         const {productName,supplierName,storeName} = req.query;
-//         const product = productName ? productName :''
-//         const supplier = supplierName ? supplierName :''
-//         const store = storeName? storeName : '' 
-
-//     const data = await Products.find({$or:[
-//         {productName: {'$regex':product,'$options':'i'}},
-//     {'store.storeName':{'$regex':store,'$options':'i'}},
-//     {'supplier.supplierName':{'$regex':supplier,'$options':'i'}}
-// ]
-// })
-//     .populate({path:'store',select:'storeName contactNumber -_id'})
-//     .populate({path:'supplier',supplierName:{'$regex':supplier,'$options':'i'},select:'supplierName contactNumber -_id'});
-   
-//         res.status(200).json({
-//             success: true,
-//             data:data
-//         })
-// });
 
 router.get("/search",
     async (req, res) => {

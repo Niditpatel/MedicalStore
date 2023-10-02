@@ -45,7 +45,7 @@ export default function EntitrysList() {
         const storeData = await getStoreData();
         try {
             const res = await fetch(
-                `/api/v1//tabs/Entries?_format=index`
+                `${BASE_URL}/tabs/Entries?_format=index`
             );
             const data = await res.json();
             const realData = Object.keys(data).map((key) => data[key])
@@ -90,7 +90,7 @@ export default function EntitrysList() {
     const getSupplierData = async () => {
         try {
             const res = await fetch(
-                `/api/v1//tabs/Suppliers?_format=index`
+                `${BASE_URL}/tabs/Suppliers?_format=index`
             );
             const data = await res.json();
             const realData = Object.keys(data).map((key) => data[key])
@@ -106,7 +106,7 @@ export default function EntitrysList() {
     const getStoreData = async () => {
         try {
             const res = await fetch(
-                `/api/v1/?_format=index`
+                `${BASE_URL}?_format=index`
             );
             const data = await res.json();
             const realData = Object.keys(data).map((key) => data[key])
@@ -122,7 +122,7 @@ export default function EntitrysList() {
     const getProductData = async () => {
         try {
             const res = await fetch(
-                `/api/v1//tabs/Products?_format=index`
+                `${BASE_URL}/tabs/Products?_format=index`
             );
             const data = await res.json();
             const realData = Object.keys(data).map((key) => data[key])
@@ -156,7 +156,7 @@ export default function EntitrysList() {
         e.preventDefault();
         try {
             const res = await fetch(
-                `/api/v1//tabs/Entries/entryId/${item?.entryId}`,
+                `${BASE_URL}/tabs/Entries/entryId/${item?.entryId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -194,7 +194,7 @@ export default function EntitrysList() {
         e.preventDefault();
         try {
             const res = await fetch(
-                `/api/v1//tabs/Carts`,
+                `${BASE_URL}/tabs/Carts`,
                 {
                     method: "POST",
                     headers: {

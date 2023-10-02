@@ -27,7 +27,7 @@ const Add = () => {
     e.preventDefault()
     navigate("/stores")
     try {
-      const submiData = await axios.post(`/api/v1/store/new`, data)
+      const submiData = await axios.post(`${BASE_URL}store/new`, data)
       if(submiData.success) {
       }
       // getAllUsers()

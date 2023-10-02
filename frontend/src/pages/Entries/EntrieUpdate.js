@@ -34,7 +34,7 @@ const Add = () => {
     const getData = async () => {
         try {
           const res = await fetch(
-            `/api/v1//tabs/Entries/search?entryId=${rowIndex}`
+            `${BASE_URL}/tabs/Entries/search?entryId=${rowIndex}`
           );
           const data = await res.json();
           setData(data[0]);
@@ -47,7 +47,7 @@ const Add = () => {
     e.preventDefault();
       try {
         const res = await fetch(
-          `/api/v1//tabs/Entries/${rowIndex}`,
+          `${BASE_URL}/tabs/Entries/${rowIndex}`,
           {
             method: "PUT",
             headers: {
@@ -67,7 +67,7 @@ const Add = () => {
   const getSupplierData = async () => {
     try {
       const res = await fetch(
-        `/api/v1//tabs/Suppliers?_format=index`
+        `${BASE_URL}/tabs/Suppliers?_format=index`
       );
       const data = await res.json();
       const realData = Object.keys(data).map((key) => data[key])
@@ -82,7 +82,7 @@ const Add = () => {
   const getStoreData = async () => {
     try {
       const res = await fetch(
-        `/api/v1/?_format=index`
+        `${BASE_URL}?_format=index`
       );
       const data = await res.json();
       const realData = Object.keys(data).map((key) => data[key])
@@ -97,7 +97,7 @@ const Add = () => {
   const getProductData = async () => {
     try {
         const res = await fetch(
-            `/api/v1//tabs/Products?_format=index`
+            `${BASE_URL}/tabs/Products?_format=index`
         );
         const data = await res.json();
         const realData = Object.keys(data).map((key) => data[key])

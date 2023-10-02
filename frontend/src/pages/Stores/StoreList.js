@@ -35,7 +35,7 @@ const Store = () => {
   const getData = async () => {
     try {
       const res = await axios.get(
-        `/api/v1/stores/?storeName=${searchData.storeName}&pageNo=${page_Index}`
+        `${BASE_URL}stores/?storeName=${searchData.storeName}&pageNo=${page_Index}`
       );
       console.log("res", res.data.stores);
       setData(res.data.stores)
@@ -46,7 +46,7 @@ const Store = () => {
   const getTotalStores = async () => {
     try {
       const res = await axios.get(
-        `/api/v1/totalStores`
+        `${BASE_URL}totalStores`
       );
       setTotalStore(res.data.total)
     } catch (error) {
@@ -62,7 +62,7 @@ const Store = () => {
 
   const handleDelete = async (e, id) => {
     try {
-      const data = await axios.delete(`/api/v1/store / ${id}`)
+      const data = await axios.delete(`${BASE_URL}store / ${id}`)
       getData();
       if (data.data.success) {
         alert("deleted successfully");

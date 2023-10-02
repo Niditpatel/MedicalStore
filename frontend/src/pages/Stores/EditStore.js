@@ -26,7 +26,7 @@ const Edit = () => {
   const getData = async () => {
     try {
       const res = await axios.get(
-        `/api/v1/store/${rowIndex}`
+        `${BASE_URL}store/${rowIndex}`
       );
       console.log("ssdsata", res.data.store);
 
@@ -47,7 +47,7 @@ const Edit = () => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `/api/v1/store/${rowIndex}`, data
+        `${BASE_URL}store/${rowIndex}`, data
       );
       if (res.data.success) {
         navigate("/stores")
@@ -58,7 +58,10 @@ const Edit = () => {
   };
   return (
     <div className="flex items-center justify-center">
-      <form style={{ maxWidth: 600, margin: "auto" }}>
+      <form style={{ maxWidth: 600, margin: "auto" }} onSubmit={(e)=>{
+        e.preventDefault();
+        handleSubmit();
+      }}>
         <Card className="w-96">
           <CardHeader floated={false}>
             <Typography className="text-center text-2xl">Store</Typography>

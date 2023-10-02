@@ -69,7 +69,7 @@ const Cart = () => {
     const storeData = await getStoreData();
     try {
       const res = await fetch(
-        `/api/v1//tabs/Carts?_format=index`
+        `${BASE_URL}/tabs/Carts?_format=index`
       );
       const data = await res.json();
       const realData = Object.keys(data).map((key) => data[key])
@@ -94,7 +94,7 @@ const Cart = () => {
   const getSupplierData = async () => {
     try {
       const res = await fetch(
-        `/api/v1//tabs/Suppliers?_format=index`
+        `${BASE_URL}/tabs/Suppliers?_format=index`
       );
       const data = await res.json();
       const realData = Object.keys(data).map((key) => data[key])
@@ -110,7 +110,7 @@ const Cart = () => {
   const getStoreData = async () => {
     try {
       const res = await fetch(
-        `/api/v1/?_format=index`
+        `${BASE_URL}?_format=index`
       );
       const data = await res.json();
       const realData = Object.keys(data).map((key) => data[key])
@@ -126,7 +126,7 @@ const Cart = () => {
   const getProductData = async () => {
     try {
       const res = await fetch(
-        `/api/v1//tabs/Products?_format=index`
+        `${BASE_URL}/tabs/Products?_format=index`
       );
       const data = await res.json();
       const realData = Object.keys(data).map((key) => data[key])
@@ -191,7 +191,7 @@ const Cart = () => {
   const handleDelete = async (rowIndex) => {
     try {
       const res = await fetch(
-        `/api/v1//tabs/Carts/${rowIndex}`,
+        `${BASE_URL}/tabs/Carts/${rowIndex}`,
         {
           method: "DELETE",
         }
