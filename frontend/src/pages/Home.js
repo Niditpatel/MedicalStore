@@ -32,7 +32,7 @@ const Home = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [dataForCart, setDataForCart] = useState([]);
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
@@ -51,7 +51,7 @@ const Home = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +'&offset=' + page_Index
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -65,7 +65,7 @@ const Home = () => {
   useEffect(() => {
     getData();
     getTotalProducts();
-  }, [searchData,page_Index]);
+  }, [searchData, page_Index]);
 
   const handleDelete = async (id) => {
     try {
@@ -90,8 +90,34 @@ const Home = () => {
   const handleEdit = (id) => {
     navigate('/edit-product/' + id)
   }
-
-  const TABLE_HEAD = ["", "Product Name", "Packing", "Supplier", "", ""];
+  const addForCart = (maal) => {
+    debugger
+    const isExists = dataForCart?.find(item => item._id == maal._id)
+    if (isExists !== null && isExists) {
+      const newData = dataForCart?.filter(item => item._id !== maal._id)
+      setDataForCart(newData);
+    } else {
+      setDataForCart([...dataForCart, maal])
+    }
+  }
+  const addAll = (e) => {
+    debugger
+    if(e === true){
+      setDataForCart(data)
+    }
+    else{
+      setDataForCart([])
+    }
+    // const isExists = dataForCart?.find(item => item._id == maal._id)
+    // if (isExists !== null && isExists) {
+    //   const newData = dataForCart?.filter(item => item._id !== maal._id)
+    //   setDataForCart(newData);
+    // } else {
+    //   setDataForCart([...dataForCart, maal])
+    // }
+  }
+  console.log("dataForCart",dataForCart);
+  const TABLE_HEAD = [ <Checkbox onChange={(e) => {addAll(e.target.checked) }} />, "Product Name", "Packing", "Supplier", "", ""];
   return (
 
     <div className="container">
@@ -160,7 +186,7 @@ const Home = () => {
                   <th
                     key={head}
                     className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
+                    >
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -183,7 +209,7 @@ const Home = () => {
                     <tr className="h-4" key={index}>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
-                          {/* <Checkbox onChange={(e) => { addForCart(item) }} /> */}
+                          <Checkbox onChange={(e) => { addForCart(item) }} />
                         </div>
                       </td>
                       <td className={classes}>
