@@ -118,12 +118,13 @@ const Home = () => {
 const handleAddCart = async() =>{
   try {
     const data = await axios.post(
-      `${BASE_URL}/cart/new`,
-      dataForCart
+      `${BASE_URL}cart/new`,
+      dataForCart?.map(item=>item._id)?.filter(item=>item !== undefined)
     );
     if (data.data.success) {
-      console.log(data.data.message)
       navigate('/cart');
+    }else{
+      console.log(data.data.error)
     }
   } catch (error) {
     console.log(error);

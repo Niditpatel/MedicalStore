@@ -5,16 +5,30 @@ const Products = require("../models/ProductSchema")
 
 
 router.post("/cart/new",async (req, res) => {
-    const{products} = req.body;
-    const cart = await (await Products.find({_id:{$in:products}})).forEach((doc)=>{
-        Carts.bulkSave(doc)
-    })
-    console.log(products)
-    // Carts.insertMany(Products.find({_id:{$in:products}}))
-    res.status(200).json({
-        success: true,
-        product:cart
-    })
+    const products = req.body;
+
+    const  cartProducts =  await  Products.find({_id:{$in:products}})
+       if(cartProducts && cartProducts?.length >0){
+        cartProducts.forEach(function(doc){
+            const newCart = new Carts({
+                productName:doc.productName
+                ,packing:doc.packing
+                ,store:doc.store
+                ,supplier:doc.supplier
+                ,isDeleted:false
+                ,isCart:false
+            })
+            newCart.save();
+         });
+         res.status(200).json({
+            success: true,
+        })
+       }else{
+        res.status(200).json({
+            success: false,
+        })
+       }
+    
 }
 );
 
@@ -72,7 +86,7 @@ router.delete("/carts",
     }
 });
 
-router.get("cart/search",
+router.get("/cart/search",
     async (req, res) => {
         const { productName,supplierName,storeName, offset, limit, sort_by, order } = req.query;
         const product = productName !== undefined ? productName :''

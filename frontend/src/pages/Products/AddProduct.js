@@ -173,7 +173,7 @@ export default function AddProduct() {
               <Button size="sm" className="mt-6" type="submit">
                 Save
               </Button>
-              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/products"); })}>
+              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/"); })}>
                 Cancle
               </Button>
             </div>
