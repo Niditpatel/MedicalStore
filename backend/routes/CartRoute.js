@@ -56,6 +56,24 @@ router.delete("/cart/:id",
     }
 });
 
+router.delete("/carts",
+    async (req, res) => {
+    const cart = await Carts.findById(req.params.id);
+
+    if (!cart) {
+        res.status(200).json({
+            success: true,
+            message: `cart not Found`
+        })
+    }else{
+        await Carts.findByIdAndDelete(req.params.id);
+        res.status(200).json({
+            success: true,
+            message: `cart deleted succesfully `
+        })
+    }
+});
+
 router.get("cart/search",
     async (req, res) => {
         const { productName,supplierName,storeName, offset, limit, sort_by, order } = req.query;
