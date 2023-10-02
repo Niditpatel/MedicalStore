@@ -112,7 +112,7 @@ const Cart = () => {
       <Card className="h-full w-full	">
         <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
           <div className="mb-3 flex justify-between items-center">
-            <Typography> Products </Typography>
+            <Typography> Cart </Typography>
             <div className="flex gap-3">
               <Button className="mt-6 m-0 " onClick={(e) => { navigate("/") }}>Add In Cart</Button>
               <Button className="mt-6 m-0 " onClick={(e)=>{setClaerAll(true)}}>claer Cart</Button>
