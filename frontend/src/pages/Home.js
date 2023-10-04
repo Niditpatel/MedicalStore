@@ -106,13 +106,6 @@ const Home = () => {
     else{
       setDataForCart([])
     }
-    // const isExists = dataForCart?.find(item => item._id == maal._id)
-    // if (isExists !== null && isExists) {
-    //   const newData = dataForCart?.filter(item => item._id !== maal._id)
-    //   setDataForCart(newData);
-    // } else {
-    //   setDataForCart([...dataForCart, maal])
-    // }
   }
 
 const handleAddCart = async() =>{

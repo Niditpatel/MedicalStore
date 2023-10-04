@@ -42,7 +42,7 @@ export function StickyNavbar() {
             size="sm"
             onClick={((e) => { navigate("/"); })}
           >
-            <span>Home</span>
+            <span>Company</span>
           </Button>
           <Button
             variant="gradient"
@@ -90,7 +90,7 @@ export function StickyNavbar() {
             className="hidden lg:inline-block"
             onClick={((e) => { navigate("/"); })}
           >
-            <span>Home</span>
+            <span>Company</span>
           </Button>
           <Button
             variant="gradient"

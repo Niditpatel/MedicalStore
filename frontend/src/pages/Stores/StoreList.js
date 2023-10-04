@@ -60,9 +60,9 @@ const Store = () => {
     getTotalStores();
   }, [searchData,page_Index]);
 
-  const handleDelete = async (e, id) => {
+  const handleDelete = async ( id) => {
     try {
-      const data = await axios.delete(`${BASE_URL}store / ${id}`)
+      const data = await axios.delete(`${BASE_URL}store/${id}`)
       getData();
       if (data.data.success) {
         alert("deleted successfully");
