@@ -23,10 +23,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route exact path="/cart" element={<Cart />} />
-        <Route exact path="/stores" element={<Store />} />
+        <Route exact path="/company" element={<Store />} />
         <Route exact path="/entries" element={<EntriesList />} />
-        <Route exact path="/add-store" element={<AddStore />} />
-        <Route exact path="/edit-store/:rowIndex" element={<EditStore />} />
+        <Route exact path="/add-company" element={<AddStore />} />
+        <Route exact path="/edit-company/:rowIndex" element={<EditStore />} />
         <Route exact path="/products" element={<ProductList />} />
         <Route exact path="/add-product" element={<AddProduct />} />
         <Route exact path="/edit-product/:rowIndex" element={<EditProduct />} />

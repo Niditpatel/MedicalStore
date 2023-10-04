@@ -26,9 +26,9 @@ export function StickyNavbar() {
       <Button
             variant="gradient"
             size="sm"
-            onClick={((e) => { navigate("/stores"); })}
+            onClick={((e) => { navigate("/company"); })}
           >
-            <span>Store</span>
+            <span>Company</span>
           </Button>
           <Button
             variant="gradient"
@@ -42,7 +42,7 @@ export function StickyNavbar() {
             size="sm"
             onClick={((e) => { navigate("/"); })}
           >
-            <span>Company</span>
+            <span>Home</span>
           </Button>
           <Button
             variant="gradient"
@@ -72,9 +72,9 @@ export function StickyNavbar() {
             variant="gradient"
             size="sm"
             className="hidden lg:inline-block"
-            onClick={((e) => { navigate("/stores"); })}
+            onClick={((e) => { navigate("/company"); })}
           >
-            <span>Store</span>
+            <span>Company</span>
           </Button>
           <Button
             variant="gradient"
@@ -90,7 +90,7 @@ export function StickyNavbar() {
             className="hidden lg:inline-block"
             onClick={((e) => { navigate("/"); })}
           >
-            <span>Company</span>
+            <span>Home</span>
           </Button>
           <Button
             variant="gradient"

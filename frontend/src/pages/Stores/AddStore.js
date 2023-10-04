@@ -25,7 +25,7 @@ const Add = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    navigate("/stores")
+    navigate("/company")
     try {
       const submiData = await axios.post(`${BASE_URL}store/new`, data)
       if(submiData.success) {
@@ -40,7 +40,7 @@ const Add = () => {
     <div class="flex items-center justify-center">
       <Card className="w-96">
         <CardHeader floated={false}>
-          <Typography className="text-center text-2xl">Store</Typography>
+          <Typography className="text-center text-2xl">Company</Typography>
         </CardHeader>
         <CardBody>
           <form onSubmit={handleSubmit}>
@@ -68,7 +68,7 @@ const Add = () => {
               <Button size="sm" className="mt-6" type="submit"  >
                 Save
               </Button>
-              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/stores"); })}>
+              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/company"); })}>
                 Cancle
               </Button>
             </div>

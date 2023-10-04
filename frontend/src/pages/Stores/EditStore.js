@@ -50,7 +50,7 @@ const Edit = () => {
         `${BASE_URL}store/${rowIndex}`, data
       );
       if (res.data.success) {
-        navigate("/stores")
+        navigate("/company")
       }
     } catch (error) {
       console.log(error);
@@ -64,7 +64,7 @@ const Edit = () => {
       }}>
         <Card className="w-96">
           <CardHeader floated={false}>
-            <Typography className="text-center text-2xl">Store</Typography>
+            <Typography className="text-center text-2xl">Company</Typography>
           </CardHeader>
           <CardBody>
             <form className="mb-2  max-w-screen-lg ">
@@ -78,7 +78,7 @@ const Edit = () => {
                 <Button size="sm" className="mt-6" type="submit"  >
                   Update
                 </Button>
-                <Button size="sm" className="mt-6" onClick={((e) => { navigate("/stores"); })}>
+                <Button size="sm" className="mt-6" onClick={((e) => { navigate("/company"); })}>
                   Cancle
                 </Button>
               </div>

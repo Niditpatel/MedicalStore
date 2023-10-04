@@ -77,15 +77,15 @@ const Store = () => {
     setSearchData({ ...searchData, [e.target.name]: e.target.value });
 
   const handleAdd = () => {
-    navigate('/add-store');
+    navigate('/add-company');
   }
   const handleEdit = (index) => {
-    navigate(`/edit-store/${index}`)
+    navigate(`/edit-company/${index}`)
   }
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
   }
-  const TABLE_HEAD = ["Store Name", "Contact Number", "", ""];
+  const TABLE_HEAD = ["Company Name", "Contact Number", "", ""];
   return (
     <div className="container ">
       <div className="mb-3 flex gap-2 justify-end">
@@ -95,8 +95,8 @@ const Store = () => {
         <Card className="h-full w-11/12	">
           <CardHeader floated={false} shadow={false} className="	 rounded-none">
             <div className="w-full flex justify-between mb-3 items-center" style={{ justifyContent: 'space-between' }}>
-              <Typography> Store List</Typography>
-              <Button size="sm" className="mt-6 m-0" onClick={handleAdd}>Add Store</Button>
+              <Typography> Company List</Typography>
+              <Button size="sm" className="mt-6 m-0" onClick={handleAdd}>Add Company</Button>
             </div>
             <div className="w-full flex justify-between gap-10 items-center">
               <Input
