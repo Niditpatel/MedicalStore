@@ -44,15 +44,22 @@ export default function AddProduct() {
     }
   };
 
-  const getSuppliers = async (inputValue) => {
+  const getSuppliers = async (inputValue,loadMode) => {
     try {
       const res = await axios.get(
         `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
       );
-      if(res.data.success){
-        setSuppliers(res.data.suppliers?.map((item=>{
+      if(res.data.success ){
+
+        const suppliers = res.data.suppliers?.map((item=>{
           return {...item,value:item._id,label:item.supplierName}
-        })))
+        }))
+        if(!loadMode){
+          setSuppliers(suppliers)
+        }
+        return suppliers
+      }else{
+        return null
       }
     } catch (error) {
       console.log(error);
@@ -82,7 +89,8 @@ export default function AddProduct() {
   };
 
   const searchSupplier =  async (inputValue) => {
-      const res = await getSuppliers(inputValue);
+    debugger
+      const res = await getSuppliers(inputValue,true);
       const institutes = res.map((val) => {
         return { label: val.supplierName, value: val._id };
       });
@@ -91,7 +99,7 @@ export default function AddProduct() {
 
   useEffect(()=>{
     getStores('')
-    getSuppliers('')
+    getSuppliers('',false)
   },[])
   
   return (
