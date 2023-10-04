@@ -196,7 +196,7 @@ const handleAddCart = async() =>{
               type="text"
               size="sm"
               className="form-control border rounded"
-              label="Store Name"
+              label="Company Name"
               name="storeName"
               value={searchData.storeName}
               onChange={handleChange}

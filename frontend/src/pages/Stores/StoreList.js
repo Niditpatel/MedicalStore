@@ -103,7 +103,7 @@ const Store = () => {
                 type="text"
                 size="md"
                 className="form-control border rounded "
-                label="Store Name"
+                label="Company Name"
                 name="storeName"
                 value={searchData.storeName}
                 onChange={handleChange}
