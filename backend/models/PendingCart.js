@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const cartSchema = new mongoose.Schema({
+const pendingCartSchema = new mongoose.Schema({
     productName: { 
         type: String,
         require: [true, "Please enter your Store name"],
@@ -26,4 +26,4 @@ const cartSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-module.exports = mongoose.model("carts", cartSchema);
+module.exports = mongoose.model("pendingCarts", pendingCartSchema);
