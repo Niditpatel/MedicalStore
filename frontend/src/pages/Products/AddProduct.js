@@ -28,31 +28,44 @@ export default function AddProduct() {
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
-  const getStores = async (inputValue) => {
+  const getStores = async (inputValue,loadMode) => {
     try {
       const res = await axios.get(
         `${BASE_URL}storesSelect/?storeName=`+ inputValue
       );
       if(res.data.success){
-          setStores(res.data.stores?.map(item=>
-            {
-            return {...item,value:item?._id,label:item.storeName}
-          }))
+        const stores = res.data.stores?.map(item=>
+          {
+          return {...item,value:item?._id,label:item.storeName}
+        })
+        if(!loadMode){
+          setStores(stores)
+        }
+        return stores
+      }else{
+        return null
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getSuppliers = async (inputValue) => {
+  const getSuppliers = async (inputValue,loadMode) => {
     try {
       const res = await axios.get(
         `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
       );
-      if(res.data.success){
-        setSuppliers(res.data.suppliers?.map((item=>{
+      if(res.data.success ){
+
+        const suppliers = res.data.suppliers?.map((item=>{
           return {...item,value:item._id,label:item.supplierName}
-        })))
+        }))
+        if(!loadMode){
+          setSuppliers(suppliers)
+        }
+        return suppliers
+      }else{
+        return null
       }
     } catch (error) {
       console.log(error);
@@ -74,7 +87,7 @@ export default function AddProduct() {
   };
 
   const searchStore =  async (inputValue) => {
-      const res = await getStores(inputValue);
+      const res = await getStores(inputValue,true);
       const institutes = res.map((val) => {
         return { label: val.storeName, value: val._id };
       });
@@ -82,7 +95,8 @@ export default function AddProduct() {
   };
 
   const searchSupplier =  async (inputValue) => {
-      const res = await getSuppliers(inputValue);
+    debugger
+      const res = await getSuppliers(inputValue,true);
       const institutes = res.map((val) => {
         return { label: val.supplierName, value: val._id };
       });
@@ -90,8 +104,8 @@ export default function AddProduct() {
   };
 
   useEffect(()=>{
-    getStores('')
-    getSuppliers('')
+    getStores('',false)
+    getSuppliers('',false)
   },[])
   
   return (
