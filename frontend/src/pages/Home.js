@@ -24,6 +24,7 @@ import {
   Pagination
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
+import moment from "moment/moment";
 
 
 
@@ -36,6 +37,8 @@ const Home = () => {
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   const getTotalProducts = async () => {
     try {
@@ -62,6 +65,26 @@ const Home = () => {
   };
 
 
+  const handleSelect = async (date) => {
+    try {
+      const data = await axios.get(
+        `${BASE_URL}search/?` + 'supplierName=' +
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index +
+        '&start_date=' +date.selection.startDate+
+        '&end_date=' +date.selection.endDate
+      );
+      if (data.data.success) {
+        setData(data.data.data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setStartDate(date.selection.startDate);
+    setEndDate(date.selection.endDate);
+    setData(data);
+  };
+
+
   useEffect(() => {
     getData();
     getTotalProducts();
@@ -70,7 +93,7 @@ const Home = () => {
   const handleDelete = async (id) => {
     try {
       const data = await axios.delete(
-        `${BASE_URL}/product` + id
+        `${BASE_URL}product/` + id
       );
       if (data.data.success) {
         console.log(data.data.message)
@@ -113,7 +136,14 @@ const Home = () => {
     // } else {
     //   setDataForCart([...dataForCart, maal])
     // }
+
   }
+
+  const selectionRange = {
+    startDate: startDate,
+    endDate: endDate,
+    key: 'selection',
+}
 
 const handleAddCart = async() =>{
   try {
@@ -140,7 +170,26 @@ const handleAddCart = async() =>{
           <div className="mb-3 flex justify-between items-center">
             <Typography> Products </Typography>
            <div style={{display:'flex',gap:5}}> <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-product") }}>Add Product</Button>
-           <Button className="mt-6 m-0 " onClick={(e) => { handleAddCart(); }}>Add to Cart</Button></div>
+           <Button className="mt-6 m-0 " onClick={(e) => { handleAddCart(); }}>Add to Cart</Button>
+           <div>
+           <Popover animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0, y: 25 },
+            }} placement="bottom" >
+                <PopoverHandler>
+                    <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
+                </PopoverHandler>
+                <PopoverContent className="w-96">
+                    <DateRange
+                        editableDateInputs={true}
+                        onChange={handleSelect}
+                        moveRangeOnFirstSelection={false}
+                        ranges={[selectionRange]}
+                    />
+                </PopoverContent>
+            </Popover>
+           </div>
+           </div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
             <Input
@@ -265,47 +314,18 @@ const handleAddCart = async() =>{
         <CardFooter className="pt-0 print:hidden">
           <Stack>
             <Pagination
-              count={Math.ceil(totalProducts / 10)}
+              count={Math.ceil(totalProducts / 5)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
           </Stack>
         </CardFooter>
-        {/* <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-  <Button variant="outlined" size="sm">
-    Previous
-  </Button>
-  <div className="flex items-center gap-2">
-    <IconButton variant="outlined" size="sm">
-      1
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      2
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      3
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      ...
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      8
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      9
-    </IconButton>
-    <IconButton variant="text" size="sm">
-      10
-    </IconButton>
-  </div>
-  <Button variant="outlined" size="sm">
-    Next
-  </Button>
-</CardFooter> */}
       </Card>
     </div>
 
   );
 };
+
+
 
 export default Home;

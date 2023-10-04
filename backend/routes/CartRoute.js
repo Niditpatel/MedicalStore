@@ -94,7 +94,8 @@ router.get("/cart/search",
         const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
         const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
         const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
-
+        // const start_date = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
+        // const end_date = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
         const filterQuery =  {productName:{'$regex':product,'$options':'i'}}
        const lookupQuery1 = [
             {
