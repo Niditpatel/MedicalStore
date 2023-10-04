@@ -39,25 +39,26 @@ const Store = () => {
         `${BASE_URL}stores/?storeName=${searchData.storeName}&pageNo=${page_Index}&pageSize=${page_Size}`
       );
       setData(res.data.stores)
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const getTotalStores = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}totalStores`
-      );
       setTotalStore(res.data.total)
     } catch (error) {
       console.log(error);
     }
   };
+  // const getTotalStores = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `${BASE_URL}totalStores`
+  //     );
+  //     setTotalStore(res.data.total)
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
 
   useEffect(() => {
     getData();
-    getTotalStores();
+    // getTotalStores();
   }, [searchData, page_Index, page_Size]);
 
   const handleDelete = async (id) => {
@@ -85,9 +86,9 @@ const Store = () => {
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
   }
-  const TABLE_HEAD = ["Company Name", "Contact Number", "", ""];
+  const TABLE_HEAD = ["Company Name", "Contact Number", ""];
   return (
-    <div className="container ">
+    <div className="container mb-8 ">
       <div className="mb-3 flex gap-2 justify-end">
 
       </div>
@@ -134,8 +135,8 @@ const Store = () => {
                 {data?.map((item, index) => {
                   const isLast = index === data.length - 1;
                   const classes = isLast
-                    ? "p-1"
-                    : "p-1 border-b border-blue-gray-50";
+                    ? "py-1 px-2"
+                    : "py-1 px-2 border-b border-blue-gray-50";
                   return (
                     <tr className="h-4" key={index}>
                       <td className={classes}>
@@ -177,10 +178,8 @@ const Store = () => {
                         >
                           &#x1F589;
                         </Button>
-                      </td>
-                      <td className={classes}>
                         <Button
-                          className="btn btn-sm btn-danger ms-1"
+                          className="btn btn-sm btn-danger ms-2"
                           variant="gradient"
                           size="sm"
                           color='red'
@@ -197,9 +196,9 @@ const Store = () => {
             </table>
           </CardBody>
           <CardFooter className="pt-0 ">
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex' ,justifyContent:'space-between'}}>
               <Pagination
-                count={Math.ceil(totalStore / 10)}
+                count={Math.ceil(totalStore / page_Size)}
                 page={page_Index}
                 onChange={handleChangePageNew}
               />
@@ -207,6 +206,7 @@ const Store = () => {
                 defaultValue={options[0]}
                 onChange={(e) => {
                   setPage_Size(parseInt(e?.value))
+                  setPage_Index(1)
                 }} options={options} />
             </div>
           </CardFooter>
@@ -225,20 +225,20 @@ const Store = () => {
           Are you sure you Want to delete store <span className="font-bold">{dialog?.item?.storeName}</span>.
         </DialogBody>
         <DialogFooter>
-          <Button
-            variant="text"
-            color="grey"
-            variant='gradient'
-            onClick={(e) => { setDialog({ open: false, item: {} }) }}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button variant="gradient" color="red" onClick={(e) => {
+          <Button variant="gradient" color="grey" onClick={(e) => {
             setDialog({ open: false, item: {} })
             handleDelete(dialog.item?._id)
-          }}>
+          }}
+          className="mr-1"
+          >
             <span>Confirm</span>
+          </Button>
+          <Button
+            color="grey"
+            variant='text'
+            onClick={(e) => { setDialog({ open: false, item: {} }) }}
+          >
+            <span>Cancel</span>
           </Button>
         </DialogFooter>
       </Dialog>

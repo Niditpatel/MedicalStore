@@ -58,16 +58,22 @@ const Edit = () => {
   };
   return (
     <div className="flex items-center justify-center">
-      <form style={{ maxWidth: 600, margin: "auto" }} onSubmit={(e)=>{
+      <Card className="min-w-[320px] max-w-[520px] w-full">
+      {/* <form style={{ maxWidth: 600, margin: "auto" }} onSubmit={(e)=>{
         e.preventDefault();
         handleSubmit();
-      }}>
-        <Card className="w-96">
-          <CardHeader floated={false}>
+      }}> */}
+          {/* <CardHeader floated={false}>
             <Typography className="text-center text-2xl">Company</Typography>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody>
-            <form className="mb-2  max-w-screen-lg ">
+            <form className="mb-2  max-w-screen-lg " onSubmit={(e)=>{
+               e.preventDefault();
+              handleSubmit();
+            }}>
+              <div className="mb-4 text-center">
+                <Typography className="text-2xl">Company</Typography>
+              </div>
               <div className="mb-4 flex flex-col gap-6">
                 <Input size="sm" label="Name" name="storeName" value={data?.storeName}
                   onChange={handleChange} />
@@ -84,8 +90,8 @@ const Edit = () => {
               </div>
             </form>
           </CardBody>
+      {/* </form> */}
         </Card>
-      </form>
     </div >
   );
 };
