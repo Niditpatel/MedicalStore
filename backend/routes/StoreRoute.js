@@ -18,7 +18,7 @@ router.post("/store/new",async (req, res) => {
 router.get("/stores", async (req, res) => {
     const storeName = req.query.storeName?req.query.storeName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
-    const pageSize = req.query.pageSize?req.query.pageSize:15
+    const pageSize = req.query.pageSize?req.query.pageSize:5
     const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
     res.status(200).json({
         success: true,
