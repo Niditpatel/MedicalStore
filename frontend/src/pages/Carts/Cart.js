@@ -27,6 +27,7 @@ import {
   Pagination
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
+import moment from "moment/moment";
 
 
 
@@ -34,14 +35,18 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
+  const [filterData, setFilterData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
 
-  const [dialog,setDialog] = useState({open:false,item:{}})
-  const [claerAll,setClaerAll] = useState(false);
+  const [dialog, setDialog] = useState({ open: false, item: {} })
+  const [claerAll, setClaerAll] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
 
   const getTotalProducts = async () => {
     try {
@@ -57,21 +62,36 @@ const Cart = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}cart/search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +'&offset=' + page_Index
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index
       );
       if (data.data.success) {
         setData(data.data.data)
+        setFilterData(data.data.data)
       }
     } catch (error) {
       console.log(error);
     }
   };
+  const selectionRange = {
+    startDate: startDate,
+    endDate: endDate,
+    key: 'selection',
+  }
 
-
+  const handleSelect = async (date) => {
+    let filtered = data.filter((product) => {
+      let productDate = new Date(product.createdAt);
+      return (productDate >= date.selection.startDate &&
+        productDate <= date.selection.endDate);
+    })
+    setStartDate(date.selection.startDate);
+    setEndDate(date.selection.endDate);
+    setFilterData(filtered);
+  };
   useEffect(() => {
     getData();
     getTotalProducts();
-  }, [searchData,page_Index]);
+  }, [searchData, page_Index]);
 
   const handleDelete = async (id) => {
     try {
@@ -93,7 +113,7 @@ const Cart = () => {
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
   }
-  const handleClearCart = async()=>{
+  const handleClearCart = async () => {
     try {
       const data = await axios.delete(
         `${BASE_URL}/carts`
@@ -116,7 +136,25 @@ const Cart = () => {
             <Typography> Cart </Typography>
             <div className="flex gap-3">
               <Button className="mt-6 m-0 " onClick={(e) => { navigate("/") }}>Add In Cart</Button>
-              <Button className="mt-6 m-0 " onClick={(e)=>{setClaerAll(true)}}>claer Cart</Button>
+              <Button className="mt-6 m-0 " onClick={(e) => { setClaerAll(true) }}>claer Cart</Button>
+              <div>
+                <Popover animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 },
+                }} placement="bottom" >
+                  <PopoverHandler>
+                    <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
+                  </PopoverHandler>
+                  <PopoverContent className="w-96">
+                    <DateRange
+                      editableDateInputs={true}
+                      onChange={handleSelect}
+                      moveRangeOnFirstSelection={false}
+                      ranges={[selectionRange]}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
@@ -172,66 +210,66 @@ const Cart = () => {
             </thead>
             {loading === false ?
               <tbody>
-                {data && data.length >0 ?
-                <>
-                 {data?.map((item, index,) => {
-                  const isLast = index === data.length - 1;
-                  const classes = isLast
-                    ? "p-1"
-                    : "p-1 border-b border-blue-gray-50";
-                  return (
-                    <tr className="h-4" key={index}>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          {/* <Checkbox onChange={(e) => { addForCart(item) }} /> */}
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.productName}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.packing}
-                        </Typography>
-                      </td>
-                      <td className={classes} >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.supplier?.map((item) => item?.supplierName)?.join(', ')}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Button
-                          variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
-                          onClick={(e) => setDialog({open:true,item:item})}
-                        >X
-                        </Button>
-                      </td>
+                {data && data.length > 0 ?
+                  <>
+                    {filterData?.map((item, index,) => {
+                      const isLast = index === data.length - 1;
+                      const classes = isLast
+                        ? "p-1"
+                        : "p-1 border-b border-blue-gray-50";
+                      return (
+                        <tr className="h-4" key={index}>
+                          <td className={classes}>
+                            <div className="flex items-center gap-3">
+                              {/* <Checkbox onChange={(e) => { addForCart(item) }} /> */}
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {item?.productName}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {item?.packing}
+                            </Typography>
+                          </td>
+                          <td className={classes} >
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {item?.supplier?.map((item) => item?.supplierName)?.join(', ')}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <Button
+                              variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
+                              onClick={(e) => setDialog({ open: true, item: item })}
+                            >X
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    },
+                    )}
+                  </>
+                  : <>
+                    <tr>
+                      <td colSpan={9} style={{ textAlign: 'center' }}>There is nothing to show.</td>
                     </tr>
-                  );
-                },
-                )}
-                </>
-                :<>
-                <tr>
-                  <td colSpan={9} style={{textAlign:'center'}}>There is nothing to show.</td>
-                </tr>
-                </>
+                  </>
                 }
-               
+
               </tbody>
               : <>Wait </>}
           </table>
@@ -248,7 +286,7 @@ const Cart = () => {
       </Card>
       <Dialog
         open={dialog.open}
-        handler={(e)=>{setDialog({open:false,item:{}})}}
+        handler={(e) => { setDialog({ open: false, item: {} }) }}
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
@@ -261,20 +299,22 @@ const Cart = () => {
           <Button
             color="grey"
             variant='gradient'
-            onClick={(e)=>{setDialog({open:false,item:{}})}}
+            onClick={(e) => { setDialog({ open: false, item: {} }) }}
             className="mr-1"
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="red" onClick={(e)=>{setDialog({open:false,item:{}})
-                    handleDelete(dialog.item?._id)}}>
+          <Button variant="gradient" color="red" onClick={(e) => {
+            setDialog({ open: false, item: {} })
+            handleDelete(dialog.item?._id)
+          }}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
       </Dialog>
       <Dialog
         open={claerAll}
-        handler={(e)=>{setClaerAll(false)}}
+        handler={(e) => { setClaerAll(false) }}
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
@@ -287,14 +327,15 @@ const Cart = () => {
           <Button
             color="grey"
             variant='gradient'
-            onClick={(e)=>{setClaerAll(false)}}
+            onClick={(e) => { setClaerAll(false) }}
             className="mr-1"
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="red" onClick={(e)=>{
-                    setClaerAll(false)
-                    handleClearCart()}}>
+          <Button variant="gradient" color="red" onClick={(e) => {
+            setClaerAll(false)
+            handleClearCart()
+          }}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>

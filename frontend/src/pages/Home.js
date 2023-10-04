@@ -10,12 +10,8 @@ import {
   Button,
   CardBody,
   Checkbox,
-  Popover,
-  PopoverHandler,
-  PopoverContent,
   CardFooter
 } from "@material-tailwind/react";
-import { DateRange, DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { BASE_URL } from "../Common";
@@ -24,7 +20,6 @@ import {
   Pagination
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
-import moment from "moment/moment";
 
 
 
@@ -37,8 +32,6 @@ const Home = () => {
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
 
   const getTotalProducts = async () => {
     try {
@@ -64,25 +57,6 @@ const Home = () => {
     }
   };
 
-
-  const handleSelect = async (date) => {
-    try {
-      const data = await axios.get(
-        `${BASE_URL}search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index +
-        '&start_date=' +date.selection.startDate+
-        '&end_date=' +date.selection.endDate
-      );
-      if (data.data.success) {
-        setData(data.data.data)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    setStartDate(date.selection.startDate);
-    setEndDate(date.selection.endDate);
-    setData(data);
-  };
 
 
   useEffect(() => {
@@ -123,10 +97,10 @@ const Home = () => {
     }
   }
   const addAll = (e) => {
-    if(e === true){
+    if (e === true) {
       setDataForCart(data)
     }
-    else{
+    else {
       setDataForCart([])
     }
     // const isExists = dataForCart?.find(item => item._id == maal._id)
@@ -139,29 +113,24 @@ const Home = () => {
 
   }
 
-  const selectionRange = {
-    startDate: startDate,
-    endDate: endDate,
-    key: 'selection',
-}
 
-const handleAddCart = async() =>{
-  try {
-    const data = await axios.post(
-      `${BASE_URL}cart/new`,
-      dataForCart?.map(item=>item._id)?.filter(item=>item !== undefined)
-    );
-    if (data.data.success) {
-      navigate('/cart');
-    }else{
-      console.log(data.data.error)
+  const handleAddCart = async () => {
+    try {
+      const data = await axios.post(
+        `${BASE_URL}cart/new`,
+        dataForCart?.map(item => item._id)?.filter(item => item !== undefined)
+      );
+      if (data.data.success) {
+        navigate('/cart');
+      } else {
+        console.log(data.data.error)
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
   }
-}
 
-  const TABLE_HEAD = [ <Checkbox onChange={(e) => {addAll(e.target.checked) }} />, "Product Name", "Packing", "Supplier", "", ""];
+  const TABLE_HEAD = [<Checkbox onChange={(e) => { addAll(e.target.checked) }} />, "Product Name", "Packing", "Supplier", "", ""];
   return (
 
     <div className="container">
@@ -169,27 +138,6 @@ const handleAddCart = async() =>{
         <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
           <div className="mb-3 flex justify-between items-center">
             <Typography> Products </Typography>
-           <div style={{display:'flex',gap:5}}> <Button className="mt-6 m-0 " onClick={(e) => { navigate("/add-product") }}>Add Product</Button>
-           <Button className="mt-6 m-0 " onClick={(e) => { handleAddCart(); }}>Add to Cart</Button>
-           <div>
-           <Popover animate={{
-                mount: { scale: 1, y: 0 },
-                unmount: { scale: 0, y: 25 },
-            }} placement="bottom" >
-                <PopoverHandler>
-                    <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
-                </PopoverHandler>
-                <PopoverContent className="w-96">
-                    <DateRange
-                        editableDateInputs={true}
-                        onChange={handleSelect}
-                        moveRangeOnFirstSelection={false}
-                        ranges={[selectionRange]}
-                    />
-                </PopoverContent>
-            </Popover>
-           </div>
-           </div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
             <Input
@@ -230,7 +178,7 @@ const handleAddCart = async() =>{
                   <th
                     key={head}
                     className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                    >
+                  >
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -254,8 +202,8 @@ const handleAddCart = async() =>{
                       <td className={classes}>
                         <div className="flex items-center gap-3">
                           <Checkbox onChange={(e) => { addForCart(item) }}
-                          checked={dataForCart.find(A=>A._id === item._id) ? true :false}
-                          value={dataForCart.find(A=>A._id === item._id) ? true :false} />
+                            checked={dataForCart.find(A => A._id === item._id) ? true : false}
+                            value={dataForCart.find(A => A._id === item._id) ? true : false} />
                         </div>
                       </td>
                       <td className={classes}>
