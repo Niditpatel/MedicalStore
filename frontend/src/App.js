@@ -7,6 +7,9 @@ import SupplierList from "./pages/Suppliers/SupplierList";
 import Cart from "./pages/Carts/Cart";
 import EditSupplier from "./pages/Suppliers/EditSupplier";
 import Store from "./pages/Stores/StoreList";
+import Buyer from "./pages/Buyer/BuyerList";
+import AddBuyer from "./pages/Buyer/AddBuyer";
+import EditBuyer from "./pages/Buyer/EditBuyer";
 import AddStore from "./pages/Stores/AddStore";
 import AddProduct from "./pages/Products/AddProduct";
 import ProductList from "./pages/Products/ProductList";
@@ -24,9 +27,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route exact path="/cart" element={<Cart />} />
         <Route exact path="/company" element={<Store />} />
-        <Route exact path="/entries" element={<EntriesList />} />
         <Route exact path="/add-company" element={<AddStore />} />
         <Route exact path="/edit-company/:rowIndex" element={<EditStore />} />
+        <Route exact path="/buyer" element={<Buyer />} />
+        <Route exact path="/add-buyer" element={<AddBuyer />} />
+        <Route exact path="/edit-buyer/:rowIndex" element={<EditBuyer />} />
+        <Route exact path="/entries" element={<EntriesList />} />
         <Route exact path="/products" element={<ProductList />} />
         <Route exact path="/add-product" element={<AddProduct />} />
         <Route exact path="/edit-product/:rowIndex" element={<EditProduct />} />

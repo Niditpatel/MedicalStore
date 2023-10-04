@@ -24,33 +24,40 @@ export function StickyNavbar() {
   const navList = (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       <Button
-            variant="gradient"
-            size="sm"
-            onClick={((e) => { navigate("/company"); })}
-          >
-            <span>Company</span>
-          </Button>
-          <Button
-            variant="gradient"
-            size="sm"
-            onClick={((e) => { navigate("/suppliers"); })}
-          >
-            <span>Supplier</span>
-          </Button>
-          <Button
-            variant="gradient"
-            size="sm"
-            onClick={((e) => { navigate("/"); })}
-          >
-            <span>Home</span>
-          </Button>
-          <Button
-            variant="gradient"
-            size="sm"
-            onClick={((e) => { navigate("/cart"); })}
-          >
-            <span>Cart</span>
-          </Button>
+        variant="gradient"
+        size="sm"
+        onClick={((e) => { navigate("/company"); })}
+      >
+        <span>Company</span>
+      </Button>
+      <Button
+        variant="gradient"
+        size="sm"
+        onClick={((e) => { navigate("/suppliers"); })}
+      >
+        <span>Supplier</span>
+      </Button>
+      <Button
+        variant="gradient"
+        size="sm"
+        onClick={((e) => { navigate("/"); })}
+      >
+        <span>Home</span>
+      </Button>
+      <Button
+        variant="gradient"
+        size="sm"
+        onClick={((e) => { navigate("/cart"); })}
+      >
+        <span>Cart</span>
+      </Button>
+      <Button
+        variant="gradient"
+        size="sm"
+        onClick={((e) => { navigate("/buyer"); })}
+      >
+        <span>BUyer</span>
+      </Button>
     </ul>
   );
 
@@ -100,6 +107,13 @@ export function StickyNavbar() {
           >
             <span>Cart</span>
           </Button>
+          <Button
+            variant="gradient"
+            size="sm"
+            onClick={((e) => { navigate("/buyer"); })}
+          >
+            <span>BUyer</span>
+          </Button>
           <IconButton
             variant="text"
             className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
@@ -141,7 +155,7 @@ export function StickyNavbar() {
       </div>
       <Collapse open={openNav}>
         {navList}
-         
+
       </Collapse>
     </Navbar>
   );

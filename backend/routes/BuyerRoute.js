@@ -10,7 +10,7 @@ router.post("/buyer/new",async (req, res) => {
     });
     res.status(200).json({
         success: true,
-        supplier:buyer
+        buyer:buyer
     })
 }
 );
@@ -19,7 +19,7 @@ router.get("/buyers", async (req, res) => {
     const buyerName = req.query.buyerName?req.query.buyerName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
-    const buyers = await Supplier.find({buyerName:{'$regex':buyerName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
+    const buyers = await Buyer.find({buyerName:{'$regex':buyerName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
     res.status(200).json({
         success: true,
         buyers
@@ -36,7 +36,7 @@ router.get("/totalBuyers", async (req, res) => {
 
 router.get("/buyersSelect", async (req, res) => {
     const buyerName = req.query.buyerName?req.query.buyerName:''
-    const buyers = await Supplier.find({buyerName:{'$regex':buyerName,'$options':'i'}});
+    const buyers = await Buyer.find({buyerName:{'$regex':buyerName,'$options':'i'}});
     res.status(200).json({
         success: true,
         buyers

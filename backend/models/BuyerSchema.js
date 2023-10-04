@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const buyerSchema = new mongoose.Schema({
-    supplierName: {
+    buyerName: {
         type: String,
         require: [true, "Please enter your buyer Name."],
     },
