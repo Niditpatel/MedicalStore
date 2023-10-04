@@ -20,6 +20,7 @@ import {
   Pagination
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
+import Select from 'react-select'
 
 
 const Store = () => {
@@ -28,16 +29,21 @@ const Store = () => {
   const [data, setData] = useState();
   const [totalStore, setTotalStore] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
+  const [page_Size, setPage_Size] = useState(5);
   const [searchData, setSearchData] = useState({ storeName: '' });
 
-  const [dialog,setDialog] = useState({open:false,item:{}})
-
+  const [dialog, setDialog] = useState({ open: false, item: {} })
+  const options = [
+    { value: '5', label: '5' },
+    { value: '10', label: '10' },
+    { value: '25', label: '25' },
+    { value: '50', label: '50' },
+  ]
   const getData = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}stores/?storeName=${searchData.storeName}&pageNo=${page_Index}`
+        `${BASE_URL}stores/?storeName=${searchData.storeName}&pageNo=${page_Index}&pageSize=${page_Size}`
       );
-      console.log("res", res.data.stores);
       setData(res.data.stores)
     } catch (error) {
       console.log(error);
@@ -58,9 +64,9 @@ const Store = () => {
   useEffect(() => {
     getData();
     getTotalStores();
-  }, [searchData,page_Index]);
+  }, [searchData, page_Index, page_Size]);
 
-  const handleDelete = async ( id) => {
+  const handleDelete = async (id) => {
     try {
       const data = await axios.delete(`${BASE_URL}store/${id}`)
       getData();
@@ -184,7 +190,7 @@ const Store = () => {
                           variant="gradient"
                           size="sm"
                           color='red'
-                          onClick={(e) => setDialog({open:true,item:item})}
+                          onClick={(e) => setDialog({ open: true, item: item })}
                         >
                           X
                         </Button>
@@ -197,20 +203,25 @@ const Store = () => {
             </table>
           </CardBody>
           <CardFooter className="pt-0 ">
-            <Stack>
+            <div style={{ display: 'flex' }}>
               <Pagination
                 count={Math.ceil(totalStore / 10)}
                 page={page_Index}
                 onChange={handleChangePageNew}
               />
-            </Stack>
+              <Select
+                defaultValue={options[0]}
+                onChange={(e) => {
+                  setPage_Size(parseInt(e?.value))
+                }} options={options} />
+            </div>
           </CardFooter>
         </Card>
       </div>
 
       <Dialog
         open={dialog.open}
-        handler={(e)=>{setDialog({open:false,item:{}})}}
+        handler={(e) => { setDialog({ open: false, item: {} }) }}
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
@@ -224,13 +235,15 @@ const Store = () => {
             variant="text"
             color="grey"
             variant='gradient'
-            onClick={(e)=>{setDialog({open:false,item:{}})}}
+            onClick={(e) => { setDialog({ open: false, item: {} }) }}
             className="mr-1"
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="red" onClick={(e)=>{setDialog({open:false,item:{}})
-                    handleDelete(dialog.item?._id)}}>
+          <Button variant="gradient" color="red" onClick={(e) => {
+            setDialog({ open: false, item: {} })
+            handleDelete(dialog.item?._id)
+          }}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
