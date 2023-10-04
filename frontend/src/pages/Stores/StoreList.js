@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import Select from 'react-select'
-
+import {options} from "../../StaticData/StaticData"
 
 const Store = () => {
   const navigate = useNavigate();
@@ -29,16 +29,10 @@ const Store = () => {
   const [data, setData] = useState();
   const [totalStore, setTotalStore] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
-  const [page_Size, setPage_Size] = useState(5);
-  const [searchData, setSearchData] = useState({ storeName: '' });
-
   const [dialog, setDialog] = useState({ open: false, item: {} })
-  const options = [
-    { value: '5', label: '5' },
-    { value: '10', label: '10' },
-    { value: '25', label: '25' },
-    { value: '50', label: '50' },
-  ]
+  const [searchData, setSearchData] = useState({ storeName: '' });
+  const [page_Size, setPage_Size] = useState(5);
+  
   const getData = async () => {
     try {
       const res = await axios.get(

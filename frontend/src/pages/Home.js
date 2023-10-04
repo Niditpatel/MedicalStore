@@ -20,6 +20,8 @@ import {
   Pagination
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
+import Select from 'react-select'
+import { options } from "../StaticData/StaticData"
 
 
 
@@ -32,6 +34,8 @@ const Home = () => {
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
+  const [page_Size, setPage_Size] = useState(5);
+
 
   const getTotalProducts = async () => {
     try {
@@ -47,7 +51,7 @@ const Home = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&pageSize=' + page_Size
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -62,7 +66,7 @@ const Home = () => {
   useEffect(() => {
     getData();
     getTotalProducts();
-  }, [searchData, page_Index]);
+  }, [searchData, page_Index, page_Size]);
 
   const handleDelete = async (id) => {
     try {
@@ -260,13 +264,18 @@ const Home = () => {
           </table>
         </CardBody>
         <CardFooter className="pt-0 print:hidden">
-          <Stack>
+          <div style={{ display: 'flex' }}>
             <Pagination
               count={Math.ceil(totalProducts / 5)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
-          </Stack>
+              <Select
+              defaultValue={options[0]}
+              onChange={(e) => {
+                setPage_Size(parseInt(e?.value))
+              }} options={options} />
+          </div>
         </CardFooter>
       </Card>
     </div>

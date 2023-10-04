@@ -16,7 +16,8 @@ import {
 import {
   Pagination
 } from "@mui/material";
-import Stack from '@mui/material/Stack';
+import Select from 'react-select'
+import {options} from "../../StaticData/StaticData"
 
 export default function SupplierList() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ export default function SupplierList() {
   const [searchData, setSearchData] = useState({ supplierName: '' });
   const [totalSupplier, setTotalSupplier] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
+  const [page_Size, setPage_Size] = useState(5);
 
 
   const getTotalSupplier = async () => {
@@ -40,7 +42,7 @@ export default function SupplierList() {
   const getData = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}suppliers/?` + 'supplierName=' + searchData.supplierName + '&pageNo=' + page_Index
+        `${BASE_URL}suppliers/?` + 'supplierName=' + searchData.supplierName + '&pageNo=' + page_Index +'&pageSize=' + page_Size
       );
       setData(res.data.suppliers)
     } catch (error) {
@@ -71,7 +73,7 @@ export default function SupplierList() {
 
   useEffect(() => {
     getData()
-  }, [searchData])
+  }, [searchData,page_Index,page_Size])
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
   }
@@ -204,13 +206,18 @@ export default function SupplierList() {
           </table>
         </CardBody>
         <CardFooter className="pt-0 ">
-          <Stack>
+          <div style={{ display: 'flex' }}>
             <Pagination
               count={Math.ceil(totalSupplier / 10)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
-          </Stack>
+            <Select
+              defaultValue={options[0]}
+              onChange={(e) => {
+                setPage_Size(parseInt(e?.value))
+              }} options={options} />
+          </div>
         </CardFooter>
         {/* <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Button variant="outlined" size="sm">

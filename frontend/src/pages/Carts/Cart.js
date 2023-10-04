@@ -28,6 +28,8 @@ import {
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import moment from "moment/moment";
+import Select from 'react-select'
+import {options} from "../../StaticData/StaticData"
 
 
 
@@ -46,6 +48,7 @@ const Cart = () => {
   const [claerAll, setClaerAll] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [page_Size, setPage_Size] = useState(5);
 
 
   const getTotalProducts = async () => {
@@ -62,7 +65,7 @@ const Cart = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}cart/search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index +'&pageSize=' + page_Size
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -91,7 +94,7 @@ const Cart = () => {
   useEffect(() => {
     getData();
     getTotalProducts();
-  }, [searchData, page_Index]);
+  }, [searchData, page_Index,page_Size]);
 
   const handleDelete = async (id) => {
     try {
@@ -275,13 +278,18 @@ const Cart = () => {
           </table>
         </CardBody>
         <CardFooter className="pt-0 print:hidden">
-          <Stack>
-            <Pagination
+          <div style={{ display: 'flex' }}>
+          <Pagination
               count={Math.ceil(totalProducts / 10)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
-          </Stack>
+            <Select
+              defaultValue={options[0]}
+              onChange={(e) => {
+                setPage_Size(parseInt(e?.value))
+              }} options={options} />
+          </div>
         </CardFooter>
       </Card>
       <Dialog
