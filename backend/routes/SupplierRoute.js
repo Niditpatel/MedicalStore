@@ -20,19 +20,21 @@ router.get("/suppliers", async (req, res) => {
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
     const suppliers = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
+    const total = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).count();
     res.status(200).json({
         success: true,
-        suppliers
-    })
-});
-
-router.get("/totalSupplier", async (req, res) => {
-    const total = await Supplier.find({}).count();
-    res.status(200).json({
-        sucess: true,
+        suppliers,
         total
     })
 });
+
+// router.get("/totalSupplier", async (req, res) => {
+//     const total = await Supplier.find({}).count();
+//     res.status(200).json({
+//         sucess: true,
+//         total
+//     })
+// });
 
 router.get("/suppliersSelect", async (req, res) => {
     const supplierName = req.query.supplierName?req.query.supplierName:''

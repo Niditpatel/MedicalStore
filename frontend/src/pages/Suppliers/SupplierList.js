@@ -29,26 +29,31 @@ export default function SupplierList() {
   const [page_Size, setPage_Size] = useState(5);
 
 
-  const getTotalSupplier = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}totalSupplier`
-      );
-      setTotalSupplier(res.data.total)
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getTotalSupplier = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `${BASE_URL}totalSupplier`
+  //     );
+  //     setTotalSupplier(res.data.total)
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const getData = async () => {
     try {
       const res = await axios.get(
         `${BASE_URL}suppliers/?` + 'supplierName=' + searchData.supplierName + '&pageNo=' + page_Index +'&pageSize=' + page_Size
       );
+     if(res.data.success){
       setData(res.data.suppliers)
+      setTotalSupplier(res.data.total)
+     }else{
+      console.log('error')
+     }
     } catch (error) {
       console.log(error);
     }
-    getTotalSupplier()
+    // getTotalSupplier()
   };
 
 
@@ -71,15 +76,17 @@ export default function SupplierList() {
     navigate(`/edit-supplier/${index}`)
   }
 
-  useEffect(() => {
-    getData()
-  }, [searchData,page_Index,page_Size])
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
   }
+
+  useEffect(() => {
+    getData()
+  }, [searchData,page_Index,page_Size])
+
   return (
     <div className="container">
-      <Card className="h-full w-full	">
+      <Card className="h-full w-full	mb-8">
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="flex justify-between items-center mb-3">
             <Typography> SupplierList</Typography>
@@ -133,18 +140,7 @@ export default function SupplierList() {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-                    edit
-                  </Typography>
-                </th>
-                <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    delete
+                    Edit/Delete
                   </Typography>
                 </th>
               </tr>
@@ -154,8 +150,8 @@ export default function SupplierList() {
                 {data?.map((item, index,) => {
                   const isLast = index === data.length - 1;
                   const classes = isLast
-                    ? "p-1"
-                    : "p-1 border-b border-blue-gray-50";
+                    ? "py-1 px-2"
+                    : "py-1 px-2 border-b border-blue-gray-50";
                   return (
                     <tr className="h-4" key={index}>
                       <td className={classes}>
@@ -188,11 +184,9 @@ export default function SupplierList() {
                         >
                           &#x1F589;
                         </Button>
-                      </td>
-                      <td className={classes + 'w-[12px]'}>
                         <Button
                           variant="gradient"
-                          size="sm" color='red' className="btn btn-danger"
+                          size="sm" color='red' className="btn btn-danger ms-2"
                           onClick={(e) => handleDelete(item?._id)}
                         >X
                         </Button>
@@ -206,9 +200,9 @@ export default function SupplierList() {
           </table>
         </CardBody>
         <CardFooter className="pt-0 ">
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex',justifyContent:'space-between' }}>
             <Pagination
-              count={Math.ceil(totalSupplier / 10)}
+              count={Math.ceil(totalSupplier / page_Index)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
@@ -216,6 +210,7 @@ export default function SupplierList() {
               defaultValue={options[0]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
+                setPage_Index(1)
               }} options={options} />
           </div>
         </CardFooter>

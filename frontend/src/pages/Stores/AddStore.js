@@ -37,6 +37,7 @@ const Add = () => {
     }
   };
   return (
+    <div className="container">
     <div class="flex items-center justify-center">
       <Card className="min-w-[320px] max-w-[520px] w-full">
         {/* <CardHeader floated={false}>
@@ -45,7 +46,7 @@ const Add = () => {
         <CardBody>
           <form onSubmit={handleSubmit}>
             <div className="mb-4 text-center">
-              <Typography className="text-2xl">Company</Typography>
+              <Typography className="text-2xl">Add Company</Typography>
             </div>
             <div className="mb-4 flex flex-col gap-6">
               <Input
@@ -79,6 +80,7 @@ const Add = () => {
         </CardBody>
       </Card>
     </div >
+    </div>
   );
 };
 

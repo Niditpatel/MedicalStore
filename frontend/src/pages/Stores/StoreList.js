@@ -86,12 +86,9 @@ const Store = () => {
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
   }
-  const TABLE_HEAD = ["Company Name", "Contact Number", ""];
+  const TABLE_HEAD = ["Company Name", "Contact Number", "Edit/Delete"];
   return (
     <div className="container mb-8 ">
-      <div className="mb-3 flex gap-2 justify-end">
-
-      </div>
       <div className="flex items-center justify-center">
         <Card className="h-full w-11/12	">
           <CardHeader floated={false} shadow={false} className="	 rounded-none">
@@ -115,27 +112,43 @@ const Store = () => {
             <table className="w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
-                  {TABLE_HEAD.map((head) => (
                     <th
-                      key={head}
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%]"
                     >
                       <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-normal leading-none opacity-70"
-                      >
-                        {head}
+                      >Name
                       </Typography>
                     </th>
-                  ))}
+                    <th
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%]"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >Contact Number
+                      </Typography>
+                    </th>
+                    <th
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[10%]"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >Edit/Delete
+                      </Typography>
+                    </th>
                 </tr>
               </thead>
               <tbody>
                 {data?.map((item, index) => {
                   const isLast = index === data.length - 1;
                   const classes = isLast
-                    ? "py-1 px-2"
+                    ? "py-1 px-2 "
                     : "py-1 px-2 border-b border-blue-gray-50";
                   return (
                     <tr className="h-4" key={index}>

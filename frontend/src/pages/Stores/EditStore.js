@@ -57,7 +57,8 @@ const Edit = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center">
+    <div className="container mb-8">
+      <div className="flex items-center justify-center">
       <Card className="min-w-[320px] max-w-[520px] w-full">
       {/* <form style={{ maxWidth: 600, margin: "auto" }} onSubmit={(e)=>{
         e.preventDefault();
@@ -72,7 +73,7 @@ const Edit = () => {
               handleSubmit();
             }}>
               <div className="mb-4 text-center">
-                <Typography className="text-2xl">Company</Typography>
+                <Typography className="text-2xl">Edit Company</Typography>
               </div>
               <div className="mb-4 flex flex-col gap-6">
                 <Input size="sm" label="Name" name="storeName" value={data?.storeName}
@@ -92,6 +93,7 @@ const Edit = () => {
           </CardBody>
       {/* </form> */}
         </Card>
+      </div>
     </div >
   );
 };
