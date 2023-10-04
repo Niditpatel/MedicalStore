@@ -22,7 +22,7 @@ export default function ProductList() {
         setLoading(true);
         try {
             const res = await fetch(
-                `${BASE_URL}/tabs/Products?_format=index`
+                `/api/v1//tabs/Products?_format=index`
             );
             const data = await res.json();
             const realData = Object.keys(data).map((key) => data[key])
@@ -44,7 +44,7 @@ export default function ProductList() {
         e.preventDefault();
         try {
             const res = await fetch(
-                `${BASE_URL}/tabs/Products/productId/${item?.productId}`,
+                `/api/v1//tabs/Products/productId/${item?.productId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -66,7 +66,7 @@ export default function ProductList() {
     const handlesearch = async () => {
         try {
             const res = await fetch(
-                `${BASE_URL}/tabs/Products/search?productName=*${searchData.productName}*`
+                `/api/v1//tabs/Products/search?productName=*${searchData.productName}*`
             );
             const data = await res.json();
             setData(data.filter(item => item?.isDeleted?.toString() !== 'TRUE'))
