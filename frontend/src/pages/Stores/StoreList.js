@@ -17,6 +17,7 @@ import {
 } from "@material-tailwind/react";
 import axios from 'axios';
 import {
+  Box,
   Pagination
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
@@ -89,7 +90,7 @@ const Store = () => {
   const TABLE_HEAD = ["Company Name", "Contact Number", "Edit/Delete"];
   return (
     <div className="container mb-8 ">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center w-full">
         <Card className="h-full w-full	">
           <CardHeader floated={false} shadow={false} className="	 rounded-none">
             <div className="w-full flex justify-between mb-3 items-center" style={{ justifyContent: 'space-between' }}>
@@ -113,7 +114,7 @@ const Store = () => {
               <thead>
                 <tr>
                     <th
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%]"
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
                     >
                       <Typography
                         variant="small"
@@ -123,7 +124,7 @@ const Store = () => {
                       </Typography>
                     </th>
                     <th
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%]"
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
                     >
                       <Typography
                         variant="small"
@@ -133,7 +134,7 @@ const Store = () => {
                       </Typography>
                     </th>
                     <th
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[10%]"
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right"
                     >
                       <Typography
                         variant="small"
@@ -182,6 +183,7 @@ const Store = () => {
                         </Typography>
                       </td> */}
                       <td className={classes}>
+                        <Box className={'text-right'}>
                         <Button
                           className="btn btn-sm btn-danger ms-1"
                           variant="gradient"
@@ -200,6 +202,7 @@ const Store = () => {
                         >
                           X
                         </Button>
+                        </Box>
                       </td>
                     </tr>
                   );
