@@ -90,7 +90,7 @@ const Store = () => {
   return (
     <div className="container mb-8 ">
       <div className="flex items-center justify-center">
-        <Card className="h-full w-11/12	">
+        <Card className="h-full w-full	">
           <CardHeader floated={false} shadow={false} className="	 rounded-none">
             <div className="w-full flex justify-between mb-3 items-center" style={{ justifyContent: 'space-between' }}>
               <Typography> Company List</Typography>
