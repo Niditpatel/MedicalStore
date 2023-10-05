@@ -134,8 +134,8 @@ export default function SupplierList() {
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right"
-                >
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-12"
+                    >
                   <Typography
                     variant="small"
                     color="blue-gray"
@@ -178,7 +178,7 @@ export default function SupplierList() {
                             </Typography>
                           </td>
                           <td className={classes}>
-                            <Box className={'text-right'}>
+                          <Box className={'text-right mr-6 flex justify-end gap-5'}>
                               <Button
                                 className="btn btn-sm btn-danger ms-1"
                                 variant="gradient"

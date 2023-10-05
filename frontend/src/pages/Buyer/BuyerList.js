@@ -126,7 +126,7 @@ const Buyer = () => {
                     </Typography>
                   </th>
                   <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-6"
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-12"
                   >
                     <Typography
                       variant="small"
