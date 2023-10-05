@@ -14,6 +14,7 @@ import {
   Input
 } from "@material-tailwind/react";
 import {
+  Box,
   Pagination
 } from "@mui/material";
 import Select from 'react-select'
@@ -111,7 +112,7 @@ export default function SupplierList() {
             <thead>
               <tr>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%]"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                 >
                   <Typography
                     variant="small"
@@ -122,18 +123,18 @@ export default function SupplierList() {
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[40%] "
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
                 >
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="font-normal leading-none opacity-70 w-[10%]"
+                    className="font-normal leading-none opacity-70 "
                   >
                     Contact
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[10%]"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right"
                 >
                   <Typography
                     variant="small"
@@ -174,7 +175,8 @@ export default function SupplierList() {
                           {item?.contactNumber}
                         </Typography>
                       </td>
-                      <td className={classes + ' w-[12px]'}>
+                      <td className={classes}>
+                        <Box className={'text-right'}>
                         <Button
                           className="btn btn-sm btn-danger ms-1"
                           variant="gradient"
@@ -190,6 +192,7 @@ export default function SupplierList() {
                           onClick={(e) => handleDelete(item?._id)}
                         >X
                         </Button>
+                        </Box>
                       </td>
                     </tr>
                   );
