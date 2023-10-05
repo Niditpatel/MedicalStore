@@ -70,7 +70,7 @@ const Edit = () => {
           <CardBody>
             <form className="mb-2  max-w-screen-lg " onSubmit={(e)=>{
                e.preventDefault();
-              handleSubmit();
+              handleSubmit(e);
             }}>
               <div className="mb-4 text-center">
                 <Typography className="text-2xl">Edit Company</Typography>

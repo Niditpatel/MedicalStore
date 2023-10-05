@@ -51,7 +51,7 @@ const Home = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&pageSize=' + page_Size
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -134,14 +134,22 @@ const Home = () => {
     }
   }
 
-  const TABLE_HEAD = [<Checkbox onChange={(e) => { addAll(e.target.checked) }} />, "Product Name", "Packing", "Supplier", "", ""];
+  const TABLE_HEAD = [<Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }}  className="m-0 p-0"/>, "Product Name", "Packing", "Supplier", "Edit/Delete"];
   return (
 
-    <div className="container">
+    <div className="container mb-8">
       <Card className="h-full w-full	">
         <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
           <div className="mb-3 flex justify-between items-center">
-            <Typography> Products </Typography>
+            <Typography> Product List </Typography>
+            <div className="flex gap-2">
+            <Button size="sm" className="mt-6 m-0" onClick={(e)=>{
+              navigate('/add-product')
+            }}>Add Product</Button>
+            <Button size="sm" className="mt-6 m-0" onClick={(e)=>{
+              handleAddCart()
+            }}>Add to Cart</Button>
+            </div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
             <Input
@@ -174,14 +182,14 @@ const Home = () => {
             {/* <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button> */}
           </div>
         </CardHeader>
-        <CardBody className="p-4 overflow-hidden px-0">
+        <CardBody className="p-4 overflow-hidden px-0 ">
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head) => (
                   <th
                     key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
                   >
                     <Typography
                       variant="small"
@@ -247,10 +255,8 @@ const Home = () => {
                         >
                           &#x1F589;
                         </Button>
-                      </td>
-                      <td className={classes}>
                         <Button
-                          variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
+                          variant="gradient" size="sm" color='red' className="btn btn-danger ms-2 print:hidden"
                           onClick={(e) => handleDelete(item?._id)}
                         >X
                         </Button>
@@ -264,9 +270,9 @@ const Home = () => {
           </table>
         </CardBody>
         <CardFooter className="pt-0 print:hidden">
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex',justifyContent:'space-between' }}>
             <Pagination
-              count={Math.ceil(totalProducts / 5)}
+              count={Math.ceil(totalProducts / page_Size)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
@@ -274,6 +280,7 @@ const Home = () => {
               defaultValue={options[0]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
+                setPage_Index(1)
               }} options={options} />
           </div>
         </CardFooter>
