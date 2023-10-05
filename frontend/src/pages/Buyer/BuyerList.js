@@ -13,6 +13,9 @@ import {
   DialogBody,
   DialogFooter
 } from "@material-tailwind/react";
+import {
+  Box,
+} from "@mui/material";
 import axios from 'axios';
 import {
   Pagination
@@ -100,20 +103,39 @@ const Buyer = () => {
             <table className="w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
-                  {TABLE_HEAD.map((head) => (
-                    <th
-                      key={head}
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
                     >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
-                      >
-                        {head}
-                      </Typography>
-                    </th>
-                  ))}
+                      Name
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70 "
+                    >
+                      Contact
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-6"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      Edit/Delete
+                    </Typography>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -147,24 +169,26 @@ const Buyer = () => {
                             </Typography>
                           </td>
                           <td className={classes}>
-                            <Button
-                              className="btn btn-sm btn-danger ms-1"
-                              variant="gradient"
-                              size="sm"
-                              color='blue'
-                              onClick={() => handleEdit(item?._id)}
-                            >
-                              &#x1F589;
-                            </Button>
-                            <Button
-                              className="btn btn-sm btn-danger ms-1"
-                              variant="gradient"
-                              size="sm"
-                              color='red'
-                              onClick={(e) => setDialog({ open: true, item: item })}
-                            >
-                              X
-                            </Button>
+                            <Box className={'text-right mr-6 flex justify-end gap-5'}>
+                              <Button
+                                className="btn btn-sm btn-danger ms-1"
+                                variant="gradient"
+                                size="sm"
+                                color='blue'
+                                onClick={() => handleEdit(item?._id)}
+                              >
+                                &#x1F589;
+                              </Button>
+                              <Button
+                                className="btn btn-sm btn-danger ms-1"
+                                variant="gradient"
+                                size="sm"
+                                color='red'
+                                onClick={(e) => setDialog({ open: true, item: item })}
+                              >
+                                X
+                              </Button>
+                            </Box>
                           </td>
                         </tr>
                       );
