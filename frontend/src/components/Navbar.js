@@ -54,6 +54,13 @@ export function StickyNavbar() {
       <Button
         variant="gradient"
         size="sm"
+        onClick={((e) => { navigate("/pending-cart"); })}
+      >
+        <span>Pending Cart</span>
+      </Button>
+      <Button
+        variant="gradient"
+        size="sm"
         onClick={((e) => { navigate("/buyer"); })}
       >
         <span>BUyer</span>
@@ -106,6 +113,13 @@ export function StickyNavbar() {
             onClick={((e) => { navigate("/cart"); })}
           >
             <span>Cart</span>
+          </Button>
+          <Button
+            variant="gradient"
+            size="sm"
+            onClick={((e) => { navigate("/pending-cart"); })}
+          >
+            <span>Pending Cart</span>
           </Button>
           <Button
             variant="gradient"

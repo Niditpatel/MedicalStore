@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import AddSupplier from "./pages/Suppliers/AddSupplier";
 import SupplierList from "./pages/Suppliers/SupplierList";
 import Cart from "./pages/Carts/Cart";
+import PendingCart from "./pages/PendingCart/PendingCart";
 import EditSupplier from "./pages/Suppliers/EditSupplier";
 import Store from "./pages/Stores/StoreList";
 import Buyer from "./pages/Buyer/BuyerList";
@@ -26,6 +27,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route exact path="/cart" element={<Cart />} />
+        <Route exact path="/pending-cart" element={<PendingCart />} />
         <Route exact path="/company" element={<Store />} />
         <Route exact path="/add-company" element={<AddStore />} />
         <Route exact path="/edit-company/:rowIndex" element={<EditStore />} />
