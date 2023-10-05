@@ -81,7 +81,7 @@ const Buyer = () => {
 
       </div>
       <div className="flex items-center justify-center">
-        <Card className="h-full w-11/12	">
+        <Card className="h-full w-full	">
           <CardHeader floated={false} shadow={false} className="	 rounded-none">
             <div className="w-full flex justify-between mb-3 items-center" style={{ justifyContent: 'space-between' }}>
               <Typography> Buyer List</Typography>
@@ -99,7 +99,7 @@ const Buyer = () => {
               />
             </div>
           </CardHeader>
-          <CardBody className="p-4 overflow-hidden px-0">
+          <CardBody className="py-4 overflow-hidden px-0">
             <table className="w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
@@ -153,7 +153,6 @@ const Buyer = () => {
                               <Typography
                                 variant="small"
                                 color="blue-gray"
-                                className="font-bold"
                               >
                                 {item?.buyerName}
                               </Typography>
@@ -169,7 +168,7 @@ const Buyer = () => {
                             </Typography>
                           </td>
                           <td className={classes}>
-                            <Box className={'text-right mr-6 flex justify-end gap-5'}>
+                            <Box className={'text-right flex gap-2 justify-end'}>
                               <Button
                                 className="btn btn-sm btn-danger ms-1"
                                 variant="gradient"

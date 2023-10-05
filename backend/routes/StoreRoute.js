@@ -86,7 +86,7 @@ router.delete("/store/:id",
             message: `Store not Found`
         })
     }else{
-        await Store.findByIdAndDelete(req.params.id);
+        await Store.findByIdAndUpdate(req.params.id,{...store,isDeleted:true});
         res.status(200).json({
             success: true,
             message: `Store deleted succesfully `

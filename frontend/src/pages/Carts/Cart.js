@@ -24,6 +24,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { BASE_URL } from "../../Common";
 import axios from "axios";
 import {
+  Box,
   Pagination
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
@@ -129,7 +130,7 @@ const Cart = () => {
     }
     getData();
   }
-  const TABLE_HEAD = ["", "Product Name", "Packing", "Supplier", ""];
+  const TABLE_HEAD = ["Product Name", "Packing", "Supplier", "Delete"];
   return (
 
     <div className="container">
@@ -138,9 +139,9 @@ const Cart = () => {
           <div className="mb-3 flex justify-between items-center">
             <Typography> Cart </Typography>
             <div className="flex gap-3">
-              <Button className="mt-6 m-0 " onClick={(e) => { navigate("/") }}>Add In Cart</Button>
-              <Button className="mt-6 m-0 " onClick={(e) => { setClaerAll(true) }}>claer Cart</Button>
-              <div>
+              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add In Cart</Button>
+              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { setClaerAll(true) }}>claer Cart</Button>
+              {/* <div>
                 <Popover animate={{
                   mount: { scale: 1, y: 0 },
                   unmount: { scale: 0, y: 25 },
@@ -157,7 +158,7 @@ const Cart = () => {
                     />
                   </PopoverContent>
                 </Popover>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
@@ -195,9 +196,7 @@ const Cart = () => {
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                {TABLE_HEAD.map((head) => (
                   <th
-                    key={head}
                     className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                   >
                     <Typography
@@ -205,10 +204,42 @@ const Cart = () => {
                       color="blue-gray"
                       className="font-normal leading-none opacity-70"
                     >
-                      {head}
+                      Product Name
                     </Typography>
                   </th>
-                ))}
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      Packing
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      Supplier Name
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70 text-right"
+                    >
+                      Delete
+                    </Typography>
+                  </th>
               </tr>
             </thead>
             {loading === false ?
@@ -222,11 +253,11 @@ const Cart = () => {
                         : "p-1 border-b border-blue-gray-50";
                       return (
                         <tr className="h-4" key={index}>
-                          <td className={classes}>
+                          {/* <td className={classes}>
                             <div className="flex items-center gap-3">
-                              {/* <Checkbox onChange={(e) => { addForCart(item) }} /> */}
+                               <Checkbox onChange={(e) => { addForCart(item) }} /> 
                             </div>
-                          </td>
+                          </td> */}
                           <td className={classes}>
                             <Typography
                               variant="small"
@@ -255,11 +286,13 @@ const Cart = () => {
                             </Typography>
                           </td>
                           <td className={classes}>
+                            <Box className={'flex justify-end'}>
                             <Button
                               variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
                               onClick={(e) => setDialog({ open: true, item: item })}
                             >X
                             </Button>
+                            </Box>
                           </td>
                         </tr>
                       );

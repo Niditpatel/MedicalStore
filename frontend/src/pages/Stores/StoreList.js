@@ -148,7 +148,6 @@ const Store = () => {
                               <Typography
                                 variant="small"
                                 color="blue-gray"
-                                className="font-bold"
                               >
                                 {item?.storeName}
                               </Typography>
@@ -173,7 +172,7 @@ const Store = () => {
                         </Typography>
                       </td> */}
                           <td className={classes}>
-                          <Box className={'text-right mr-6 flex justify-end gap-5'}>
+                          <Box className={'text-right flex gap-2 justify-end'}>
                               <Button
                                 className="btn btn-sm btn-danger ms-1"
                                 variant="gradient"
