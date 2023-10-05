@@ -17,7 +17,9 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { BASE_URL } from "../Common";
 import axios from "axios";
 import {
-  Pagination
+  Box,
+  Pagination,
+  TextField
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import Select from 'react-select'
@@ -134,7 +136,7 @@ const Home = () => {
     }
   }
 
-  const TABLE_HEAD = [<Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }}  className="m-0 p-0"/>, "Product Name", "Packing", "Supplier", "Edit/Delete"];
+  const TABLE_HEAD = [<Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }}  className="m-0 p-0 print:hidden"/>, "Product Name",'Quantity', "Packing", "Supplier", "Edit/Delete"];
   return (
 
     <div className="container mb-8">
@@ -207,13 +209,13 @@ const Home = () => {
                 {data?.map((item, index,) => {
                   const isLast = index === data.length - 1;
                   const classes = isLast
-                    ? "p-1"
-                    : "p-1 border-b border-blue-gray-50";
+                    ? "py-1 px-2"
+                    : "py-1 px-2 border-b border-blue-gray-50";
                   return (
                     <tr className="h-4" key={index}>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <Checkbox onChange={(e) => { addForCart(item) }}
+                      <td className={classes} >
+                        <div className="flex items-center">
+                          <Checkbox className="print:hidden" size={'small'} onChange={(e) => { addForCart(item) }}
                             checked={dataForCart.find(A => A._id === item._id) ? true : false}
                             value={dataForCart.find(A => A._id === item._id) ? true : false} />
                         </div>
@@ -226,6 +228,9 @@ const Home = () => {
                         >
                           {item?.productName}
                         </Typography>
+                      </td>
+                      <td className={classes}>
+                        <TextField size="small"/>
                       </td>
                       <td className={classes}>
                         <Typography
@@ -246,7 +251,8 @@ const Home = () => {
                         </Typography>
                       </td>
                       <td className={classes}>
-                        <Button
+                       <Box className={'text-right'}>
+                       <Button
                           variant="gradient"
                           color='blue'
                           size="sm"
@@ -260,6 +266,7 @@ const Home = () => {
                           onClick={(e) => handleDelete(item?._id)}
                         >X
                         </Button>
+                       </Box>
                       </td>
                     </tr>
                   );
