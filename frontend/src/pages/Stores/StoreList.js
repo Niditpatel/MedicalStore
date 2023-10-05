@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import Select from 'react-select'
-import {options} from "../../StaticData/StaticData"
+import { options } from "../../StaticData/StaticData"
 
 const Store = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const Store = () => {
   const [dialog, setDialog] = useState({ open: false, item: {} })
   const [searchData, setSearchData] = useState({ storeName: '' });
   const [page_Size, setPage_Size] = useState(5);
-  
+
   const getData = async () => {
     try {
       const res = await axios.get(
@@ -45,21 +45,9 @@ const Store = () => {
       console.log(error);
     }
   };
-  // const getTotalStores = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `${BASE_URL}totalStores`
-  //     );
-  //     setTotalStore(res.data.total)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
 
   useEffect(() => {
     getData();
-    // getTotalStores();
   }, [searchData, page_Index, page_Size]);
 
   const handleDelete = async (id) => {
@@ -113,67 +101,69 @@ const Store = () => {
             <table className="w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
-                    <th
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
-                      >Name
-                      </Typography>
-                    </th>
-                    <th
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
-                      >Contact Number
-                      </Typography>
-                    </th>
-                    <th
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
-                      >Edit/Delete
-                      </Typography>
-                    </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >Name
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >Contact Number
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >Edit/Delete
+                    </Typography>
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {data?.map((item, index) => {
-                  const isLast = index === data.length - 1;
-                  const classes = isLast
-                    ? "py-1 px-2 "
-                    : "py-1 px-2 border-b border-blue-gray-50";
-                  return (
-                    <tr className="h-4" key={index}>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {item?.storeName}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.contactNumber}
-                        </Typography>
-                      </td>
-                      {/* <td className={classes} >
+                {data && data.length > 0 ?
+                  <>
+                    {data?.map((item, index) => {
+                      const isLast = index === data.length - 1;
+                      const classes = isLast
+                        ? "py-1 px-2 "
+                        : "py-1 px-2 border-b border-blue-gray-50";
+                      return (
+                        <tr className="h-4" key={index}>
+                          <td className={classes}>
+                            <div className="flex items-center gap-3">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-bold"
+                              >
+                                {item?.storeName}
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {item?.contactNumber}
+                            </Typography>
+                          </td>
+                          {/* <td className={classes} >
                         <Typography
                           variant="small"
                           color="blue-gray"
@@ -182,37 +172,40 @@ const Store = () => {
                           {item?.createdDate ? (item?.createdDate) : '-'}
                         </Typography>
                       </td> */}
-                      <td className={classes}>
-                        <Box className={'text-right'}>
-                        <Button
-                          className="btn btn-sm btn-danger ms-1"
-                          variant="gradient"
-                          size="sm"
-                          color='blue'
-                          onClick={() => handleEdit(item?._id)}
-                        >
-                          &#x1F589;
-                        </Button>
-                        <Button
-                          className="btn btn-sm btn-danger ms-2"
-                          variant="gradient"
-                          size="sm"
-                          color='red'
-                          onClick={(e) => setDialog({ open: true, item: item })}
-                        >
-                          X
-                        </Button>
-                        </Box>
-                      </td>
-                    </tr>
-                  );
-                },
-                )}
+                          <td className={classes}>
+                            <Box className={'text-right'}>
+                              <Button
+                                className="btn btn-sm btn-danger ms-1"
+                                variant="gradient"
+                                size="sm"
+                                color='blue'
+                                onClick={() => handleEdit(item?._id)}
+                              >
+                                &#x1F589;
+                              </Button>
+                              <Button
+                                className="btn btn-sm btn-danger ms-2"
+                                variant="gradient"
+                                size="sm"
+                                color='red'
+                                onClick={(e) => setDialog({ open: true, item: item })}
+                              >
+                                X
+                              </Button>
+                            </Box>
+                          </td>
+                        </tr>
+                      );
+                    },
+                    )}</>
+                  : <> <tr>
+                    <td colSpan={9} style={{ textAlign: 'center' }}>There is nothing to show.</td>
+                  </tr></>}
               </tbody>
             </table>
           </CardBody>
           <CardFooter className="pt-0 ">
-            <div style={{ display: 'flex' ,justifyContent:'space-between'}}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Pagination
                 count={Math.ceil(totalStore / page_Size)}
                 page={page_Index}
@@ -245,7 +238,7 @@ const Store = () => {
             setDialog({ open: false, item: {} })
             handleDelete(dialog.item?._id)
           }}
-          className="mr-1"
+            className="mr-1"
           >
             <span>Confirm</span>
           </Button>
