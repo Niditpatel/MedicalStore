@@ -18,7 +18,7 @@ import {
   Pagination
 } from "@mui/material";
 import Select from 'react-select'
-import {options} from "../../StaticData/StaticData"
+import { options } from "../../StaticData/StaticData"
 
 export default function SupplierList() {
   const navigate = useNavigate();
@@ -43,14 +43,14 @@ export default function SupplierList() {
   const getData = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}suppliers/?` + 'supplierName=' + searchData.supplierName + '&pageNo=' + page_Index +'&pageSize=' + page_Size
+        `${BASE_URL}suppliers/?` + 'supplierName=' + searchData.supplierName + '&pageNo=' + page_Index + '&pageSize=' + page_Size
       );
-     if(res.data.success){
-      setData(res.data.suppliers)
-      setTotalSupplier(res.data.total)
-     }else{
-      console.log('error')
-     }
+      if (res.data.success) {
+        setData(res.data.suppliers)
+        setTotalSupplier(res.data.total)
+      } else {
+        console.log('error')
+      }
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +83,7 @@ export default function SupplierList() {
 
   useEffect(() => {
     getData()
-  }, [searchData,page_Index,page_Size])
+  }, [searchData, page_Index, page_Size])
 
   return (
     <div className="container">
@@ -148,62 +148,67 @@ export default function SupplierList() {
             </thead>
             {loading === false ?
               <tbody>
-                {data?.map((item, index,) => {
-                  const isLast = index === data.length - 1;
-                  const classes = isLast
-                    ? "py-1 px-2"
-                    : "py-1 px-2 border-b border-blue-gray-50";
-                  return (
-                    <tr className="h-4" key={index}>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {item?.supplierName}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.contactNumber}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Box className={'text-right'}>
-                        <Button
-                          className="btn btn-sm btn-danger ms-1"
-                          variant="gradient"
-                          color='blue'
-                          size="sm"
-                          onClick={() => handleEdit(item?._id)}
-                        >
-                          &#x1F589;
-                        </Button>
-                        <Button
-                          variant="gradient"
-                          size="sm" color='red' className="btn btn-danger ms-2"
-                          onClick={(e) => handleDelete(item?._id)}
-                        >X
-                        </Button>
-                        </Box>
-                      </td>
-                    </tr>
-                  );
-                },
-                )}
+                {data && data.length > 0 ?
+                  <>
+                    {data?.map((item, index,) => {
+                      const isLast = index === data.length - 1;
+                      const classes = isLast
+                        ? "py-1 px-2"
+                        : "py-1 px-2 border-b border-blue-gray-50";
+                      return (
+                        <tr className="h-4" key={index}>
+                          <td className={classes}>
+                            <div className="flex items-center gap-3">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-bold"
+                              >
+                                {item?.supplierName}
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {item?.contactNumber}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <Box className={'text-right'}>
+                              <Button
+                                className="btn btn-sm btn-danger ms-1"
+                                variant="gradient"
+                                color='blue'
+                                size="sm"
+                                onClick={() => handleEdit(item?._id)}
+                              >
+                                &#x1F589;
+                              </Button>
+                              <Button
+                                variant="gradient"
+                                size="sm" color='red' className="btn btn-danger ms-2"
+                                onClick={(e) => handleDelete(item?._id)}
+                              >X
+                              </Button>
+                            </Box>
+                          </td>
+                        </tr>
+                      );
+                    },
+                    )}</>
+                  : <> <tr>
+                    <td colSpan={9} style={{ textAlign: 'center' }}>There is nothing to show.</td>
+                  </tr></>}
               </tbody>
               : <>Wait </>}
           </table>
         </CardBody>
         <CardFooter className="pt-0 ">
-          <div style={{ display: 'flex',justifyContent:'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Pagination
               count={Math.ceil(totalSupplier / page_Index)}
               page={page_Index}

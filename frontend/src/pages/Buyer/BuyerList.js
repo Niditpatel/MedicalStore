@@ -18,7 +18,7 @@ import {
   Pagination
 } from "@mui/material";
 import Select from 'react-select'
-import {options} from "../../StaticData/StaticData"
+import { options } from "../../StaticData/StaticData"
 
 const Buyer = () => {
   const navigate = useNavigate();
@@ -29,32 +29,21 @@ const Buyer = () => {
   const [dialog, setDialog] = useState({ open: false, item: {} })
   const [searchData, setSearchData] = useState({ buyerName: '' });
   const [page_Size, setPage_Size] = useState(5);
-  
+
   const getData = async () => {
     try {
       const res = await axios.get(
         `${BASE_URL}buyers/?buyerName=${searchData.buyerName}&pageNo=${page_Index}&pageSize=${page_Size}`
       );
       setData(res.data.buyers)
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const getTotalBuyers = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}totalBuyers`
-      );
       setTotalBuyer(res.data.total)
     } catch (error) {
       console.log(error);
     }
   };
 
-
   useEffect(() => {
     getData();
-    getTotalBuyers();
   }, [searchData, page_Index, page_Size]);
 
   const handleDelete = async (id) => {
@@ -82,7 +71,7 @@ const Buyer = () => {
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
   }
-  const TABLE_HEAD = ["Buyer Name", "Contact Number", "", ""];
+  const TABLE_HEAD = ["Buyer Name", "Contact Number", "Edit/Delete"];
   return (
     <div className="container ">
       <div className="mb-3 flex gap-2 justify-end">
@@ -128,73 +117,67 @@ const Buyer = () => {
                 </tr>
               </thead>
               <tbody>
-                {data?.map((item, index) => {
-                  const isLast = index === data.length - 1;
-                  const classes = isLast
-                    ? "p-1"
-                    : "p-1 border-b border-blue-gray-50";
-                  return (
-                    <tr className="h-4" key={index}>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {item?.buyerName}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.contactNumber}
-                        </Typography>
-                      </td>
-                      {/* <td className={classes} >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.createdDate ? (item?.createdDate) : '-'}
-                        </Typography>
-                      </td> */}
-                      <td className={classes}>
-                        <Button
-                          className="btn btn-sm btn-danger ms-1"
-                          variant="gradient"
-                          size="sm"
-                          color='blue'
-                          onClick={() => handleEdit(item?._id)}
-                        >
-                          &#x1F589;
-                        </Button>
-                      </td>
-                      <td className={classes}>
-                        <Button
-                          className="btn btn-sm btn-danger ms-1"
-                          variant="gradient"
-                          size="sm"
-                          color='red'
-                          onClick={(e) => setDialog({ open: true, item: item })}
-                        >
-                          X
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                },
-                )}
+                {data && data.length > 0 ?
+                  <>
+                    {data?.map((item, index) => {
+                      const isLast = index === data.length - 1;
+                      const classes = isLast
+                        ? "p-1"
+                        : "p-1 border-b border-blue-gray-50";
+                      return (
+                        <tr className="h-4" key={index}>
+                          <td className={classes}>
+                            <div className="flex items-center gap-3">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-bold"
+                              >
+                                {item?.buyerName}
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {item?.contactNumber}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <Button
+                              className="btn btn-sm btn-danger ms-1"
+                              variant="gradient"
+                              size="sm"
+                              color='blue'
+                              onClick={() => handleEdit(item?._id)}
+                            >
+                              &#x1F589;
+                            </Button>
+                            <Button
+                              className="btn btn-sm btn-danger ms-1"
+                              variant="gradient"
+                              size="sm"
+                              color='red'
+                              onClick={(e) => setDialog({ open: true, item: item })}
+                            >
+                              X
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    },
+                    )}</> : <>
+                    <tr>
+                      <td colSpan={9} style={{ textAlign: 'center' }}>There is nothing to show.</td>
+                    </tr></>}
               </tbody>
             </table>
           </CardBody>
           <CardFooter className="pt-0 ">
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Pagination
                 count={Math.ceil(totalBuyer / 10)}
                 page={page_Index}
