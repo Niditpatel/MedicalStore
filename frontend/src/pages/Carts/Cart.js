@@ -66,7 +66,7 @@ const Cart = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}cart/search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index +'&pageSize=' + page_Size
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index +'&limit=' + page_Size
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -92,10 +92,7 @@ const Cart = () => {
     setEndDate(date.selection.endDate);
     setFilterData(filtered);
   };
-  useEffect(() => {
-    getData();
-    getTotalProducts();
-  }, [searchData, page_Index,page_Size]);
+
 
   const handleDelete = async (id) => {
     try {
@@ -131,6 +128,12 @@ const Cart = () => {
     getData();
   }
   const TABLE_HEAD = ["Product Name", "Packing", "Supplier", "Delete"];
+
+  useEffect(() => {
+    getData();
+    getTotalProducts();
+  }, [searchData, page_Index,page_Size]);
+
   return (
 
     <div className="container">
@@ -313,7 +316,7 @@ const Cart = () => {
         <CardFooter className="pt-0 print:hidden">
           <div style={{ display: 'flex', justifyContent:'space-between' }}>
           <Pagination
-              count={Math.ceil(totalProducts / 10)}
+              count={Math.ceil(totalProducts / page_Size)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
@@ -321,6 +324,7 @@ const Cart = () => {
               defaultValue={options[0]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
+                setPage_Index(1)
               }} options={options} />
           </div>
         </CardFooter>

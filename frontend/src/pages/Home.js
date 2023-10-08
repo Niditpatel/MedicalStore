@@ -16,6 +16,7 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { BASE_URL } from "../Common";
 import axios from "axios";
+import AsyncSelect from 'react-select/async';
 import {
   Box,
   Pagination,
@@ -33,6 +34,7 @@ const Home = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dataForCart, setDataForCart] = useState([]);
+  const [buyers, setBuyers] = useState([]);
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
@@ -65,10 +67,7 @@ const Home = () => {
 
 
 
-  useEffect(() => {
-    getData();
-    getTotalProducts();
-  }, [searchData, page_Index, page_Size]);
+
 
   const handleDelete = async (id) => {
     try {
@@ -136,7 +135,47 @@ const Home = () => {
     }
   }
 
-  const TABLE_HEAD = [<Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }}  className="m-0 p-0 print:hidden"/>, "Product Name",'Quantity', "Packing", "Supplier", "Edit/Delete"];
+
+  const getBuyers = async (inputValue,loadMode) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}buyersSelect/?buyerName=`+ inputValue
+      );
+      if(res.data.success){
+        const buyers = res.data.buyers?.map(item =>
+          {
+          return {...item,value:item?._id,label:item.buyerName}
+        })
+        if(!loadMode){
+          setBuyers(buyers)
+        }
+        return buyers
+      }else{
+        return null
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const searchBuyer =  async (inputValue) => {
+    const res = await getBuyers(inputValue,true);
+    const institutes = res.map((val) => {
+      return { label: val.buyerName, value: val._id };
+    });
+    return institutes;
+};
+
+useEffect(() => {
+  getData();
+  getTotalProducts();
+}, [searchData, page_Index, page_Size]);
+
+useEffect(()=>{
+  getBuyers();
+},[])
+
+  const TABLE_HEAD = [ "Product Name","Packing",'Quantity',  "Supplier", "Edit/Delete"];
   return (
 
     <div className="container mb-8">
@@ -188,9 +227,12 @@ const Home = () => {
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                {TABLE_HEAD.map((head) => (
                   <th
-                    key={head}
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                  >
+                    <Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }}  className="m-0 p-0 print:hidden"/>
+                  </th>
+                  <th
                     className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
                   >
                     <Typography
@@ -198,10 +240,59 @@ const Home = () => {
                       color="blue-gray"
                       className="font-normal leading-none opacity-70"
                     >
-                      {head}
+                      Product Name
+                    </Typography>
+                  </th><th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >Packing
                     </Typography>
                   </th>
-                ))}
+                  
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >Supplier
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >Quantity
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >Buyer
+                    </Typography>
+                  </th>
+                  <th
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70 text-right"
+                    >Edit/Delete
+                    </Typography>
+                  </th>
               </tr>
             </thead>
             {loading === false ?
@@ -230,9 +321,6 @@ const Home = () => {
                         </Typography>
                       </td>
                       <td className={classes}>
-                        <TextField size="small"/>
-                      </td>
-                      <td className={classes}>
                         <Typography
                           variant="small"
                           color="blue-gray"
@@ -241,6 +329,7 @@ const Home = () => {
                           {item?.packing}
                         </Typography>
                       </td>
+                      
                       <td className={classes} >
                         <Typography
                           variant="small"
@@ -249,6 +338,32 @@ const Home = () => {
                         >
                           {item?.supplier?.map((item) => item?.supplierName)?.join(', ')}
                         </Typography>
+                      </td>
+                      <td className={classes}>
+                        <TextField size="small" type="number" onWheel={(e)=>{
+                         e.target.blur()
+                        }}/>
+                      </td>
+                      <td className={classes}>
+                      <AsyncSelect
+                        cacheOptions
+                        defaultOptions={buyers}
+                        isClearable
+                        placeholder="Buyer"
+                        loadOptions={searchBuyer}
+                        getOptionValue={(option) => option.value}
+                        getOptionLabel={(option) => option.label}
+                        onChange={(e)=>{
+                          // setData({...data,store:e?e.value:''})
+                        }}
+                        noOptionsMessage={({ inputValue }) =>
+                          !inputValue
+                            ? "Start Typing to View Results"
+                            : inputValue.length > 0
+                            ? "No Result Are Found Matching This Value"
+                            : "Type At Least Three Character to View Result"
+                        }
+                      />
                       </td>
                       <td className={classes}>
                        <Box className={'text-right'}>

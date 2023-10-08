@@ -109,16 +109,20 @@ export default function AddProduct() {
   },[])
   
   return (
+    <div className="container">
     <div class="flex items-center justify-center">
-      <Card className="w-96">
-        <CardHeader floated={false}>
+    <Card className="min-w-[320px] max-w-[520px] w-full">
+        {/* <CardHeader floated={false}>
           <Typography className="text-center text-2xl">Product</Typography>
-        </CardHeader>
+        </CardHeader> */}
         <CardBody>
           <form onSubmit={(e)=>{
             e.preventDefault();
             handleSubmit();
           }}>
+            <div className="mb-4 text-center">
+              <Typography className="text-2xl">Add Product</Typography>
+            </div>
             <div className="mb-4 flex flex-col gap-6">
               <Input
                 size="sm"
@@ -195,6 +199,8 @@ export default function AddProduct() {
         </CardBody>
       </Card>
     </div >
+    </div>
+
   );
 };
 

@@ -38,7 +38,7 @@ router.get("/buyers", async (req, res) => {
 
 router.get("/buyersSelect", async (req, res) => {
     const buyerName = req.query.buyerName?req.query.buyerName:''
-    const buyers = await Buyer.find({buyerName:{'$regex':buyerName,'$options':'i'}});
+    const buyers = await Buyer.find({buyerName:{'$regex':buyerName,'$options':'i'}}).limit(10);
     res.status(200).json({
         success: true,
         buyers
