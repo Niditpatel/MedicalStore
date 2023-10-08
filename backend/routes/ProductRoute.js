@@ -10,29 +10,29 @@ router.post("/product/new",async (req, res) => {
     });
     res.status(200).json({
         success: true,
-        product:'hello'
+        product:product
     })
 }
 );
 
-router.get("/products", async (req, res) => {
-    const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
-    const pageSize = req.query.pageSize?req.query.pageSize:15
-    const products = await Products.find().skip(pageNo*pageSize).limit(pageSize);
-    res.status(200).json({
-        success: true,
-        products
-    })
-});
+// router.get("/products", async (req, res) => {
+//     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
+//     const pageSize = req.query.pageSize?req.query.pageSize:15
+//     const products = await Products.find().skip(pageNo*pageSize).limit(pageSize);
+//     res.status(200).json({
+//         success: true,
+//         products
+//     })
+// });
 
 
-router.get("/totalProducts", async (req, res) => {
-    const total = await Products.find().count();
-    res.status(200).json({
-        success: true,
-        total
-    })
-});
+// router.get("/totalProducts", async (req, res) => {
+//     const total = await Products.find().count();
+//     res.status(200).json({
+//         success: true,
+//         total
+//     })
+// });
 
 router.put("/product/:id",async (req, res) => {
     let product = await Products.findById(req.params.id)
@@ -79,7 +79,7 @@ router.delete("/product/:id",
             message: `Product not Found`
         })
     }else{
-        await Products.findByIdAndDelete(req.params.id);
+        await Products.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
             message: `Product deleted succesfully `
@@ -98,7 +98,7 @@ router.get("/search",
         const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
         const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
 
-        const filterQuery =  {productName:{'$regex':product,'$options':'i'}}
+        const filterQuery =  {$and:[{productName:{'$regex':product,'$options':'i'}},{isDeleted:{$ne:true}}]}
        const lookupQuery1 = [
             {
                 $lookup: {

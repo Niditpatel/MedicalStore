@@ -55,11 +55,11 @@ const Store = () => {
       const data = await axios.delete(`${BASE_URL}store/${id}`)
       getData();
       if (data.data.success) {
-        alert("deleted successfully");
+        console.log("deleted successfully");
       }
     }
     catch (e) {
-      alert(e.message);
+      console.log(e.message);
     }
   };
 
@@ -234,8 +234,8 @@ const Store = () => {
         </DialogBody>
         <DialogFooter>
           <Button variant="gradient" color="grey" onClick={(e) => {
-            setDialog({ open: false, item: {} })
             handleDelete(dialog.item?._id)
+            setDialog({ open: false, item: {} })
           }}
             className="mr-1"
           >

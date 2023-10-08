@@ -35,7 +35,7 @@ router.post("/cart/new",async (req, res) => {
 router.get("/carts", async (req, res) => {
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
-    const carts = await Carts.find().skip(pageNo*pageSize).limit(pageSize);
+    const carts = await Carts.find({isDeleted:{$ne:true}}).skip(pageNo*pageSize).limit(pageSize);
     res.status(200).json({
         success: true,
         carts
@@ -62,7 +62,7 @@ router.delete("/cart/:id",
             message: `cart not Found`
         })
     }else{
-        await Carts.findByIdAndDelete(req.params.id);
+        await Carts.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
             message: `cart deleted succesfully `
@@ -73,7 +73,7 @@ router.delete("/cart/:id",
 router.delete("/carts",
     async (req, res) => {
     try{
-        const cart = await Carts.deleteMany({});
+        const cart = await Carts.updateMany({$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
             message: `cart deleted succesfully `
@@ -96,7 +96,7 @@ router.get("/cart/search",
         const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
         // const start_date = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
         // const end_date = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
-        const filterQuery =  {productName:{'$regex':product,'$options':'i'}}
+        const filterQuery =  {$and:[{productName:{'$regex':product,'$options':'i'}},{isDeleted:{$ne:true}}]}
        const lookupQuery1 = [
             {
                 $lookup: {

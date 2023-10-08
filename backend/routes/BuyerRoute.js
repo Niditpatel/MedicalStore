@@ -19,8 +19,8 @@ router.get("/buyers", async (req, res) => {
     const buyerName = req.query.buyerName?req.query.buyerName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
-    const buyers = await Buyer.find({buyerName:{'$regex':buyerName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
-    const total = await Buyer.find({buyerName:{'$regex':buyerName,'$options':'i'}}).count()
+    const buyers = await Buyer.find({$and:[{buyerName:{'$regex':buyerName,'$options':'i'}},{isDeleted:{$ne:true}}]}).skip(pageNo*pageSize).limit(pageSize);
+    const total = await Buyer.find({$and:[{buyerName:{'$regex':buyerName,'$options':'i'}},{isDeleted:{$ne:true}}]}).count()
     res.status(200).json({
         success: true,
         buyers,
@@ -38,7 +38,7 @@ router.get("/buyers", async (req, res) => {
 
 router.get("/buyersSelect", async (req, res) => {
     const buyerName = req.query.buyerName?req.query.buyerName:''
-    const buyers = await Buyer.find({buyerName:{'$regex':buyerName,'$options':'i'}}).limit(10);
+    const buyers = await Buyer.find({$and:[{buyerName:{'$regex':buyerName,'$options':'i'}},{isDeleted:{$ne:true}}]}).limit(10);
     res.status(200).json({
         success: true,
         buyers
@@ -76,7 +76,6 @@ router.get("/buyer/:id",async (req, res) => {
             buyer
         })
     }
-
 });
 router.delete("/buyer/:id",
     async (req, res) => {
@@ -88,7 +87,7 @@ router.delete("/buyer/:id",
             message: `buyer not Found`
         })
     }else{
-        await Buyer.findByIdAndDelete(req.params.id);
+        await Buyer.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
             message: `Buyer deleted succesfully `

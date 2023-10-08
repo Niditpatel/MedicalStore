@@ -19,8 +19,8 @@ router.get("/suppliers", async (req, res) => {
     const supplierName = req.query.supplierName?req.query.supplierName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
-    const suppliers = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
-    const total = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).count();
+    const suppliers = await Supplier.find({$and:[{supplierName:{'$regex':supplierName,'$options':'i'}},{isDeleted:{$ne:true}}]}).skip(pageNo*pageSize).limit(pageSize);
+    const total = await Supplier.find({$and:[{supplierName:{'$regex':supplierName,'$options':'i'}},{isDeleted:{$ne:true}}]}).count();
     res.status(200).json({
         success: true,
         suppliers,
@@ -38,7 +38,7 @@ router.get("/suppliers", async (req, res) => {
 
 router.get("/suppliersSelect", async (req, res) => {
     const supplierName = req.query.supplierName?req.query.supplierName:''
-    const suppliers = await Supplier.find({supplierName:{'$regex':supplierName,'$options':'i'}}).limit(10);
+    const suppliers = await Supplier.find({$and:[{supplierName:{'$regex':supplierName,'$options':'i'}},{isDeleted:{$ne:true}}]}).limit(10);
     res.status(200).json({
         success: true,
         suppliers
@@ -87,7 +87,7 @@ router.delete("/supplier/:id",
             message: `Supplier not Found`
         })
     }else{
-        await Supplier.findByIdAndDelete(req.params.id);
+        await Supplier.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
             message: `Supplier deleted succesfully `

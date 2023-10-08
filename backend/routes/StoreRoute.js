@@ -19,8 +19,8 @@ router.get("/stores", async (req, res) => {
     const storeName = req.query.storeName?req.query.storeName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:5
-    const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).skip(pageNo*pageSize).limit(pageSize);
-    const total = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).count()
+    const stores = await Store.find({$and:[{storeName:{'$regex':storeName,'$options':'i'}},{isDeleted:{$ne:true}}]}).skip(pageNo*pageSize).limit(pageSize);
+    const total = await Store.find({$and:[{storeName:{'$regex':storeName,'$options':'i'}},{isDeleted:{$ne:true}}]}).count()
     res.status(200).json({
         success: true,
         stores,
@@ -30,7 +30,7 @@ router.get("/stores", async (req, res) => {
 
 router.get("/storesSelect", async (req, res) => {
     const storeName = req.query.storeName?req.query.storeName:''
-    const stores = await Store.find({storeName:{'$regex':storeName,'$options':'i'}}).limit(10);
+    const stores = await Store.find({$and:[{storeName:{'$regex':storeName,'$options':'i'}},{isDeleted:{$ne:true}}]}).limit(10);
     res.status(200).json({
         success: true,
         stores
@@ -83,13 +83,13 @@ router.delete("/store/:id",
     if (!store) {
         res.status(200).json({
             success: true,
-            message: `Store not Found`
+            message: `Company not Found`
         })
     }else{
-        await Store.findByIdAndUpdate(req.params.id,{...store,isDeleted:true});
+        await Store.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
-            message: `Store deleted succesfully `
+            message: `Company deleted succesfully `
         })
     }
 });
