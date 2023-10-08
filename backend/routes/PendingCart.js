@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Carts = require("../models/CartSchema");
-const Products = require("../models/ProductSchema")
+const PendingCart = require("../models/PendingCart")
 
 
-router.post("/cart/new",async (req, res) => {
+router.post("/pendingCart/new",async (req, res) => {
     const products = req.body;
 
     const  cartProducts =  await  Products.find({_id:{$in:products}})
@@ -32,51 +32,45 @@ router.post("/cart/new",async (req, res) => {
 }
 );
 
-router.get("/carts", async (req, res) => {
+router.get("/pendingCarts", async (req, res) => {
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
-    const carts = await Carts.find({isDeleted:{$ne:true}}).skip(pageNo*pageSize).limit(pageSize);
+    const pendingCart = await PendingCart.find({isDeleted:{$ne:true}}).skip(pageNo*pageSize).limit(pageSize);
+    const total = await PendingCart.find({isDeleted:{$ne:true}}).count();
     res.status(200).json({
         success: true,
-        carts
-    })
-});
-
-
-router.get("/totalcarts", async (req, res) => {
-    const total = await Carts.find().count();
-    res.status(200).json({
-        success: true,
+        pendingCart,
         total
     })
 });
 
 
-router.delete("/cart/:id",
+
+router.delete("/PendingCart/:id",
     async (req, res) => {
-    const cart = await Carts.findById(req.params.id);
+    const pednidngCart = await PendingCart.findById(req.params.id);
 
     if (!cart) {
         res.status(200).json({
             success: true,
-            message: `cart not Found`
+            message: `item not Found`
         })
     }else{
-        await Carts.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
+        await PendingCart.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
-            message: `cart deleted succesfully `
+            message: `item deleted succesfully `
         })
     }
 });
 
-router.delete("/carts",
+router.delete("/pendingCarts",
     async (req, res) => {
     try{
         const cart = await Carts.updateMany({$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
-            message: `cart deleted succesfully `
+            message: `deleted succesfully `
         })
     }catch(e){
         res.status(400).json({
@@ -86,17 +80,20 @@ router.delete("/carts",
     }
 });
 
-router.get("/cart/search",
+router.get("/pendingCart/search",
     async (req, res) => {
-        const { productName,supplierName,storeName, offset, limit, sort_by, order,buyerName } = req.query;
+        const { productName,supplierName,storeName, offset, limit, sort_by, order,start_date ,end_date,buyerName} = req.query;
         const product = productName !== undefined ? productName :''
         const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
         const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
         const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
         const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
-        // const start_date = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
-        // const end_date = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
-        const filterQuery =  {$and:[{productName:{'$regex':product,'$options':'i'}},{isDeleted:{$ne:true}}]}
+        const filterQuery =  {$and:[
+            {productName:{'$regex':product,'$options':'i'}},
+            {isDeleted:{$ne:true}},
+            {createdAt:{$gte:ISODate(start_date),$lt:ISODate(end_date)}}
+            ]}
+
        const lookupQuery1 = [
             {
                 $lookup: {
@@ -144,7 +141,6 @@ router.get("/cart/search",
             }
         ]
 
-
         const lookupQuery3 = [
             {
                 $lookup: {
@@ -175,11 +171,10 @@ router.get("/cart/search",
         const storeFilterQuery =storeName? storeName : '' ;
         const buyerFilterQuery =buyerName? buyerName : '' ;
 
-    const data = await Carts.aggregate([
+    const data = await PendingCart.aggregate([
         { $match: filterQuery},
          ...lookupQuery1,
          ...lookupQuery2,
-         ...lookupQuery3,
          {$match:{$and:
             [
                 {'supplier.supplierName': {'$regex':supplierFilterQuery ,'$options':'i'}},
