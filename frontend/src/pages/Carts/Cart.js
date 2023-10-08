@@ -30,8 +30,8 @@ import {
 import Stack from '@mui/material/Stack';
 import moment from "moment/moment";
 import Select from 'react-select'
-import {options} from "../../StaticData/StaticData"
-
+import { options } from "../../StaticData/StaticData"
+import { useReactToPrint } from "react-to-print";
 
 
 const Cart = () => {
@@ -50,7 +50,10 @@ const Cart = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [page_Size, setPage_Size] = useState(5);
-
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const getTotalProducts = async () => {
     try {
@@ -66,7 +69,7 @@ const Cart = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}cart/search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index +'&limit=' + page_Size
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -132,7 +135,7 @@ const Cart = () => {
   useEffect(() => {
     getData();
     getTotalProducts();
-  }, [searchData, page_Index,page_Size]);
+  }, [searchData, page_Index, page_Size]);
 
   return (
 
@@ -144,6 +147,9 @@ const Cart = () => {
             <div className="flex gap-3">
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add In Cart</Button>
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { setClaerAll(true) }}>claer Cart</Button>
+              <Button className="btn btn-primary" type="primary" onClick={handlePrint}>
+                Print
+              </Button>
               {/* <div>
                 <Popover animate={{
                   mount: { scale: 1, y: 0 },
@@ -192,57 +198,56 @@ const Cart = () => {
               value={searchData.supplierName}
               onChange={handleChange}
             />
-            {/* <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button> */}
           </div>
         </CardHeader>
         <CardBody className="p-4 overflow-hidden px-0">
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
+          <table className="w-full min-w-max table-auto text-left"  id="section-to-print"ref={componentRef}>
+            <thead >
               <tr>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      Product Name
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    Product Name
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      Packing
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    Packing
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      Supplier Name
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    Supplier Name
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70 text-right"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70 text-right"
-                    >
-                      Delete
-                    </Typography>
-                  </th>
+                    Delete
+                  </Typography>
+                </th>
               </tr>
             </thead>
             {loading === false ?
@@ -290,11 +295,11 @@ const Cart = () => {
                           </td>
                           <td className={classes}>
                             <Box className={'flex justify-end'}>
-                            <Button
-                              variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
-                              onClick={(e) => setDialog({ open: true, item: item })}
-                            >X
-                            </Button>
+                              <Button
+                                variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
+                                onClick={(e) => setDialog({ open: true, item: item })}
+                              >X
+                              </Button>
                             </Box>
                           </td>
                         </tr>
@@ -314,8 +319,8 @@ const Cart = () => {
           </table>
         </CardBody>
         <CardFooter className="pt-0 print:hidden">
-          <div style={{ display: 'flex', justifyContent:'space-between' }}>
-          <Pagination
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Pagination
               count={Math.ceil(totalProducts / page_Size)}
               page={page_Index}
               onChange={handleChangePageNew}
