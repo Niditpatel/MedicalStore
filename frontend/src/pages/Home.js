@@ -136,21 +136,20 @@ const Home = () => {
   }
 
 
-  const getBuyers = async (inputValue,loadMode) => {
+  const getBuyers = async (inputValue, loadMode) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}buyersSelect/?buyerName=`+ inputValue
+        `${BASE_URL}buyersSelect/?buyerName=` + inputValue
       );
-      if(res.data.success){
-        const buyers = res.data.buyers?.map(item =>
-          {
-          return {...item,value:item?._id,label:item.buyerName}
+      if (res.data.success) {
+        const buyers = res.data.buyers?.map(item => {
+          return { ...item, value: item?._id, label: item.buyerName }
         })
-        if(!loadMode){
+        if (!loadMode) {
           setBuyers(buyers)
         }
         return buyers
-      }else{
+      } else {
         return null
       }
     } catch (error) {
@@ -158,24 +157,24 @@ const Home = () => {
     }
   };
 
-  const searchBuyer =  async (inputValue) => {
-    const res = await getBuyers(inputValue,true);
+  const searchBuyer = async (inputValue) => {
+    const res = await getBuyers(inputValue, true);
     const institutes = res.map((val) => {
       return { label: val.buyerName, value: val._id };
     });
     return institutes;
-};
+  };
 
-useEffect(() => {
-  getData();
-  getTotalProducts();
-}, [searchData, page_Index, page_Size]);
+  useEffect(() => {
+    getData();
+    getTotalProducts();
+  }, [searchData, page_Index, page_Size]);
 
-useEffect(()=>{
-  getBuyers();
-},[])
+  useEffect(() => {
+    getBuyers('',false);
+  }, [])
 
-  const TABLE_HEAD = [ "Product Name","Packing",'Quantity',  "Supplier", "Edit/Delete"];
+  const TABLE_HEAD = ["Product Name", "Packing", 'Quantity', "Supplier", "Edit/Delete"];
   return (
 
     <div className="container mb-8">
@@ -184,12 +183,12 @@ useEffect(()=>{
           <div className="mb-3 flex justify-between items-center">
             <Typography> Product List </Typography>
             <div className="flex gap-2">
-            <Button size="sm" className="mt-6 m-0" onClick={(e)=>{
-              navigate('/add-product')
-            }}>Add Product</Button>
-            <Button size="sm" className="mt-6 m-0" onClick={(e)=>{
-              handleAddCart()
-            }}>Add to Cart</Button>
+              <Button size="sm" className="mt-6 m-0" onClick={(e) => {
+                navigate('/add-product')
+              }}>Add Product</Button>
+              <Button size="sm" className="mt-6 m-0" onClick={(e) => {
+                handleAddCart()
+              }}>Add to Cart</Button>
             </div>
           </div>
           <div className="w-full flex gap-5 justify-between items-center">
@@ -227,72 +226,72 @@ useEffect(()=>{
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                >
+                  <Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }} className="m-0 p-0 print:hidden" />
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
                   >
-                    <Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }}  className="m-0 p-0 print:hidden"/>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      Product Name
-                    </Typography>
-                  </th><th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >Packing
-                    </Typography>
-                  </th>
-                  
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >Supplier
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >Quantity
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >Buyer
-                    </Typography>
-                  </th>
-                  <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70 text-right"
-                    >Edit/Delete
-                    </Typography>
-                  </th>
+                    Product Name
+                  </Typography>
+                </th><th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >Packing
+                  </Typography>
+                </th>
+
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >Supplier
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >Quantity
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >Buyer
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70 text-right"
+                  >Edit/Delete
+                  </Typography>
+                </th>
               </tr>
             </thead>
             {loading === false ?
@@ -329,7 +328,7 @@ useEffect(()=>{
                           {item?.packing}
                         </Typography>
                       </td>
-                      
+
                       <td className={classes} >
                         <Typography
                           variant="small"
@@ -340,49 +339,49 @@ useEffect(()=>{
                         </Typography>
                       </td>
                       <td className={classes}>
-                        <TextField size="small" type="number" onWheel={(e)=>{
-                         e.target.blur()
-                        }}/>
+                        <TextField size="small" type="number" onWheel={(e) => {
+                          e.target.blur()
+                        }} />
                       </td>
                       <td className={classes}>
-                      <AsyncSelect
-                        cacheOptions
-                        menuPortalTarget={document.querySelectorAll('body')}
-                        defaultOptions={buyers}
-                        isClearable
-                        placeholder="Buyer"
-                        loadOptions={searchBuyer}
-                        getOptionValue={(option) => option.value}
-                        getOptionLabel={(option) => option.label}
-                        onChange={(e)=>{
-                          // setData({...data,store:e?e.value:''})
-                        }}
-                        noOptionsMessage={({ inputValue }) =>
-                          !inputValue
-                            ? "Start Typing to View Results"
-                            : inputValue.length > 0
-                            ? "No Result Are Found Matching This Value"
-                            : "Type At Least Three Character to View Result"
-                        }
-                      />
+                        <AsyncSelect
+                          cacheOptions
+                          menuPortalTarget={document.querySelector('body')}
+                          defaultOptions={buyers}
+                          isClearable
+                          placeholder="Buyer"
+                          loadOptions={searchBuyer}
+                          getOptionValue={(option) => option.value}
+                          getOptionLabel={(option) => option.label}
+                          onChange={(e) => {
+                            // setData({...data,store:e?e.value:''})
+                          }}
+                          noOptionsMessage={({ inputValue }) =>
+                            !inputValue
+                              ? "Start Typing to View Results"
+                              : inputValue.length > 0
+                                ? "No Result Are Found Matching This Value"
+                                : "Type At Least Three Character to View Result"
+                          }
+                        />
                       </td>
                       <td className={classes}>
-                       <Box className={'text-right'}>
-                       <Button
-                          variant="gradient"
-                          color='blue'
-                          size="sm"
-                          className="print:hidden"
-                          onClick={() => handleEdit(item?._id)}
-                        >
-                          &#x1F589;
-                        </Button>
-                        <Button
-                          variant="gradient" size="sm" color='red' className="btn btn-danger ms-2 print:hidden"
-                          onClick={(e) => handleDelete(item?._id)}
-                        >X
-                        </Button>
-                       </Box>
+                        <Box className={'text-right'}>
+                          <Button
+                            variant="gradient"
+                            color='blue'
+                            size="sm"
+                            className="print:hidden"
+                            onClick={() => handleEdit(item?._id)}
+                          >
+                            &#x1F589;
+                          </Button>
+                          <Button
+                            variant="gradient" size="sm" color='red' className="btn btn-danger ms-2 print:hidden"
+                            onClick={(e) => handleDelete(item?._id)}
+                          >X
+                          </Button>
+                        </Box>
                       </td>
                     </tr>
                   );
@@ -393,13 +392,13 @@ useEffect(()=>{
           </table>
         </CardBody>
         <CardFooter className="pt-0 print:hidden">
-          <div style={{ display: 'flex',justifyContent:'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Pagination
               count={Math.ceil(totalProducts / page_Size)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
-              <Select
+            <Select
               defaultValue={options[0]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
