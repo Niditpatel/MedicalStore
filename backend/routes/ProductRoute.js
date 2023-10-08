@@ -111,7 +111,7 @@ router.get("/search",
                             $project: {
                                 supplierName: 1,
                                 contactNumber:1,
-                                _id:0
+                                _id:1
                             }
                         }
                     ]
@@ -138,7 +138,7 @@ router.get("/search",
                             $project: {
                                 storeName: 1,
                                 contactNumber:1,
-                                _id:0
+                                _id:1
                             }
                         }
                     ]
