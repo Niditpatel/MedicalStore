@@ -278,7 +278,7 @@ const PendingCart = () => {
           </table>
         </CardBody>
         <CardFooter className="pt-0 print:hidden">
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex' ,justifyContent:'space-between'}}>
           <Pagination
               count={Math.ceil(totalProducts / 10)}
               page={page_Index}
