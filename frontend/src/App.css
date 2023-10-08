@@ -38,7 +38,37 @@ input::-webkit-inner-spin-button {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  @page {
+    width: 100%;
+    margin: 5mm;
+  }
+
+  #section-to-print,
+  #section-to-print * {
+    visibility: visible;
+  }
+
+  table {
+    width: 100%;
+    min-width: max-content;
+    table-layout: auto;
+    text-align: left;
+  }
+
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 }
