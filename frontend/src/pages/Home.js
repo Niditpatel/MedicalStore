@@ -347,6 +347,7 @@ useEffect(()=>{
                       <td className={classes}>
                       <AsyncSelect
                         cacheOptions
+                        menuPortalTarget={document.querySelectorAll('body')}
                         defaultOptions={buyers}
                         isClearable
                         placeholder="Buyer"
