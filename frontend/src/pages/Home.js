@@ -201,10 +201,16 @@ const Home = () => {
         validationSchema={
           Yup.array().of(
             Yup.object().shape({
-              buyerId: Yup.number().when("isDeleted", {
-                is: false,
-                then: Yup.number().required("Product is required.")
-                  .min(1, "Product is required."),
+              buyerId: Yup.string().when("isCart", {
+                is: true,
+                then: Yup.string().required("Buyer is required.")
+                  .min(1, "Byer is required."),
+                otherwise: Yup.string(),
+              }),
+              quantity: Yup.number().when("isCart", {
+                is: true,
+                then: Yup.number().required("Buyer is required.")
+                  .min(1, "Byer is required."),
                 otherwise: Yup.number(),
               }),
             })
@@ -218,6 +224,7 @@ const Home = () => {
             errors,
             dirty,
             isSubmitting,
+            setFieldValue,
             handleChange,
             handleBlur,
             handleSubmit,
@@ -233,7 +240,7 @@ const Home = () => {
                       <Button size="sm" className="mt-6 m-0" onClick={(e) => {
                         navigate('/add-product')
                       }}>Add Product</Button>
-                      <Button size="sm" className="mt-6 m-0" onClick={(e) => {
+                      <Button type="submit" disabled={isSubmitting} size="sm" className="mt-6 m-0" onClick={(e) => {
                         handleAddCart()
                       }}>Add to Cart</Button>
                     </div>
@@ -358,9 +365,7 @@ const Home = () => {
                                       console.log("e", e);
                                       // data[index].isCart = e.target.checked;
                                     }}
-                                    value={(e) => {
-                                      data[index].isCart = e.target.checked;
-                                    }} />
+                                    value={values[index]?.isCart} />
                                 </div>
                               </td>
                               <td className={classes}>
@@ -416,6 +421,12 @@ const Home = () => {
                                   getOptionValue={(option) => option.value}
                                   getOptionLabel={(option) => option.label}
                                   onChange={(e) => {
+                                    console.log("e", e);
+                                    setFieldValue(
+                                      `data[${index}].buyerId`,
+                                      e !== null ? e.value : "",
+                                      false
+                                    );
                                     // setData({...data,store:e?e.value:''})
                                   }}
                                   noOptionsMessage={({ inputValue }) =>
