@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
+import * as React from "react";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { Formik, Form, Field, FieldArray } from 'formik';
 import {
   Card,
   CardHeader,
@@ -12,6 +12,7 @@ import {
   Checkbox,
   CardFooter
 } from "@material-tailwind/react";
+import * as Yup from "yup";
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { BASE_URL } from "../Common";
@@ -22,7 +23,6 @@ import {
   Pagination,
   TextField
 } from "@mui/material";
-import Stack from '@mui/material/Stack';
 import Select from 'react-select'
 import { options } from "../StaticData/StaticData"
 
@@ -30,8 +30,24 @@ import { options } from "../StaticData/StaticData"
 
 const Home = () => {
   const navigate = useNavigate();
-
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([{
+    _id: "",
+    productName: "",
+    packing: "",
+    store: {
+      contactNumber: "",
+      storeName: "",
+      _id: "",
+    },
+    supplier: [{
+      contactNumber: "",
+      supplierName: "",
+      _id: "",
+    }],
+    isCart: false,
+    buyerId: "",
+    quantity: 0
+  }]);
   const [loading, setLoading] = useState(false);
   const [dataForCart, setDataForCart] = useState([]);
   const [buyers, setBuyers] = useState([]);
@@ -41,16 +57,16 @@ const Home = () => {
   const [page_Size, setPage_Size] = useState(5);
 
 
-  const getTotalProducts = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}totalProducts`
-      );
-      setTotalProduct(res.data.total)
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getTotalProducts = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `${BASE_URL}totalProducts`
+  //     );
+  //     setTotalProduct(res.data.total)
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const getData = async () => {
     try {
       const data = await axios.get(
@@ -64,9 +80,6 @@ const Home = () => {
       console.log(error);
     }
   };
-
-
-
 
 
   const handleDelete = async (id) => {
@@ -115,7 +128,6 @@ const Home = () => {
     // } else {
     //   setDataForCart([...dataForCart, maal])
     // }
-
   }
 
 
@@ -167,248 +179,331 @@ const Home = () => {
 
   useEffect(() => {
     getData();
-    getTotalProducts();
+    // getTotalProducts();
   }, [searchData, page_Index, page_Size]);
 
   useEffect(() => {
-    getBuyers('',false);
+    getBuyers('', false);
   }, [])
+  const updateDataForCart = (item) => {
 
+  }
   const TABLE_HEAD = ["Product Name", "Packing", 'Quantity', "Supplier", "Edit/Delete"];
   return (
-
     <div className="container mb-8">
-      <Card className="h-full w-full	">
-        <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
-          <div className="mb-3 flex justify-between items-center">
-            <Typography> Product List </Typography>
-            <div className="flex gap-2">
-              <Button size="sm" className="mt-6 m-0" onClick={(e) => {
-                navigate('/add-product')
-              }}>Add Product</Button>
-              <Button size="sm" className="mt-6 m-0" onClick={(e) => {
-                handleAddCart()
-              }}>Add to Cart</Button>
-            </div>
-          </div>
-          <div className="w-full flex gap-5 justify-between items-center">
-            <Input
-              type="text"
-              size="sm"
-              className="form-control border rounded"
-              label="Company Name"
-              name="storeName"
-              value={searchData.storeName}
-              onChange={handleChange}
-            />
-            <Input
-              type="text"
-              size="sm"
-              className="form-control border rounded"
-              label="Product Name"
-              name="productName"
-              value={searchData.productName}
-              onChange={handleChange}
-            />
-            <Input
-              type="text"
-              size="sm"
-              className="form-control border rounded"
-              label="Supplier Name"
-              name="supplierName"
-              value={searchData.supplierName}
-              onChange={handleChange}
-            />
-            {/* <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button> */}
-          </div>
-        </CardHeader>
-        <CardBody className="p-4 overflow-hidden px-0 ">
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                >
-                  <Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }} className="m-0 p-0 print:hidden" />
-                </th>
-                <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    Product Name
-                  </Typography>
-                </th><th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >Packing
-                  </Typography>
-                </th>
-
-                <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >Supplier
-                  </Typography>
-                </th>
-                <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >Quantity
-                  </Typography>
-                </th>
-                <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >Buyer
-                  </Typography>
-                </th>
-                <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70 text-right"
-                  >Edit/Delete
-                  </Typography>
-                </th>
-              </tr>
-            </thead>
-            {loading === false ?
-              <tbody>
-                {data?.map((item, index,) => {
-                  const isLast = index === data.length - 1;
-                  const classes = isLast
-                    ? "py-1 px-2"
-                    : "py-1 px-2 border-b border-blue-gray-50";
-                  return (
-                    <tr className="h-4" key={index}>
-                      <td className={classes} >
-                        <div className="flex items-center">
-                          <Checkbox className="print:hidden" size={'small'} onChange={(e) => { addForCart(item) }}
-                            checked={dataForCart.find(A => A._id === item._id) ? true : false}
-                            value={dataForCart.find(A => A._id === item._id) ? true : false} />
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
+      <Formik
+        initialValues={{ email: "" }}
+        onSubmit={async (values) => {
+          console.log("value", values);
+        }}
+        validateOnChange={false}
+        validateOnBlur={false}
+        validationSchema={
+          Yup.array().of(
+            Yup.object().shape({
+              buyerId: Yup.number().when("isDeleted", {
+                is: false,
+                then: Yup.number().required("Product is required.")
+                  .min(1, "Product is required."),
+                otherwise: Yup.number(),
+              }),
+            })
+          )}
+      >
+        {(props) => {
+          props.submitCount > 0 && (props.validateOnChange = true);
+          const {
+            values,
+            touched,
+            errors,
+            dirty,
+            isSubmitting,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            handleReset
+          } = props;
+          return (
+            <form onSubmit={handleSubmit}>
+              <Card className="h-full w-full	">
+                <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
+                  <div className="mb-3 flex justify-between items-center">
+                    <Typography> Product List </Typography>
+                    <div className="flex gap-2">
+                      <Button size="sm" className="mt-6 m-0" onClick={(e) => {
+                        navigate('/add-product')
+                      }}>Add Product</Button>
+                      <Button size="sm" className="mt-6 m-0" onClick={(e) => {
+                        handleAddCart()
+                      }}>Add to Cart</Button>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-5 justify-between items-center">
+                    <Input
+                      type="text"
+                      size="sm"
+                      className="form-control border rounded"
+                      label="Company Name"
+                      name="storeName"
+                      value={searchData.storeName}
+                      onChange={handleChange}
+                    />
+                    <Input
+                      type="text"
+                      size="sm"
+                      className="form-control border rounded"
+                      label="Product Name"
+                      name="productName"
+                      value={searchData.productName}
+                      onChange={handleChange}
+                    />
+                    <Input
+                      type="text"
+                      size="sm"
+                      className="form-control border rounded"
+                      label="Supplier Name"
+                      name="supplierName"
+                      value={searchData.supplierName}
+                      onChange={handleChange}
+                    />
+                    {/* <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button> */}
+                  </div>
+                </CardHeader>
+                <CardBody className="p-4 overflow-hidden px-0 ">
+                  <table className="w-full min-w-max table-auto text-left">
+                    <thead>
+                      <tr>
+                        <th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
                         >
-                          {item?.productName}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
+                          <Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }} className="m-0 p-0 print:hidden" />
+                        </th>
+                        <th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
                         >
-                          {item?.packing}
-                        </Typography>
-                      </td>
-
-                      <td className={classes} >
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {item?.supplier?.map((item) => item?.supplierName)?.join(', ')}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <TextField size="small" type="number" onWheel={(e) => {
-                          e.target.blur()
-                        }} />
-                      </td>
-                      <td className={classes}>
-                        <AsyncSelect
-                          cacheOptions
-                          menuPortalTarget={document.querySelector('body')}
-                          defaultOptions={buyers}
-                          isClearable
-                          placeholder="Buyer"
-                          loadOptions={searchBuyer}
-                          getOptionValue={(option) => option.value}
-                          getOptionLabel={(option) => option.label}
-                          onChange={(e) => {
-                            // setData({...data,store:e?e.value:''})
-                          }}
-                          noOptionsMessage={({ inputValue }) =>
-                            !inputValue
-                              ? "Start Typing to View Results"
-                              : inputValue.length > 0
-                                ? "No Result Are Found Matching This Value"
-                                : "Type At Least Three Character to View Result"
-                          }
-                        />
-                      </td>
-                      <td className={classes}>
-                        <Box className={'text-right'}>
-                          <Button
-                            variant="gradient"
-                            color='blue'
-                            size="sm"
-                            className="print:hidden"
-                            onClick={() => handleEdit(item?._id)}
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
                           >
-                            &#x1F589;
-                          </Button>
-                          <Button
-                            variant="gradient" size="sm" color='red' className="btn btn-danger ms-2 print:hidden"
-                            onClick={(e) => handleDelete(item?._id)}
-                          >X
-                          </Button>
-                        </Box>
-                      </td>
-                    </tr>
-                  );
-                },
-                )}
-              </tbody>
-              : <>Wait </>}
-          </table>
-        </CardBody>
-        <CardFooter className="pt-0 print:hidden">
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Pagination
-              count={Math.ceil(totalProducts / page_Size)}
-              page={page_Index}
-              onChange={handleChangePageNew}
-            />
-            <Select
-              defaultValue={options[0]}
-              onChange={(e) => {
-                setPage_Size(parseInt(e?.value))
-                setPage_Index(1)
-              }} options={options} />
-          </div>
-        </CardFooter>
-      </Card>
-    </div>
+                            Product Name
+                          </Typography>
+                        </th><th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                        >
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >Packing
+                          </Typography>
+                        </th>
 
+                        <th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                        >
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >Supplier
+                          </Typography>
+                        </th>
+                        <th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                        >
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >Quantity
+                          </Typography>
+                        </th>
+                        <th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                        >
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >Buyer
+                          </Typography>
+                        </th>
+                        <th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                        >
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70 text-right"
+                          >Edit/Delete
+                          </Typography>
+                        </th>
+                      </tr>
+                    </thead>
+                    {loading === false ?
+                      <tbody>
+                        {data?.map((item, index,) => {
+                          const isLast = index === data.length - 1;
+                          const classes = isLast
+                            ? "py-1 px-2"
+                            : "py-1 px-2 border-b border-blue-gray-50";
+                          return (
+                            <tr className="h-4" key={index}>
+                              <td className={classes} >
+                                <div className="flex items-center">
+                                  <Checkbox className="print:hidden" size={'small'} onChange={(e) => { addForCart(item) }}
+                                    checked={(e) => {
+                                      debugger
+                                      console.log("e", e);
+                                      // data[index].isCart = e.target.checked;
+                                    }}
+                                    value={(e) => {
+                                      data[index].isCart = e.target.checked;
+                                    }} />
+                                </div>
+                              </td>
+                              <td className={classes}>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {item?.productName}
+                                </Typography>
+                              </td>
+                              <td className={classes}>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {item?.packing}
+                                </Typography>
+                              </td>
+
+                              <td className={classes} >
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {item?.supplier?.map((item) => item?.supplierName)?.join(', ')}
+                                </Typography>
+                              </td>
+                              <td className={classes}>
+                                <TextField size="small" type="number"
+                                  value={values[index]?.quantity}
+                                  onChange={handleChange}
+                                  onWheel={(e) => {
+                                    e.target.blur()
+                                  }}
+                                // className={
+                                //   errors.quantity && touched.quantity
+                                //     ? "text-input error"
+                                //     : "text-input"
+                                // }
+                                />
+                              </td>
+                              <td className={classes}>
+                                <AsyncSelect
+                                  cacheOptions
+                                  menuPortalTarget={document.querySelector('body')}
+                                  defaultOptions={buyers}
+                                  isClearable
+                                  placeholder="Buyer"
+                                  loadOptions={searchBuyer}
+                                  getOptionValue={(option) => option.value}
+                                  getOptionLabel={(option) => option.label}
+                                  onChange={(e) => {
+                                    // setData({...data,store:e?e.value:''})
+                                  }}
+                                  noOptionsMessage={({ inputValue }) =>
+                                    !inputValue
+                                      ? "Start Typing to View Results"
+                                      : inputValue.length > 0
+                                        ? "No Result Are Found Matching This Value"
+                                        : "Type At Least Three Character to View Result"
+                                  }
+                                />
+                              </td>
+                              <td className={classes}>
+                                <Box className={'text-right'}>
+                                  <Button
+                                    variant="gradient"
+                                    color='blue'
+                                    size="sm"
+                                    className="print:hidden"
+                                    onClick={() => handleEdit(item?._id)}
+                                  >
+                                    &#x1F589;
+                                  </Button>
+                                  <Button
+                                    variant="gradient" size="sm" color='red' className="btn btn-danger ms-2 print:hidden"
+                                    onClick={(e) => handleDelete(item?._id)}
+                                  >X
+                                  </Button>
+                                </Box>
+                              </td>
+                            </tr>
+                          );
+                        },
+                        )}
+                      </tbody>
+                      : <>Wait </>}
+                  </table>
+                </CardBody>
+
+                <CardFooter className="pt-0 print:hidden">
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Pagination
+                      count={Math.ceil(totalProducts / page_Size)}
+                      page={page_Index}
+                      onChange={handleChangePageNew}
+                    />
+                    <Select
+                      defaultValue={options[0]}
+                      onChange={(e) => {
+                        setPage_Size(parseInt(e?.value))
+                        setPage_Index(1)
+                      }} options={options} />
+                  </div>
+                </CardFooter>
+              </Card>
+              {/* <input
+                id="email"
+                placeholder="Enter your email"
+                type="text"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={
+                  errors.email && touched.email
+                    ? "text-input error"
+                    : "text-input"
+                }
+              />
+              {errors.email && touched.email && (
+                <div className="input-feedback">{errors.email}</div>
+              )}
+
+              <button
+                type="button"
+                className="outline"
+                onClick={handleReset}
+                disabled={!dirty || isSubmitting}
+              >
+                Reset
+              </button>
+              <button type="submit" disabled={isSubmitting}>
+                Submit
+              </button> */}
+            </form>
+          );
+        }}
+      </Formik>
+
+    </div >
   );
 };
 
