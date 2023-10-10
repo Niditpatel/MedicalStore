@@ -74,7 +74,15 @@ const Home = () => {
         searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
       );
       if (data.data.success) {
-        setData(data.data.data)
+        let dataMake= data?.data?.data
+        dataMake.map((x)=>{
+        x.buyerId ="";
+        x.quantity=0;
+        x.isCart = false;
+        return x;
+        });
+        setData(dataMake)
+        setTotalProduct(data.data.total)
       }
     } catch (error) {
       console.log(error);
@@ -192,29 +200,30 @@ const Home = () => {
   return (
     <div className="container mb-8">
       <Formik
-        initialValues={{ email: "" }}
-        onSubmit={async (values) => {
+        enableReinitialize 
+        initialValues={data}
+        onSubmit={(values) => {
           console.log("value", values);
         }}
         validateOnChange={false}
         validateOnBlur={false}
-        validationSchema={
-          Yup.array().of(
-            Yup.object().shape({
-              buyerId: Yup.string().when("isCart", {
-                is: true,
-                then: Yup.string().required("Buyer is required.")
-                  .min(1, "Byer is required."),
-                otherwise: Yup.string(),
-              }),
-              quantity: Yup.number().when("isCart", {
-                is: true,
-                then: Yup.number().required("Buyer is required.")
-                  .min(1, "Byer is required."),
-                otherwise: Yup.number(),
-              }),
-            })
-          )}
+        // validationSchema={
+        //   Yup.array().of(
+        //     Yup.object().shape({
+        //       buyerId: Yup.string().when("isCart", {
+        //         is: true,
+        //         then: Yup.string().required("Buyer is required.")
+        //           .min(1, "Byer is required."),
+        //         otherwise: Yup.string(),
+        //       }),
+        //       quantity: Yup.number().when("isCart", {
+        //         is: true,
+        //         then: Yup.number().required("Buyer is required.")
+        //           .min(1, "Byer is required."),
+        //         otherwise: Yup.number(),
+        //       }),
+        //     })
+        //   )}
       >
         {(props) => {
           props.submitCount > 0 && (props.validateOnChange = true);
@@ -359,12 +368,14 @@ const Home = () => {
                             <tr className="h-4" key={index}>
                               <td className={classes} >
                                 <div className="flex items-center">
-                                  <Checkbox className="print:hidden" size={'small'} onChange={(e) => { addForCart(item) }}
-                                    checked={(e) => {
-                                      debugger
-                                      console.log("e", e);
-                                      // data[index].isCart = e.target.checked;
-                                    }}
+{ console.log(values[0]._id)}
+                                  <Checkbox className="print:hidden" size={'small'} onChange={(e) => { 
+                                    setFieldValue(
+                                        `data[${index}].isCart`,
+                                        e !== null ? e.target.checked : false,
+                                        false
+                                      ); }}
+                                    checked={values[index]?.isCart}
                                     value={values[index]?.isCart} />
                                 </div>
                               </td>
@@ -397,12 +408,19 @@ const Home = () => {
                                 </Typography>
                               </td>
                               <td className={classes}>
-                                <TextField size="small" type="number"
+                                <TextField size="small" 
+                                type="number"
                                   value={values[index]?.quantity}
-                                  onChange={handleChange}
-                                  onWheel={(e) => {
-                                    e.target.blur()
-                                  }}
+                                  onChange={(e)=>{
+                                    debugger
+                                    setFieldValue(
+                                    `data[${index}].quantity`,
+                                    e.target.value ? parseInt(e.target.value) : 0,
+                                    false
+                                  )}}
+                                  // onWheel={(e) => {
+                                  //   e.target.blur()
+                                  // }}
                                 // className={
                                 //   errors.quantity && touched.quantity
                                 //     ? "text-input error"
@@ -421,7 +439,6 @@ const Home = () => {
                                   getOptionValue={(option) => option.value}
                                   getOptionLabel={(option) => option.label}
                                   onChange={(e) => {
-                                    console.log("e", e);
                                     setFieldValue(
                                       `data[${index}].buyerId`,
                                       e !== null ? e.value : "",
