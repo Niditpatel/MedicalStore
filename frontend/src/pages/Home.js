@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field, FieldArray } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import {
   Card,
   CardHeader,
@@ -74,12 +74,12 @@ const Home = () => {
         searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
       );
       if (data.data.success) {
-        let dataMake= data?.data?.data
-        dataMake.map((x)=>{
-        x.buyerId ="";
-        x.quantity=0;
-        x.isCart = false;
-        return x;
+        let dataMake = data?.data?.data
+        dataMake.map((x) => {
+          x.buyerId = "";
+          x.quantity = 0;
+          x.isCart = false;
+          return x;
         });
         setData(dataMake)
         setTotalProduct(data.data.total)
@@ -200,30 +200,31 @@ const Home = () => {
   return (
     <div className="container mb-8">
       <Formik
-        enableReinitialize 
-        initialValues={data}
+        enableReinitialize
+        initialValues={[...data]}
         onSubmit={(values) => {
           console.log("value", values);
         }}
-        validateOnChange={false}
-        validateOnBlur={false}
-        // validationSchema={
-        //   Yup.array().of(
-        //     Yup.object().shape({
-        //       buyerId: Yup.string().when("isCart", {
-        //         is: true,
-        //         then: Yup.string().required("Buyer is required.")
-        //           .min(1, "Byer is required."),
-        //         otherwise: Yup.string(),
-        //       }),
-        //       quantity: Yup.number().when("isCart", {
-        //         is: true,
-        //         then: Yup.number().required("Buyer is required.")
-        //           .min(1, "Byer is required."),
-        //         otherwise: Yup.number(),
-        //       }),
-        //     })
-        //   )}
+        // validateOnMount
+        // validateOnChange={false}
+        // validateOnBlur={false}
+        validationSchema={
+          Yup.array().of(
+            Yup.object().shape({
+              buyerId: Yup.string().when("isCart", {
+                is: true,
+                then: Yup.string().required("Buyer is required.")
+                  .min(1, "Byer is required."),
+                otherwise: Yup.string(),
+              }),
+              quantity: Yup.number().when("isCart", {
+                is: true,
+                then: Yup.number().required("Quantiy is required.")
+                  .min(1, "Quantiy is required."),
+                otherwise: Yup.number(),
+              }),
+            })
+          )}
       >
         {(props) => {
           props.submitCount > 0 && (props.validateOnChange = true);
@@ -249,9 +250,11 @@ const Home = () => {
                       <Button size="sm" className="mt-6 m-0" onClick={(e) => {
                         navigate('/add-product')
                       }}>Add Product</Button>
-                      <Button type="submit" disabled={isSubmitting} size="sm" className="mt-6 m-0" onClick={(e) => {
-                        handleAddCart()
-                      }}>Add to Cart</Button>
+                      <Button type="submit"
+                        //disabled={isSubmitting}
+                        size="sm" className="mt-6 m-0"
+                      // onClick={(e) => { handleAddCart() }}
+                      >Add to Cart</Button>
                     </div>
                   </div>
                   <div className="w-full flex gap-5 justify-between items-center">
@@ -282,7 +285,6 @@ const Home = () => {
                       value={searchData.supplierName}
                       onChange={handleChange}
                     />
-                    {/* <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button> */}
                   </div>
                 </CardHeader>
                 <CardBody className="p-4 overflow-hidden px-0 ">
@@ -359,7 +361,7 @@ const Home = () => {
                     </thead>
                     {loading === false ?
                       <tbody>
-                        {data?.map((item, index,) => {
+                        {values?.map((item, index,) => {
                           const isLast = index === data.length - 1;
                           const classes = isLast
                             ? "py-1 px-2"
@@ -368,13 +370,14 @@ const Home = () => {
                             <tr className="h-4" key={index}>
                               <td className={classes} >
                                 <div className="flex items-center">
-{ console.log(values[0]._id)}
-                                  <Checkbox className="print:hidden" size={'small'} onChange={(e) => { 
+                                  <Checkbox className="print:hidden" size={'small'} onChange={(e) => {
+                                    debugger
                                     setFieldValue(
-                                        `data[${index}].isCart`,
-                                        e !== null ? e.target.checked : false,
-                                        false
-                                      ); }}
+                                      `[${index}].isCart`,
+                                      e.target?.checked ? e.target.checked : false,
+                                      false
+                                    );
+                                  }}
                                     checked={values[index]?.isCart}
                                     value={values[index]?.isCart} />
                                 </div>
@@ -408,25 +411,27 @@ const Home = () => {
                                 </Typography>
                               </td>
                               <td className={classes}>
-                                <TextField size="small" 
-                                type="number"
+                                <TextField size="small"
+                                  type="number"
                                   value={values[index]?.quantity}
-                                  onChange={(e)=>{
+                                  onChange={(e) => {
                                     debugger
                                     setFieldValue(
-                                    `data[${index}].quantity`,
-                                    e.target.value ? parseInt(e.target.value) : 0,
-                                    false
-                                  )}}
-                                  // onWheel={(e) => {
-                                  //   e.target.blur()
-                                  // }}
+                                      `[${index}].quantity`,
+                                      e.target.value ? parseInt(e.target.value) : 0,
+                                      false
+                                    )
+                                  }}
+                                // onWheel={(e) => {
+                                //   e.target.blur()
+                                // }}
                                 // className={
                                 //   errors.quantity && touched.quantity
                                 //     ? "text-input error"
                                 //     : "text-input"
                                 // }
                                 />
+                                <ErrorMessage name={`${index}.quantity`} />
                               </td>
                               <td className={classes}>
                                 <AsyncSelect
@@ -440,7 +445,7 @@ const Home = () => {
                                   getOptionLabel={(option) => option.label}
                                   onChange={(e) => {
                                     setFieldValue(
-                                      `data[${index}].buyerId`,
+                                      `[${index}].buyerId`,
                                       e !== null ? e.value : "",
                                       false
                                     );
