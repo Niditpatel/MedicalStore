@@ -56,17 +56,6 @@ const Home = () => {
   const [page_Index, setPage_Index] = useState(1);
   const [page_Size, setPage_Size] = useState(5);
 
-
-  // const getTotalProducts = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `${BASE_URL}totalProducts`
-  //     );
-  //     setTotalProduct(res.data.total)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getData = async () => {
     try {
       const data = await axios.get(
@@ -123,19 +112,11 @@ const Home = () => {
     }
   }
   const addAll = (e) => {
-  const newData=   data.map((x)=>{
-    x.isCart = e
-    return x
+    const newData = data.map((x) => {
+      x.isCart = e
+      return x
     })
-      setData(newData)
-    
-    // const isExists = dataForCart?.find(item => item._id == maal._id)
-    // if (isExists !== null && isExists) {
-    //   const newData = dataForCart?.filter(item => item._id !== maal._id)
-    //   setDataForCart(newData);
-    // } else {
-    //   setDataForCart([...dataForCart, maal])
-    // }
+    setData(newData)
   }
 
 
@@ -193,44 +174,40 @@ const Home = () => {
   useEffect(() => {
     getBuyers('', false);
   }, [])
-  const updateDataForCart = (item) => {
-
-  }
-  const TABLE_HEAD = ["Product Name", "Packing", 'Quantity', "Supplier", "Edit/Delete"];
-  const validationSchema=
- Yup.object().shape({
-  data:Yup.array().of(
+  const validationSchema =
     Yup.object().shape({
-      buyerId: Yup.string().when("isCart", {
-        is: true,
-        then: Yup.string().required("Buyer is required.")
-          .min(1, "Byer is required."),
-        otherwise: Yup.string(),
-      }),
-      quantity: Yup.number().when("isCart", {
-        is: true,
-        then: Yup.number().required("Quantiy is required.")
-          .min(1, "Quantiy is required."),
-        otherwise: Yup.number(),
-      }),
-      isCart: Yup.boolean()
-    }))
-})
+      data: Yup.array().of(
+        Yup.object().shape({
+          buyerId: Yup.string().when("isCart", {
+            is: true,
+            then: Yup.string().required("Buyer is required.")
+              .min(1, "Byer is required."),
+            otherwise: Yup.string(),
+          }),
+          quantity: Yup.number().when("isCart", {
+            is: true,
+            then: Yup.number().required("Quantiy is required.")
+              .min(1, "Quantiy is required."),
+            otherwise: Yup.number(),
+          }),
+          isCart: Yup.boolean()
+        }))
+    })
   return (
     <div className="container mb-8">
-        <Formik
-          enableReinitialize
-          initialValues={{
-              data:data
-          }}
+      <Formik
+        enableReinitialize
+        initialValues={{
+          data: data
+        }}
         onSubmit={(values) => {
-      debugger
+          debugger
           console.log("value", values);
         }}
         // validateOnMount
         // validateOnChange={false}
         // validateOnBlur={false}
-        validationSchema={validationSchema}
+         validationSchema={validationSchema}
       >
         {(props) => {
           props.submitCount > 0 && (props.validateOnChange = true);
@@ -258,9 +235,9 @@ const Home = () => {
                       }}>Add Product</Button>
                       <Button type="submit"
                         //disabled={isSubmitting}
-                        // onSubmit={(E)=>{
-                        //   console.log("errora",errors);
-                        // }}
+                        onSubmit={(E)=>{
+                          console.log("errora",props.errors);
+                        }}
                         size="sm" className="mt-6 m-0"
                       // onClick={(e) => { handleAddCart() }}
                       >Add to Cart</Button>
@@ -440,7 +417,7 @@ const Home = () => {
                                 //     ? "text-input error"
                                 //     : "text-input"
                                 // }
-                               // <ErrorMessage name={`data[${index}].quantity`} />
+                                // <ErrorMessage name={`data[${index}].quantity`} />
                                 />
                               </td>
                               <td className={classes}>
