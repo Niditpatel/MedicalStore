@@ -123,12 +123,12 @@ const Home = () => {
     }
   }
   const addAll = (e) => {
-    if (e === true) {
-      setDataForCart(data)
-    }
-    else {
-      setDataForCart([])
-    }
+  const newData=   data.map((x)=>{
+    x.isCart = e
+    return x
+    })
+      setData(newData)
+    
     // const isExists = dataForCart?.find(item => item._id == maal._id)
     // if (isExists !== null && isExists) {
     //   const newData = dataForCart?.filter(item => item._id !== maal._id)
@@ -197,34 +197,40 @@ const Home = () => {
 
   }
   const TABLE_HEAD = ["Product Name", "Packing", 'Quantity', "Supplier", "Edit/Delete"];
+  const validationSchema=
+ Yup.object().shape({
+  data:Yup.array().of(
+    Yup.object().shape({
+      buyerId: Yup.string().when("isCart", {
+        is: true,
+        then: Yup.string().required("Buyer is required.")
+          .min(1, "Byer is required."),
+        otherwise: Yup.string(),
+      }),
+      quantity: Yup.number().when("isCart", {
+        is: true,
+        then: Yup.number().required("Quantiy is required.")
+          .min(1, "Quantiy is required."),
+        otherwise: Yup.number(),
+      }),
+      isCart: Yup.boolean()
+    }))
+})
   return (
     <div className="container mb-8">
-      <Formik
-        enableReinitialize
-        initialValues={[...data]}
+        <Formik
+          enableReinitialize
+          initialValues={{
+              data:data
+          }}
         onSubmit={(values) => {
+      debugger
           console.log("value", values);
         }}
         // validateOnMount
         // validateOnChange={false}
         // validateOnBlur={false}
-        validationSchema={
-          Yup.array().of(
-            Yup.object().shape({
-              buyerId: Yup.string().when("isCart", {
-                is: true,
-                then: Yup.string().required("Buyer is required.")
-                  .min(1, "Byer is required."),
-                otherwise: Yup.string(),
-              }),
-              quantity: Yup.number().when("isCart", {
-                is: true,
-                then: Yup.number().required("Quantiy is required.")
-                  .min(1, "Quantiy is required."),
-                otherwise: Yup.number(),
-              }),
-            })
-          )}
+        validationSchema={validationSchema}
       >
         {(props) => {
           props.submitCount > 0 && (props.validateOnChange = true);
@@ -252,6 +258,9 @@ const Home = () => {
                       }}>Add Product</Button>
                       <Button type="submit"
                         //disabled={isSubmitting}
+                        // onSubmit={(E)=>{
+                        //   console.log("errora",errors);
+                        // }}
                         size="sm" className="mt-6 m-0"
                       // onClick={(e) => { handleAddCart() }}
                       >Add to Cart</Button>
@@ -361,7 +370,7 @@ const Home = () => {
                     </thead>
                     {loading === false ?
                       <tbody>
-                        {values?.map((item, index,) => {
+                        {data?.map((item, index,) => {
                           const isLast = index === data.length - 1;
                           const classes = isLast
                             ? "py-1 px-2"
@@ -371,15 +380,14 @@ const Home = () => {
                               <td className={classes} >
                                 <div className="flex items-center">
                                   <Checkbox className="print:hidden" size={'small'} onChange={(e) => {
-                                    debugger
                                     setFieldValue(
-                                      `[${index}].isCart`,
+                                      `data[${index}].isCart`,
                                       e.target?.checked ? e.target.checked : false,
                                       false
                                     );
                                   }}
-                                    checked={values[index]?.isCart}
-                                    value={values[index]?.isCart} />
+                                    checked={values.data[index]?.isCart}
+                                    value={values.data[index]?.isCart} />
                                 </div>
                               </td>
                               <td className={classes}>
@@ -413,11 +421,13 @@ const Home = () => {
                               <td className={classes}>
                                 <TextField size="small"
                                   type="number"
-                                  value={values[index]?.quantity}
+                                  name={`data[${index}].quantity`}
+                                  value={values.data[index]?.quantity}
+                                  // className={props.errors.data && props.errors.data[index].quantity? "text-input error" :"text-input " }
+                                  // errors={props.errors.data && props.errors.data[index].quantity}
                                   onChange={(e) => {
-                                    debugger
                                     setFieldValue(
-                                      `[${index}].quantity`,
+                                      `data[${index}].quantity`,
                                       e.target.value ? parseInt(e.target.value) : 0,
                                       false
                                     )
@@ -430,8 +440,8 @@ const Home = () => {
                                 //     ? "text-input error"
                                 //     : "text-input"
                                 // }
+                               // <ErrorMessage name={`data[${index}].quantity`} />
                                 />
-                                <ErrorMessage name={`${index}.quantity`} />
                               </td>
                               <td className={classes}>
                                 <AsyncSelect
@@ -445,7 +455,7 @@ const Home = () => {
                                   getOptionLabel={(option) => option.label}
                                   onChange={(e) => {
                                     setFieldValue(
-                                      `[${index}].buyerId`,
+                                      `data[${index}].buyerId`,
                                       e !== null ? e.value : "",
                                       false
                                     );
@@ -503,34 +513,6 @@ const Home = () => {
                   </div>
                 </CardFooter>
               </Card>
-              {/* <input
-                id="email"
-                placeholder="Enter your email"
-                type="text"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={
-                  errors.email && touched.email
-                    ? "text-input error"
-                    : "text-input"
-                }
-              />
-              {errors.email && touched.email && (
-                <div className="input-feedback">{errors.email}</div>
-              )}
-
-              <button
-                type="button"
-                className="outline"
-                onClick={handleReset}
-                disabled={!dirty || isSubmitting}
-              >
-                Reset
-              </button>
-              <button type="submit" disabled={isSubmitting}>
-                Submit
-              </button> */}
             </form>
           );
         }}
