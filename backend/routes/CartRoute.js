@@ -199,7 +199,7 @@ router.get("/cart/search",
         ]
         const supplierFilterQuery = supplierName ? supplierName :''
         const storeFilterQuery =storeName? storeName : '' ;
-        const buyerFilterQuery =buyerName? buyerName : '' ;
+        const buyerFilterQuery = buyerName? buyerName : '' ;
 
     const data = await Carts.aggregate([
         { $match: filterQuery},

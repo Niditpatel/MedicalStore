@@ -5,11 +5,10 @@ const PendingCart = require("../models/PendingCart")
 
 
 router.post("/pendingcart/new",async (req, res) => {
-    const carts = req.body;
     var d = new Date();
         d.setDate(d.getDate() - 1);
     const tommorow_date = ISODate(d)
-    const  cartProducts =  await  Carts.find({$and:[{_id:{$in:carts}},{isDeleted:{$ne:true}},{createdAt:{$lte:tommorow_date}}]})
+    const  cartProducts =  await  Carts.find({$and:[{isDeleted:{$ne:true}},{createdAt:{$lte:tommorow_date}}]})
        if(cartProducts && cartProducts?.length >0){
         cartProducts.forEach(function(doc){
             const newCart = new PendingCart({
@@ -36,10 +35,21 @@ router.post("/pendingcart/new",async (req, res) => {
 );
 
 router.put('/clearfromcart',async(req,res)=>{
-  const res =  await  Carts.updateMany({$and:[{_id:{$in:carts}},{isDeleted:{$ne:true}},{createdAt:{$lte:tommorow_date}}]},{$set:{isDeleted:true}})
+    var d = new Date();
+    d.setDate(d.getDate() - 1);
+const tommorow_date = ISODate(d)
+try{
+   await  Carts.updateMany({$and:[{isDeleted:{$ne:true}},{createdAt:{$lte:tommorow_date}}]},{$set:{isDeleted:true}})
   res.status(200).json({
     success: true,
 })
+}catch(e){
+    res.status(400).json({
+        success:false,
+        e
+    })
+}
+
 })
 
 

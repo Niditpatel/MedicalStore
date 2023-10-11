@@ -41,7 +41,7 @@ const Cart = () => {
   const [filterData, setFilterData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
+  const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' ,buyerName:''});
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
 
@@ -69,7 +69,10 @@ const Cart = () => {
     try {
       const data = await axios.get(
         `${BASE_URL}cart/search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
+        searchData.supplierName +
+        '&buyerName=' +
+        searchData.buyerName 
+        + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -243,7 +246,7 @@ const Cart = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="font-normal leading-none opacity-70 text-right"
+                    className="font-normal leading-none opacity-70 text-right print:hidden"
                   >
                     Delete
                   </Typography>
