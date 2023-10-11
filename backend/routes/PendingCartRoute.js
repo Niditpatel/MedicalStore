@@ -12,11 +12,13 @@ router.post("/pendingcart/new",async (req, res) => {
     const  cartProducts =  await  Carts.find({$and:[{_id:{$in:carts}},{isDeleted:{$ne:true}},{createdAt:{$lte:tommorow_date}}]})
        if(cartProducts && cartProducts?.length >0){
         cartProducts.forEach(function(doc){
-            const newCart = new Carts({
+            const newCart = new PendingCart({
                 productName:doc.productName
                 ,packing:doc.packing
                 ,store:doc.store
                 ,supplier:doc.supplier
+                ,buyer:doc.buyer
+                ,quantity:doc.quantity
                 ,isDeleted:false
                 ,isCart:false
             })
@@ -29,7 +31,35 @@ router.post("/pendingcart/new",async (req, res) => {
         res.status(200).json({
             success: false,
         })
-       }
+    }
+}
+);
+
+router.put('/clearfromcart',async(req,res)=>{
+  const res =  await  Carts.updateMany({$and:[{_id:{$in:carts}},{isDeleted:{$ne:true}},{createdAt:{$lte:tommorow_date}}]},{$set:{isDeleted:true}})
+  res.status(200).json({
+    success: true,
+})
+})
+
+
+router.post("/pendingcart/forcesave",async (req, res) => {
+    const carts = req.body;
+    const createdDate = ISODate(carts.createdAt)
+        const newCart = new PendingCart({
+            productName:carts.productName
+            ,packing:carts.packing
+            ,store:carts.store
+            ,supplier:carts.supplier
+            ,buyer:carts.buyer
+            ,quantity:carts.quantity
+            ,isDeleted:false
+            ,createdAt:createdDate
+        })
+            newCart.save();
+        res.status(200).json({
+            success: true,
+        })
 }
 );
 

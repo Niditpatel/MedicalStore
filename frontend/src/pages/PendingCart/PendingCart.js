@@ -139,6 +139,7 @@ const PendingCart = () => {
             <Typography> Pending Cart </Typography>
             <div className="flex gap-3">
               <Button className="mt-6 m-0 " onClick={(e) => { navigate("/") }}>Add In Pending Cart</Button>
+              <Button className="mt-6 m-0 " onClick={(e) => { navigate("/pending-cart-save") }}>Add Forcefully</Button>
               <Button className="mt-6 m-0 " onClick={(e) => { setClaerAll(true) }}>claer Pending Cart</Button>
               <div>
                 <Popover animate={{
