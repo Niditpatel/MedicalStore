@@ -10,7 +10,10 @@ import {
   Button,
   CardBody,
   Checkbox,
-  CardFooter
+  CardFooter,
+  Dialog,
+  DialogBody,
+  DialogFooter
 } from "@material-tailwind/react";
 import * as Yup from "yup";
 import 'react-date-range/dist/styles.css'; // main style file
@@ -49,7 +52,7 @@ const Home = () => {
     quantity: 0
   }]);
   const [loading, setLoading] = useState(false);
-  const [dataForCart, setDataForCart] = useState([]);
+  const [dialog, setDialog] = useState({ open: false, item: {} })
   const [buyers, setBuyers] = useState([]);
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
@@ -102,15 +105,6 @@ const Home = () => {
   const handleEdit = (id) => {
     navigate('/edit-product/' + id)
   }
-  const addForCart = (maal) => {
-    const isExists = dataForCart?.find(item => item._id == maal._id)
-    if (isExists !== null && isExists) {
-      const newData = dataForCart?.filter(item => item._id !== maal._id)
-      setDataForCart(newData);
-    } else {
-      setDataForCart([...dataForCart, maal])
-    }
-  }
   const addAll = (e) => {
     const newData = data.map((x) => {
       x.isCart = e
@@ -120,11 +114,30 @@ const Home = () => {
   }
 
 
-  const handleAddCart = async () => {
+  const handleAddCart = async (values) => {
+    let validateQuantiy = values?.data?.filter(
+      (x) =>
+        x.isCart === true &&
+        (x._id === " " ||
+          x.quantity < 1)
+    ).length;
+
+    let validateBuyer = values?.data?.filter(
+      (x) =>
+        x.isCart === true &&
+        (x._id === "" ||
+          x.buyerId === "")
+    ).length;
+    if (validateQuantiy > 0) {
+      return alert("Quantity must grater than 0 in selected field")
+    }
+    if (validateBuyer > 0) {
+      return alert("Please select Buyer in selected field ")
+    }
     try {
       const data = await axios.post(
         `${BASE_URL}cart/new`,
-        dataForCart?.map(item => item._id)?.filter(item => item !== undefined)
+        values?.data.filter((item) => item?.isCart === true)
       );
       if (data.data.success) {
         navigate('/cart');
@@ -193,6 +206,8 @@ const Home = () => {
           isCart: Yup.boolean()
         }))
     })
+  const handleFocus = (event) => event.target.select();
+
   return (
     <div className="container mb-8">
       <Formik
@@ -201,16 +216,12 @@ const Home = () => {
           data: data
         }}
         onSubmit={(values) => {
-          debugger
-          console.log("value", values);
+          handleAddCart(values)
         }}
-        // validateOnMount
-        // validateOnChange={false}
-        // validateOnBlur={false}
-         validationSchema={validationSchema}
+      // validateOnMount
+      // validationSchema={validationSchema}
       >
         {(props) => {
-          props.submitCount > 0 && (props.validateOnChange = true);
           const {
             values,
             touched,
@@ -235,11 +246,10 @@ const Home = () => {
                       }}>Add Product</Button>
                       <Button type="submit"
                         //disabled={isSubmitting}
-                        onSubmit={(E)=>{
-                          console.log("errora",props.errors);
+                        onSubmit={(E) => {
+                          console.log("errora", props.errors);
                         }}
                         size="sm" className="mt-6 m-0"
-                      // onClick={(e) => { handleAddCart() }}
                       >Add to Cart</Button>
                     </div>
                   </div>
@@ -409,16 +419,13 @@ const Home = () => {
                                       false
                                     )
                                   }}
-                                // onWheel={(e) => {
-                                //   e.target.blur()
-                                // }}
-                                // className={
-                                //   errors.quantity && touched.quantity
-                                //     ? "text-input error"
-                                //     : "text-input"
-                                // }
-                                // <ErrorMessage name={`data[${index}].quantity`} />
+                                  onWheel={(e) => e.target.blur()}
+                                  inputProps={{
+                                    style: { textAlign: "right" },
+                                  }}
+                                  onFocus={handleFocus}
                                 />
+                                {/*  <ErrorMessage name={`data[${index}].quantity`} /> */}
                               </td>
                               <td className={classes}>
                                 <AsyncSelect
@@ -436,7 +443,6 @@ const Home = () => {
                                       e !== null ? e.value : "",
                                       false
                                     );
-                                    // setData({...data,store:e?e.value:''})
                                   }}
                                   noOptionsMessage={({ inputValue }) =>
                                     !inputValue
@@ -460,7 +466,7 @@ const Home = () => {
                                   </Button>
                                   <Button
                                     variant="gradient" size="sm" color='red' className="btn btn-danger ms-2 print:hidden"
-                                    onClick={(e) => handleDelete(item?._id)}
+                                    onClick={(e) => setDialog({ open: true, item: item })}
                                   >X
                                   </Button>
                                 </Box>
@@ -494,7 +500,35 @@ const Home = () => {
           );
         }}
       </Formik>
-
+      <Dialog
+        open={dialog.open}
+        handler={(e) => { setDialog({ open: false, item: {} }) }}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogBody divider>
+          Are you sure you Want to delete Store <span className="font-bold">{dialog?.item?.storeName}</span>.
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="grey"
+            variant='gradient'
+            onClick={(e) => { setDialog({ open: false, item: {} }) }}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button variant="gradient" color="red" onClick={(e) => {
+            setDialog({ open: false, item: {} })
+            handleDelete(dialog.item?._id)
+          }}>
+            <span>Confirm</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </div >
   );
 };

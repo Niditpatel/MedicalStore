@@ -20,7 +20,6 @@ import {
   Box,
   Pagination
 } from "@mui/material";
-import Stack from '@mui/material/Stack';
 import Select from 'react-select'
 import { options } from "../../StaticData/StaticData"
 
@@ -123,7 +122,7 @@ const Store = () => {
                   </th>
                   <th
                     className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-12"
-                    >
+                  >
                     <Typography
                       variant="small"
                       color="blue-gray"
@@ -172,7 +171,7 @@ const Store = () => {
                         </Typography>
                       </td> */}
                           <td className={classes}>
-                          <Box className={'text-right flex gap-2 justify-end'}>
+                            <Box className={'text-right flex gap-2 justify-end'}>
                               <Button
                                 className="btn btn-sm btn-danger ms-1"
                                 variant="gradient"
@@ -230,82 +229,26 @@ const Store = () => {
         }}
       >
         <DialogBody divider>
-          Are you sure you Want to delete store <span className="font-bold">{dialog?.item?.storeName}</span>.
+          Are you sure you Want to delete Company <span className="font-bold">{dialog?.item?.storeName}</span>.
         </DialogBody>
         <DialogFooter>
-          <Button variant="gradient" color="grey" onClick={(e) => {
-            handleDelete(dialog.item?._id)
-            setDialog({ open: false, item: {} })
-          }}
-            className="mr-1"
-          >
-            <span>Confirm</span>
-          </Button>
           <Button
+            variant="text"
             color="grey"
-            variant='text'
+            variant='gradient'
             onClick={(e) => { setDialog({ open: false, item: {} }) }}
+            className="mr-1"
           >
             <span>Cancel</span>
           </Button>
+          <Button variant="gradient" color="red" onClick={(e) => {
+            setDialog({ open: false, item: {} })
+            handleDelete(dialog.item?._id)
+          }}>
+            <span>Confirm</span>
+          </Button>
         </DialogFooter>
       </Dialog>
-
-
-      {/* <div className="mb-5 flex justify-between">
-        <div className="text-2xl">Stores</div>
-        <Button variant="gradient" size="sm" className="btn btn-primary" color='black' onClick={handleAdd}>Add</Button>
-        </div>
-      <div className="mb-3 flex gap-2 justify-end">
-        <Input
-          type="text"
-          size="sm"
-          className="form-control border rounded"
-          label="Name"
-          value={searchData.name}
-          onChange={handleChange}
-        />
-        <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button>
-      </div>
-      <div>
-      <table className="table w-full text-center border-collapse">
-          <thead>
-            <tr className="border  bg-secondary/[0.6]">
-              {data && data.length > 0 && Object.keys(data[0]).map((item, i) =>
-                <th key={i}>{item}</th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {data && data.length > 0 && data.map((item, index) =>
-              <tr key={index} className="border even:bg-secondary">
-                {Object.keys(item).map((key) => (
-                  <td
-                    key={key}
-                    style={{ fontSize: "17px", lineHeight: "28px" }}
-                  >
-                    {typeof item[key] === "boolean"
-                      ? item[key] === true
-                        ? "Yes"
-                        : "No"
-                      : item[key]}
-                  </td>
-                ))}
-                <td className="flex p-2  items-center justify-center space-x-2">
-                <Button variant="gradient" size="sm" color='blue' className="btn btn-primary" onClick={(e)=>{
-                   e.preventDefault();
-                   handleEdit(item?.storeId);
-                }}>Edit</Button>
-                <Button variant="gradient" size="sm" color='red' className="btn btn-danger" onClick={(e)=>{
-                   e.preventDefault();
-                   handleDelete(item?.storeId);
-                }}>delete</Button>
-              </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div> */}
     </div>
 
   );

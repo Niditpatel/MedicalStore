@@ -11,7 +11,10 @@ import {
   Button,
   CardBody,
   CardFooter,
-  Input
+  Input,
+  Dialog,
+  DialogBody,
+  DialogFooter
 } from "@material-tailwind/react";
 import {
   Box,
@@ -28,18 +31,7 @@ export default function SupplierList() {
   const [totalSupplier, setTotalSupplier] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
   const [page_Size, setPage_Size] = useState(5);
-
-
-  // const getTotalSupplier = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `${BASE_URL}totalSupplier`
-  //     );
-  //     setTotalSupplier(res.data.total)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const [dialog, setDialog] = useState({ open: false, item: {} })
   const getData = async () => {
     try {
       const res = await axios.get(
@@ -134,8 +126,8 @@ export default function SupplierList() {
                   </Typography>
                 </th>
                 <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-12"
-                    >
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-12"
+                >
                   <Typography
                     variant="small"
                     color="blue-gray"
@@ -177,7 +169,7 @@ export default function SupplierList() {
                             </Typography>
                           </td>
                           <td className={classes}>
-                          <Box className={'text-right flex gap-2 justify-end'}>
+                            <Box className={'text-right flex gap-2 justify-end'}>
                               <Button
                                 className="btn btn-sm btn-danger ms-1"
                                 variant="gradient"
@@ -190,7 +182,7 @@ export default function SupplierList() {
                               <Button
                                 variant="gradient"
                                 size="sm" color='red' className="btn btn-danger ms-2"
-                                onClick={(e) => handleDelete(item?._id)}
+                                onClick={(e) => setDialog({ open: true, item: item })}
                               >X
                               </Button>
                             </Box>
@@ -221,39 +213,37 @@ export default function SupplierList() {
               }} options={options} />
           </div>
         </CardFooter>
-        {/* <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-          <Button variant="outlined" size="sm">
-            Previous
-          </Button>
-          <div className="flex items-center gap-2">
-            <IconButton variant="outlined" size="sm">
-              1
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              2
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              3
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              ...
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              8
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              9
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              10
-            </IconButton>
-          </div>
-          <Button variant="outlined" size="sm">
-            Next
-          </Button>
-        </CardFooter> */}
+        <Dialog
+          open={dialog.open}
+          handler={(e) => { setDialog({ open: false, item: {} }) }}
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0.9, y: -100 },
+          }}
+        >
+          <DialogBody divider>
+            Are you sure you Want to delete Store <span className="font-bold">{dialog?.item?.storeName}</span>.
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              variant="text"
+              color="grey"
+              variant='gradient'
+              onClick={(e) => { setDialog({ open: false, item: {} }) }}
+              className="mr-1"
+            >
+              <span>Cancel</span>
+            </Button>
+            <Button variant="gradient" color="red" onClick={(e) => {
+              setDialog({ open: false, item: {} })
+              handleDelete(dialog.item?._id)
+            }}>
+              <span>Confirm</span>
+            </Button>
+          </DialogFooter>
+        </Dialog>
       </Card>
-    </div>
+    </div >
   );
 };
 
