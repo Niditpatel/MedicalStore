@@ -55,28 +55,18 @@ const Cart = () => {
     content: () => componentRef.current,
   });
 
-  const getTotalProducts = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}totalcarts`
-      );
-      setTotalProduct(res.data.total)
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const getData = async () => {
     try {
       const data = await axios.get(
         `${BASE_URL}cart/search/?` + 'supplierName=' +
         searchData.supplierName +
         '&buyerName=' +
-        searchData.buyerName 
+        searchData.buyerName
         + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
       );
       if (data.data.success) {
         setData(data.data.data)
-        setTotalProduct(data.data.total)
+setTotalProduct(data.data.total)
         setFilterData(data.data.data)
       }
     } catch (error) {
@@ -100,7 +90,20 @@ const Cart = () => {
     setFilterData(filtered);
   };
 
-
+  const addInPendingCart = async () => {
+    try {
+      const data = await axios.post(
+        `${BASE_URL}pendingcart/new`,
+      );
+      if (data.data.success) {
+        navigate('/pending-cart');
+      } else {
+        console.log(data.data.error)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const handleDelete = async (id) => {
     try {
       const data = await axios.delete(
@@ -138,7 +141,6 @@ const Cart = () => {
 
   useEffect(() => {
     getData();
-    getTotalProducts();
   }, [searchData, page_Index, page_Size]);
 
   return (
@@ -149,6 +151,7 @@ const Cart = () => {
           <div className="mb-3 flex justify-between items-center">
             <Typography> Cart </Typography>
             <div className="flex gap-3">
+              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { addInPendingCart() }}>Add In Pending Cart</Button>
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add In Cart</Button>
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { setClaerAll(true) }}>claer Cart</Button>
               <Button className="btn btn-primary" type="primary" onClick={handlePrint}>
@@ -205,7 +208,7 @@ const Cart = () => {
           </div>
         </CardHeader>
         <CardBody className="p-4 overflow-hidden px-0">
-          <table className="w-full min-w-max table-auto text-left"  id="section-to-print"ref={componentRef}>
+          <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
             <thead >
               <tr>
                 <th
