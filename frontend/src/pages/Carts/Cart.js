@@ -76,6 +76,7 @@ const Cart = () => {
       );
       if (data.data.success) {
         setData(data.data.data)
+        setTotalProduct(data.data.total)
         setFilterData(data.data.data)
       }
     } catch (error) {
