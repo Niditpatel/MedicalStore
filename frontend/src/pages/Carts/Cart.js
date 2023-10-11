@@ -297,7 +297,7 @@ setTotalProduct(data.data.total)
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {item?.supplier?.map((item) => item?.supplierName)?.join(', ')}
+                              {item?.supplier?.supplierName}
                             </Typography>
                           </td>
                           <td className={classes}>
