@@ -6,28 +6,54 @@ const Products = require("../models/ProductSchema")
 
 router.post("/cart/new",async (req, res) => {
     const products = req.body;
-
-    const  cartProducts =  await  Products.find({_id:{$in:products}})
-       if(cartProducts && cartProducts?.length >0){
-        cartProducts.forEach(function(doc){
-            const newCart = new Carts({
-                productName:doc.productName
-                ,packing:doc.packing
-                ,store:doc.store
-                ,supplier:doc.supplier
+    if(products && products?.length > 0){
+       try{
+        products.forEach(element => {
+            const cart = new Carts({
+                productName:element.productName
+                ,packing:element.packing
+                ,store:element.store._id
+                ,buyer:element.buyerId
+                ,supplier:element.supplier?.map((item)=>item._id)
                 ,isDeleted:false
                 ,isCart:false
             })
-            newCart.save();
-         });
-         res.status(200).json({
-            success: true,
-        })
-       }else{
+            cart.save()
+        });
         res.status(200).json({
-            success: false,
+            success:true,
+            message:'success fully created.'
+        })
+       }catch(e){
+        res.status(400).json({
+            success:false,
+            message:'something was wromg.'
         })
        }
+    }
+
+    // const  cartProducts =  await  Products.find({_id:{$in:products}})
+    //    if(cartProducts && cartProducts?.length >0){
+    //     cartProducts.forEach(function(doc){
+    //         const newCart = new Carts({
+    //             productName:doc.productName
+    //             ,packing:doc.packing
+    //             ,store:doc.store
+    //             ,buyer:products.
+    //             ,supplier:doc.supplier
+    //             ,isDeleted:false
+    //             ,isCart:false
+    //         })
+    //         newCart.save();
+    //      });
+    //      res.status(200).json({
+    //         success: true,
+    //     })
+    //    }else{
+    //     res.status(200).json({
+    //         success: false,
+    //     })
+    //    }
     
 }
 );
