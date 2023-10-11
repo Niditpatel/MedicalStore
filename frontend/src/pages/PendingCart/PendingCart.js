@@ -46,30 +46,33 @@ const PendingCart = () => {
 
   const [dialog, setDialog] = useState({ open: false, item: {} })
   const [claerAll, setClaerAll] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [endDate, setEndDate] = useState(new Date());
   const [page_Size, setPage_Size] = useState(5);
 
 
-  const getTotalProducts = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}totalpendingCarts`
-      );
-      setTotalProduct(res.data.total)
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getTotalProducts = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `${BASE_URL}totalpendingCarts`
+  //     );
+  //     setTotalProduct(res.data.total)
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const getData = async () => {
     try {
       const data = await axios.get(
         `${BASE_URL}pendingCart/search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index +'&pageSize=' + page_Size
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + 
+        '&offset=' + page_Index +'&pageSize=' + page_Size +'&start_date=' +startDate  +'&end_date=' +endDate    
       );
       if (data.data.success) {
         setData(data.data.data)
         setFilterData(data.data.data)
+        setTotalProduct(data.data.total)
+        await axios.put(`${BASE_URL}clearfromcart`)
       }
     } catch (error) {
       console.log(error);
@@ -93,7 +96,6 @@ const PendingCart = () => {
   };
   useEffect(() => {
     getData();
-    getTotalProducts();
   }, [searchData, page_Index,page_Size]);
 
   const handleDelete = async (id) => {

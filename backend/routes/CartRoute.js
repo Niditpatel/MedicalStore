@@ -14,6 +14,7 @@ router.post("/cart/new",async (req, res) => {
                 ,packing:element.packing
                 ,store:element.store._id
                 ,buyer:element.buyerId
+                ,quantity:element.quantity
                 ,supplier:element.supplier?.map((item)=>item._id)
                 ,isDeleted:false
                 ,isCart:false

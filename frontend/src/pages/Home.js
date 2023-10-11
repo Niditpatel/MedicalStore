@@ -343,16 +343,6 @@ const Home = () => {
                           >Buyer
                           </Typography>
                         </th>
-                        <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                        >
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal leading-none opacity-70 text-right"
-                          >Edit/Delete
-                          </Typography>
-                        </th>
                       </tr>
                     </thead>
                     {loading === false ?
@@ -397,21 +387,30 @@ const Home = () => {
                               </td>
 
                               <td className={classes} >
-                                <Typography
-                                  variant="small"
-                                  color="blue-gray"
-                                  className="font-normal"
-                                >
-                                  {item?.supplier?.map((item) => item?.supplierName)?.join(', ')}
-                                </Typography>
+                                <Select
+                                  menuPortalTarget={document.body}
+                                  className="basic-single"
+                                  classNamePrefix="select"
+                                  isClearable={true}
+                                  isSearchable={true}
+                                  onChange={(e)=>{
+                                    setFieldValue(
+                                      `data[${index}].supplierId`,
+                                      e !== null ? e.value : "",
+                                      false
+                                    );
+                                  }}
+                                  name="supplier"
+                                  options={item.supplier.map((item)=>{
+                                    return {...item,label:item.supplierName,value:item._id}
+                                  })}
+                                />
                               </td>
                               <td className={classes}>
                                 <TextField size="small"
                                   type="number"
                                   name={`data[${index}].quantity`}
                                   value={values.data[index]?.quantity}
-                                  // className={props.errors.data && props.errors.data[index].quantity? "text-input error" :"text-input " }
-                                  // errors={props.errors.data && props.errors.data[index].quantity}
                                   onChange={(e) => {
                                     setFieldValue(
                                       `data[${index}].quantity`,
@@ -452,24 +451,6 @@ const Home = () => {
                                         : "Type At Least Three Character to View Result"
                                   }
                                 />
-                              </td>
-                              <td className={classes}>
-                                <Box className={'text-right'}>
-                                  <Button
-                                    variant="gradient"
-                                    color='blue'
-                                    size="sm"
-                                    className="print:hidden"
-                                    onClick={() => handleEdit(item?._id)}
-                                  >
-                                    &#x1F589;
-                                  </Button>
-                                  <Button
-                                    variant="gradient" size="sm" color='red' className="btn btn-danger ms-2 print:hidden"
-                                    onClick={(e) => setDialog({ open: true, item: item })}
-                                  >X
-                                  </Button>
-                                </Box>
                               </td>
                             </tr>
                           );

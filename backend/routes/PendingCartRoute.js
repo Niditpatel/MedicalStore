@@ -4,11 +4,11 @@ const Carts = require("../models/CartSchema");
 const PendingCart = require("../models/PendingCart")
 
 
-router.post("/pendingcart/new",async (res) => {
+router.post("/pendingcart/new",async (req,res) => {
     var d = new Date();
         d.setDate(d.getDate() - 1);
-    const tommorow_date = ISODate(d)
-    const  cartProducts =  await  Carts.find({$and:[{isDeleted:{$ne:true}},{createdAt:{$lte:tommorow_date}}]})
+    const  cartProducts =  await  Carts.find({$and:[{isDeleted:{$ne:true}},{createdAt:{$lte:d}}]})
+    console.log(cartProducts)
        if(cartProducts && cartProducts?.length >0){
         cartProducts.forEach(function(doc){
             const newCart = new PendingCart({
@@ -20,6 +20,7 @@ router.post("/pendingcart/new",async (res) => {
                 ,quantity:doc.quantity
                 ,isDeleted:false
                 ,isCart:false
+                ,createdAt:doc.createdAt
             })
             newCart.save();
          });
@@ -37,19 +38,17 @@ router.post("/pendingcart/new",async (res) => {
 router.put('/clearfromcart',async(req,res)=>{
     var d = new Date();
     d.setDate(d.getDate() - 1);
-const tommorow_date = ISODate(d)
-try{
-   await  Carts.updateMany({$and:[{isDeleted:{$ne:true}},{createdAt:{$lte:tommorow_date}}]},{$set:{isDeleted:true}})
-  res.status(200).json({
-    success: true,
-})
-}catch(e){
-    res.status(400).json({
-        success:false,
-        e
+    try{
+    await  Carts.updateMany({$and:[{isDeleted:{$ne:true}},{createdAt:{$lte:d}}]},{$set:{isDeleted:true}})
+    res.status(200).json({
+        success: true,
     })
-}
-
+    }catch(e){
+        res.status(400).json({
+            success:false,
+            e
+        })
+    }
 })
 
 
@@ -132,7 +131,7 @@ router.get("/pendingCart/search",
         const filterQuery =  {$and:[
             {productName:{'$regex':product,'$options':'i'}},
             {isDeleted:{$ne:true}},
-            {createdAt:{$gte:ISODate(start_date),$lt:ISODate(end_date)}}
+            {createdAt:{$gte:new Date(start_date),$lte:new Date(end_date)}}
             ]}
 
        const lookupQuery1 = [
@@ -216,6 +215,7 @@ router.get("/pendingCart/search",
         { $match: filterQuery},
          ...lookupQuery1,
          ...lookupQuery2,
+         ...lookupQuery3,
          {$match:{$and:
             [
                 {'supplier.supplierName': {'$regex':supplierFilterQuery ,'$options':'i'}},
