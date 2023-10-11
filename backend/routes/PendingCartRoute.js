@@ -4,7 +4,7 @@ const Carts = require("../models/CartSchema");
 const PendingCart = require("../models/PendingCart")
 
 
-router.post("/pendingcart/new",async (req, res) => {
+router.post("/pendingcart/new",async (res) => {
     var d = new Date();
         d.setDate(d.getDate() - 1);
     const tommorow_date = ISODate(d)
