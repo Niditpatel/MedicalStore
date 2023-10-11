@@ -69,13 +69,13 @@ router.get("/carts", async (req, res) => {
 });
 
 
-router.get("/totalcarts", async (req, res) => {
-    const total = await Carts.find().count();
-    res.status(200).json({
-        success: true,
-        total
-    })
-});
+// router.get("/totalcarts", async (req, res) => {
+//     const total = await Carts.find().count();
+//     res.status(200).json({
+//         success: true,
+//         total
+//     })
+// });
 
 
 router.delete("/cart/:id",
