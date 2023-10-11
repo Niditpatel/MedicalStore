@@ -152,6 +152,13 @@ router.get("/pendingCart/search",
                     ]
                 },
             },
+            {
+                $unwind: {
+                    path: '$supplier',
+                    // for not showing not matched doc 
+                     preserveNullAndEmptyArrays: false
+                }
+            }
         ]
 
         const lookupQuery2 = [
