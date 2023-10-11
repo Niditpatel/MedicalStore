@@ -49,6 +49,7 @@ const Home = () => {
     }],
     isCart: false,
     buyerId: "",
+    supplierId: "",
     quantity: 0
   }]);
   const [loading, setLoading] = useState(false);
@@ -69,6 +70,7 @@ const Home = () => {
         let dataMake = data?.data?.data
         dataMake.map((x) => {
           x.buyerId = "";
+          x.supplierId = "";
           x.quantity = 0;
           x.isCart = false;
           return x;
@@ -128,11 +130,20 @@ const Home = () => {
         (x._id === "" ||
           x.buyerId === "")
     ).length;
+    let validateSupplier = values?.data?.filter(
+      (x) =>
+        x.isCart === true &&
+        (x._id === "" ||
+          x.supplierId === "")
+    ).length;
     if (validateQuantiy > 0) {
       return alert("Quantity must grater than 0 in selected field")
     }
     if (validateBuyer > 0) {
       return alert("Please select Buyer in selected field ")
+    }
+    if (validateSupplier > 0) {
+      return alert("Please select Supplier in selected field ")
     }
     try {
       const data = await axios.post(
@@ -207,7 +218,6 @@ const Home = () => {
         }))
     })
   const handleFocus = (event) => event.target.select();
-
   return (
     <div className="container mb-8">
       <Formik
@@ -245,9 +255,7 @@ const Home = () => {
                         navigate('/add-product')
                       }}>Add Product</Button>
                       <Button type="submit"
-                        //disabled={isSubmitting}
                         onSubmit={(E) => {
-                          console.log("errora", props.errors);
                         }}
                         size="sm" className="mt-6 m-0"
                       >Add to Cart</Button>
@@ -393,7 +401,7 @@ const Home = () => {
                                   classNamePrefix="select"
                                   isClearable={true}
                                   isSearchable={true}
-                                  onChange={(e)=>{
+                                  onChange={(e) => {
                                     setFieldValue(
                                       `data[${index}].supplierId`,
                                       e !== null ? e.value : "",
@@ -401,8 +409,8 @@ const Home = () => {
                                     );
                                   }}
                                   name="supplier"
-                                  options={item.supplier.map((item)=>{
-                                    return {...item,label:item.supplierName,value:item._id}
+                                  options={item.supplier.map((item) => {
+                                    return { ...item, label: item.supplierName, value: item._id }
                                   })}
                                 />
                               </td>
