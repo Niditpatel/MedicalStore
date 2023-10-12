@@ -4,30 +4,30 @@ const Carts = require("../models/CartSchema");
 const PendingCart = require("../models/PendingCart")
 
 
-router.post("/pendingcart/new",async (req,res) => {
+router.post("/pendingcart/new", async (req, res) => {
     var d = new Date();
-        d.setDate(d.getDate() - 1);
-    const  cartProducts =  await  Carts.find({$and:[{isDeleted:{$ne:true}},{createdAt:{$lte:d}}]})
+    d.setDate(d.getDate() - 1);
+    const cartProducts = await Carts.find({ $and: [{ isDeleted: { $ne: true } }, { createdAt: { $lte: d } }] })
     console.log(cartProducts)
-       if(cartProducts && cartProducts?.length >0){
-        cartProducts.forEach(function(doc){
+    if (cartProducts && cartProducts?.length > 0) {
+        cartProducts.forEach(function (doc) {
             const newCart = new PendingCart({
-                productName:doc.productName
-                ,packing:doc.packing
-                ,store:doc.store
-                ,supplier:doc.supplier
-                ,buyer:doc.buyer
-                ,quantity:doc.quantity
-                ,isDeleted:false
-                ,isCart:false
-                ,createdAt:doc.createdAt
+                productName: doc.productName
+                , packing: doc.packing
+                , store: doc.store
+                , supplier: doc.supplier
+                , buyer: doc.buyer
+                , quantity: doc.quantity
+                , isDeleted: false
+                , isCart: false
+                , createdAt: doc.createdAt
             })
             newCart.save();
-         });
-         res.status(200).json({
+        });
+        res.status(200).json({
             success: true,
         })
-       }else{
+    } else {
         res.status(200).json({
             success: false,
         })
@@ -35,48 +35,78 @@ router.post("/pendingcart/new",async (req,res) => {
 }
 );
 
-router.put('/clearfromcart',async(req,res)=>{
-    var d = new Date();
-    d.setDate(d.getDate() - 1);
-    try{
-    await  Carts.updateMany({$and:[{isDeleted:{$ne:true}},{createdAt:{$lte:d}}]},{$set:{isDeleted:true}})
+router.post("/pendingcart/forceSave", async (req, res) => {
+    const { productName
+        , packing
+        , store
+        , supplier
+        , buyer
+        , quantity
+        , isCart
+        , isDeleted
+        , createdAt } = req.body;
+    const pendingCarts = await PendingCart.create({
+        productName
+        , packing
+        , store
+        , supplier
+        , buyer
+        , quantity
+        , isCart
+        , isDeleted
+        , createdAt
+    });
     res.status(200).json({
         success: true,
+        pendingCarts: pendingCarts
     })
-    }catch(e){
+
+
+
+}
+);
+router.put('/clearfromcart', async (req, res) => {
+    var d = new Date();
+    d.setDate(d.getDate() - 1);
+    try {
+        await Carts.updateMany({ $and: [{ isDeleted: { $ne: true } }, { createdAt: { $lte: d } }] }, { $set: { isDeleted: true } })
+        res.status(200).json({
+            success: true,
+        })
+    } catch (e) {
         res.status(400).json({
-            success:false,
+            success: false,
             e
         })
     }
 })
 
 
-router.post("/pendingcart/forcesave",async (req, res) => {
-    const carts = req.body;
-    const createdDate = ISODate(carts.createdAt)
-        const newCart = new PendingCart({
-            productName:carts.productName
-            ,packing:carts.packing
-            ,store:carts.store
-            ,supplier:carts.supplier
-            ,buyer:carts.buyer
-            ,quantity:carts.quantity
-            ,isDeleted:false
-            ,createdAt:createdDate
-        })
-            newCart.save();
-        res.status(200).json({
-            success: true,
-        })
-}
-);
+// router.post("/pendingcart/forcesave", async (req, res) => {
+//     const carts = req.body;
+//     const createdDate = ISODate(carts.createdAt)
+//     const newCart = new PendingCart({
+//         productName: carts.productName
+//         , packing: carts.packing
+//         , store: carts.store
+//         , supplier: carts.supplier
+//         , buyer: carts.buyer
+//         , quantity: carts.quantity
+//         , isDeleted: false
+//         , createdAt: createdDate
+//     })
+//     newCart.save();
+//     res.status(200).json({
+//         success: true,
+//     })
+// }
+// );
 
 router.get("/pendingCarts", async (req, res) => {
-    const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
-    const pageSize = req.query.pageSize?req.query.pageSize:15
-    const pendingCart = await PendingCart.find({isDeleted:{$ne:true}}).skip(pageNo*pageSize).limit(pageSize);
-    const total = await PendingCart.find({isDeleted:{$ne:true}}).count();
+    const pageNo = req.query.pageNo ? parseInt(req.query.pageNo) - 1 : 0
+    const pageSize = req.query.pageSize ? req.query.pageSize : 15
+    const pendingCart = await PendingCart.find({ isDeleted: { $ne: true } }).skip(pageNo * pageSize).limit(pageSize);
+    const total = await PendingCart.find({ isDeleted: { $ne: true } }).count();
     res.status(200).json({
         success: true,
         pendingCart,
@@ -88,53 +118,55 @@ router.get("/pendingCarts", async (req, res) => {
 
 router.delete("/PendingCart/:id",
     async (req, res) => {
-    const pednidngCart = await PendingCart.findById(req.params.id);
+        const pednidngCart = await PendingCart.findById(req.params.id);
 
-    if (!cart) {
-        res.status(200).json({
-            success: true,
-            message: `item not Found`
-        })
-    }else{
-        await PendingCart.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
-        res.status(200).json({
-            success: true,
-            message: `item deleted succesfully `
-        })
-    }
-});
+        if (!cart) {
+            res.status(200).json({
+                success: true,
+                message: `item not Found`
+            })
+        } else {
+            await PendingCart.findByIdAndUpdate(req.params.id, { $set: { isDeleted: true } });
+            res.status(200).json({
+                success: true,
+                message: `item deleted succesfully `
+            })
+        }
+    });
 
 router.delete("/pendingCarts",
     async (req, res) => {
-    try{
-        const cart = await Carts.updateMany({$set:{isDeleted:true}});
-        res.status(200).json({
-            success: true,
-            message: `deleted succesfully `
-        })
-    }catch(e){
-        res.status(400).json({
-            success:false,
-            message:'something was wrong'
-        })
-    }
-});
+        try {
+            const cart = await Carts.updateMany({ $set: { isDeleted: true } });
+            res.status(200).json({
+                success: true,
+                message: `deleted succesfully `
+            })
+        } catch (e) {
+            res.status(400).json({
+                success: false,
+                message: 'something was wrong'
+            })
+        }
+    });
 
 router.get("/pendingCart/search",
     async (req, res) => {
-        const { productName,supplierName,storeName, offset, limit, sort_by, order,start_date ,end_date,buyerName} = req.query;
-        const product = productName !== undefined ? productName :''
+        const { productName, supplierName, storeName, offset, limit, sort_by, order, start_date, end_date, buyerName } = req.query;
+        const product = productName !== undefined ? productName : ''
         const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
         const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
         const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
         const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
-        const filterQuery =  {$and:[
-            {productName:{'$regex':product,'$options':'i'}},
-            {isDeleted:{$ne:true}},
-            {createdAt:{$gte:new Date(start_date),$lte:new Date(end_date)}}
-            ]}
+        const filterQuery = {
+            $and: [
+                { productName: { '$regex': product, '$options': 'i' } },
+                { isDeleted: { $ne: true } },
+                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
+            ]
+        }
 
-       const lookupQuery1 = [
+        const lookupQuery1 = [
             {
                 $lookup: {
                     from: 'suppliers',
@@ -145,8 +177,8 @@ router.get("/pendingCart/search",
                         {
                             $project: {
                                 supplierName: 1,
-                                contactNumber:1,
-                                _id:1
+                                contactNumber: 1,
+                                _id: 1
                             }
                         }
                     ]
@@ -172,8 +204,8 @@ router.get("/pendingCart/search",
                         {
                             $project: {
                                 storeName: 1,
-                                contactNumber:1,
-                                _id:0
+                                contactNumber: 1,
+                                _id: 0
                             }
                         }
                     ]
@@ -183,7 +215,7 @@ router.get("/pendingCart/search",
                 $unwind: {
                     path: '$store',
                     // for not showing not matched doc 
-                     preserveNullAndEmptyArrays: false
+                    preserveNullAndEmptyArrays: false
                 }
             }
         ]
@@ -199,8 +231,8 @@ router.get("/pendingCart/search",
                         {
                             $project: {
                                 buyerName: 1,
-                                contactNumber:1,
-                                _id:0
+                                contactNumber: 1,
+                                _id: 0
                             }
                         }
                     ]
@@ -210,26 +242,29 @@ router.get("/pendingCart/search",
                 $unwind: {
                     path: '$buyer',
                     // for not showing not matched doc 
-                     preserveNullAndEmptyArrays: false
+                    preserveNullAndEmptyArrays: false
                 }
             }
         ]
-        const supplierFilterQuery = supplierName ? supplierName :''
-        const storeFilterQuery =storeName? storeName : '' ;
-        const buyerFilterQuery =buyerName? buyerName : '' ;
+        const supplierFilterQuery = supplierName ? supplierName : ''
+        const storeFilterQuery = storeName ? storeName : '';
+        const buyerFilterQuery = buyerName ? buyerName : '';
 
-    const data = await PendingCart.aggregate([
-        { $match: filterQuery},
-         ...lookupQuery1,
-         ...lookupQuery2,
-         ...lookupQuery3,
-         {$match:{$and:
-            [
-                {'supplier.supplierName': {'$regex':supplierFilterQuery ,'$options':'i'}},
-                {'store.storeName':{'$regex':storeFilterQuery,'$options':'i'}},
-                {'buyer.buyerName':{'$regex':buyerFilterQuery,'$options':'i'}}
-            ]
-        }},
+        const data = await PendingCart.aggregate([
+            { $match: filterQuery },
+            ...lookupQuery1,
+            ...lookupQuery2,
+            ...lookupQuery3,
+            {
+                $match: {
+                    $and:
+                        [
+                            { 'supplier.supplierName': { '$regex': supplierFilterQuery, '$options': 'i' } },
+                            { 'store.storeName': { '$regex': storeFilterQuery, '$options': 'i' } },
+                            { 'buyer.buyerName': { '$regex': buyerFilterQuery, '$options': 'i' } }
+                        ]
+                }
+            },
             {
                 $facet: {
                     metadata: [
@@ -247,28 +282,30 @@ router.get("/pendingCart/search",
                     ]
                 }
             },
-    ])
-   
+        ])
+
         res.status(200).json({
             success: true,
-            data:data[0]?.data ? data[0]?.data :[],
-            total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+            data: data[0]?.data ? data[0]?.data : [],
+            total: data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total : 0
         })
-});
+    });
 
 router.get("/pendingCart/print",
     async (req, res) => {
-        const { productName,supplierName,storeName, offset, limit, sort_by, order,start_date ,end_date,buyerName} = req.query;
-        const product = productName !== undefined ? productName :''
+        const { productName, supplierName, storeName, offset, limit, sort_by, order, start_date, end_date, buyerName } = req.query;
+        const product = productName !== undefined ? productName : ''
         const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
         const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
-        const filterQuery =  {$and:[
-            {productName:{'$regex':product,'$options':'i'}},
-            {isDeleted:{$ne:true}},
-            {createdAt:{$gte:new Date(start_date),$lte:new Date(end_date)}}
-            ]}
+        const filterQuery = {
+            $and: [
+                { productName: { '$regex': product, '$options': 'i' } },
+                { isDeleted: { $ne: true } },
+                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
+            ]
+        }
 
-       const lookupQuery1 = [
+        const lookupQuery1 = [
             {
                 $lookup: {
                     from: 'suppliers',
@@ -279,8 +316,8 @@ router.get("/pendingCart/print",
                         {
                             $project: {
                                 supplierName: 1,
-                                contactNumber:1,
-                                _id:1
+                                contactNumber: 1,
+                                _id: 1
                             }
                         }
                     ]
@@ -306,8 +343,8 @@ router.get("/pendingCart/print",
                         {
                             $project: {
                                 storeName: 1,
-                                contactNumber:1,
-                                _id:0
+                                contactNumber: 1,
+                                _id: 0
                             }
                         }
                     ]
@@ -317,7 +354,7 @@ router.get("/pendingCart/print",
                 $unwind: {
                     path: '$store',
                     // for not showing not matched doc 
-                     preserveNullAndEmptyArrays: false
+                    preserveNullAndEmptyArrays: false
                 }
             }
         ]
@@ -333,8 +370,8 @@ router.get("/pendingCart/print",
                         {
                             $project: {
                                 buyerName: 1,
-                                contactNumber:1,
-                                _id:0
+                                contactNumber: 1,
+                                _id: 0
                             }
                         }
                     ]
@@ -344,26 +381,29 @@ router.get("/pendingCart/print",
                 $unwind: {
                     path: '$buyer',
                     // for not showing not matched doc 
-                     preserveNullAndEmptyArrays: false
+                    preserveNullAndEmptyArrays: false
                 }
             }
         ]
-        const supplierFilterQuery = supplierName ? supplierName :''
-        const storeFilterQuery =storeName? storeName : '' ;
-        const buyerFilterQuery =buyerName? buyerName : '' ;
+        const supplierFilterQuery = supplierName ? supplierName : ''
+        const storeFilterQuery = storeName ? storeName : '';
+        const buyerFilterQuery = buyerName ? buyerName : '';
 
-    const data = await PendingCart.aggregate([
-        { $match: filterQuery},
-         ...lookupQuery1,
-         ...lookupQuery2,
-         ...lookupQuery3,
-         {$match:{$and:
-            [
-                {'supplier.supplierName': {'$regex':supplierFilterQuery ,'$options':'i'}},
-                {'store.storeName':{'$regex':storeFilterQuery,'$options':'i'}},
-                {'buyer.buyerName':{'$regex':buyerFilterQuery,'$options':'i'}}
-            ]
-        }},
+        const data = await PendingCart.aggregate([
+            { $match: filterQuery },
+            ...lookupQuery1,
+            ...lookupQuery2,
+            ...lookupQuery3,
+            {
+                $match: {
+                    $and:
+                        [
+                            { 'supplier.supplierName': { '$regex': supplierFilterQuery, '$options': 'i' } },
+                            { 'store.storeName': { '$regex': storeFilterQuery, '$options': 'i' } },
+                            { 'buyer.buyerName': { '$regex': buyerFilterQuery, '$options': 'i' } }
+                        ]
+                }
+            },
             {
                 $facet: {
                     metadata: [
@@ -379,30 +419,30 @@ router.get("/pendingCart/print",
                     ]
                 }
             },
-    ])
-   
+        ])
+
         res.status(200).json({
             success: true,
-            data:data[0]?.data ? data[0]?.data :[],
-            total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+            data: data[0]?.data ? data[0]?.data : [],
+            total: data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total : 0
         })
-});
+    });
 
 
-router.get('/pendingCart/company',async(req,res)=>{
+router.get('/pendingCart/company', async (req, res) => {
 
     const companyreport = await pendingCart.aggregate(
         [
             {
-                $group:{
-                _id:{}
+                $group: {
+                    _id: {}
                 }
             }
         ]
     )
     res.status(200).json({
-        
+
     })
 });
 
-module.exports  = router;
+module.exports = router;

@@ -87,7 +87,14 @@ router.delete("/product/:id",
     }
 });
 
-
+router.get("/productSelect", async (req, res) => {
+    const productName = req.query.productName?req.query.productName:''
+    const products = await Products.find({$and:[{productName:{'$regex':productName,'$options':'i'}},{isDeleted:{$ne:true}}]}).limit(10);
+    res.status(200).json({
+        success: true,
+        products
+    })
+});
 router.get("/search",
     async (req, res) => {
         // const {productName,supplierName,storeName} = req.query;

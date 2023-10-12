@@ -5,11 +5,9 @@ import {
   Input,
   CardBody,
   Button,
-  CardHeader,
   Typography
 } from "@material-tailwind/react";
 import { BASE_URL } from "../../Common";
-import moment from "moment/moment"; 
 import axios from 'axios';
 import AsyncSelect from 'react-select/async';
 
@@ -19,35 +17,57 @@ export default function AddPendingCart() {
     productName: "",
     packing: "",
     store: '',
-    quantity:0,
-    supplier:[],
-    buyer:'',
-    createdAt:'',
-    modifiedAt:''
+    quantity: 0,
+    supplier: [],
+    buyer: '',
+    isDeleted: false,
+    isCart: false,
+    createdAt: new Date(),
+    modifiedAt: ''
   });
 
-  const [stores,setStores] = useState([]);
-  const [buyers,setBuyers] = useState([]);
-  const [suppliers,setSuppliers] = useState([]);
+  const [stores, setStores] = useState([]);
+  const [buyers, setBuyers] = useState([]);
+  const [product, setProducts] = useState([]);
 
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
-  const getStores = async (inputValue,loadMode) => {
+  const getProducts = async (inputValue, loadMode) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}storesSelect/?storeName=`+ inputValue
+        `${BASE_URL}productSelect/?productName=` + inputValue
       );
-      if(res.data.success){
-        const stores = res.data.stores?.map(item=>
-          {
-          return {...item,value:item?._id,label:item.storeName}
+      if (res.data.success) {
+        const products = res.data.products?.map(item => {
+          return { ...item, value: item?._id, label: item.productName }
         })
-        if(!loadMode){
+        if (!loadMode) {
+          setProducts(products)
+        }
+        return products
+      } else {
+        return null
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getStores = async (inputValue, loadMode) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}storesSelect/?storeName=` + inputValue
+      );
+      if (res.data.success) {
+        const stores = res.data.stores?.map(item => {
+          return { ...item, value: item?._id, label: item.storeName }
+        })
+        if (!loadMode) {
           setStores(stores)
         }
         return stores
-      }else{
+      } else {
         return null
       }
     } catch (error) {
@@ -55,21 +75,20 @@ export default function AddPendingCart() {
     }
   };
 
-  const getBuyer = async (inputValue,loadMode) => {
+  const getBuyer = async (inputValue, loadMode) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}buyersSelect/?buyerName=`+ inputValue
+        `${BASE_URL}buyersSelect/?buyerName=` + inputValue
       );
-      if(res.data.success){
-        const buyers = res.data.stores?.map(item=>
-          {
-          return {...item,value:item?._id,label:item.buyerName}
+      if (res.data.success) {
+        const buyers = res.data.buyers?.map(item => {
+          return { ...item, value: item?._id, label: item.buyerName }
         })
-        if(!loadMode){
+        if (!loadMode) {
           setBuyers(buyers)
         }
         return buyers
-      }else{
+      } else {
         return null
       }
     } catch (error) {
@@ -77,200 +96,152 @@ export default function AddPendingCart() {
     }
   };
 
-  const getSuppliers = async (inputValue,loadMode) => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
-      );
-      if(res.data.success ){
-
-        const suppliers = res.data.suppliers?.map((item=>{
-          return {...item,value:item._id,label:item.supplierName}
-        }))
-        if(!loadMode){
-          setSuppliers(suppliers)
-        }
-        return suppliers
-      }else{
-        return null
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const searchStore = async (inputValue) => {
+    const res = await getStores(inputValue, true);
+    const institutes = res.map((val) => {
+      return { label: val.storeName, value: val._id };
+    });
+    return institutes;
   };
 
-  const handleSubmit = async () => {
-    try {
-      const res = await axios.post(
-        `${BASE_URL}product/new`,
-        data
-      );
-      if(res.data.success){
-        navigate('/');
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const searchProduct = async (inputValue) => {
+    const res = await getProducts(inputValue, true);
+    const institutes = res.map((val) => {
+      return { label: val.productName, value: val._id };
+    });
+    return institutes;
   };
 
-  const searchStore =  async (inputValue) => {
-      const res = await getStores(inputValue,true);
-      const institutes = res.map((val) => {
-        return { label: val.storeName, value: val._id };
-      });
-      return institutes;
-  };
 
-  const searchSupplier =  async (inputValue) => {
-      const res = await getSuppliers(inputValue,true);
-      const institutes = res.map((val) => {
-        return { label: val.supplierName, value: val._id };
-      });
-      return institutes;
-  };
-
-  const searchBuyer =  async (inputValue) => {
-    const res = await getBuyer(inputValue,true);
+  const searchBuyer = async (inputValue) => {
+    const res = await getBuyer(inputValue, true);
     const institutes = res.map((val) => {
       return { label: val.buyerName, value: val._id };
     });
     return institutes;
-};
+  };
 
-  useEffect(()=>{
-    getStores('',false)
-    getSuppliers('',false)
-    getBuyer('',false)
-  },[])
-  
+  const handleSubmit = async () => {
+    debugger
+    try {
+      const res = await axios.post(
+        `${BASE_URL}pendingcart/forceSave`,
+        data
+      );
+      if (res.data.success) {
+        navigate('/pending-cart');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getStores('', false)
+    getBuyer('', false)
+    getProducts('', false)
+  }, [])
+
   return (
     <div className="container">
-    <div class="flex items-center justify-center">
-    <Card className="min-w-[320px] max-w-[520px] w-full">
-        {/* <CardHeader floated={false}>
-          <Typography className="text-center text-2xl">Product</Typography>
-        </CardHeader> */}
-        <CardBody>
-          <form onSubmit={(e)=>{
-            e.preventDefault();
-            handleSubmit();
-          }}>
-            <div className="mb-4 text-center">
-              <Typography className="text-2xl">Add entry to pending cart </Typography>
-            </div>
-            <div className="mb-4 flex flex-col gap-6">
-              <Input
-                size="sm"
-                type="text"
-                className="form-control"
-                name="productName"
-                label="Product Name"
-                value={data.productName}
-                onChange={handleChange}
-              />
-              <Input
-                size="sm"
-                type="text"
-                className="form-control"
-                name="packing"
-                label="Packing"
-                value={data.packing}
-                onChange={handleChange}
-              />
-              <AsyncSelect
-                cacheOptions
-                defaultOptions={stores}
-                isClearable
-                placeholder="Select Store"
-                loadOptions={searchStore}
-                getOptionValue={(option) => option.value}
-                getOptionLabel={(option) => option.label}
-                onChange={(e)=>{
-                  setData({...data,store:e?e.value:''})
-                }}
-                noOptionsMessage={({ inputValue }) =>
-                  !inputValue
-                    ? "Start Typing to View Results"
-                    : inputValue.length > 0
-                    ? "No Result Are Found Matching This Value"
-                    : "Type At Least Three Character to View Result"
-                }
-              />
+      <div class="flex items-center justify-center">
+        <Card className="min-w-[320px] max-w-[520px] w-full">
+          <CardBody>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}>
+              <div className="mb-4 text-center">
+                <Typography className="text-2xl">Add entry to pending cart </Typography>
+              </div>
+              <div className="mb-4 flex flex-col gap-6">
                 <AsyncSelect
-                cacheOptions
-                isMulti
-                defaultOptions={suppliers}
-                isClearable
-                placeholder="Select Suppliers"
-                loadOptions={searchSupplier}
-                onChange={(e)=>{
-                 if(e.length >0){
-                  const suppliers = e.map(item=>item._id)
-                    setData({...data,supplier:suppliers})
-                 }else{
-                  setData({...data,supplier:[]})
-                 }
-                }}
-                getOptionValue={(option) => option.value}
-                getOptionLabel={(option) => option.label}
-                noOptionsMessage={({ inputValue }) =>
-                  !inputValue
-                    ? "Start Typing to View Results"
-                    : inputValue.length > 0
-                    ? "No Result Are Found Matching This Value"
-                    : "Type At Least Three Character to View Result"
-                }
-              />
-              <Input
-                size="sm"
-                type="text"
-                className="form-control"
-                name="quantity"
-                label="quantity"
-                value={data.quantity}
-                onChange={handleChange}
-              />
+                  cacheOptions
+                  defaultOptions={product}
+                  isClearable
+                  placeholder="Select Products"
+                  loadOptions={searchProduct}
+                  getOptionValue={(option) => option.value}
+                  getOptionLabel={(option) => option.label}
+                  onChange={(e) => {
+                    setData({ ...data, productName: e.productName, packing: e.packing, supplier: e.supplier })
+                  }}
+                  noOptionsMessage={({ inputValue }) =>
+                    !inputValue
+                      ? "Start Typing to View Results"
+                      : inputValue.length > 0
+                        ? "No Result Are Found Matching This Value"
+                        : "Type At Least Three Character to View Result"
+                  }
+                />
                 <AsyncSelect
-                cacheOptions
-                defaultOptions={buyers}
-                isClearable
-                placeholder="Select Buyer"
-                loadOptions={searchBuyer}
-                getOptionValue={(option) => option.value}
-                getOptionLabel={(option) => option.label}
-                onChange={(e)=>{
-                  setData({...data,buyer:e?e.value:''})
-                }}
-                noOptionsMessage={({ inputValue }) =>
-                  !inputValue
-                    ? "Start Typing to View Results"
-                    : inputValue.length > 0
-                    ? "No Result Are Found Matching This Value"
-                    : "Type At Least Three Character to View Result"
-                }
-              />
-              <Input
-                size="sm"
-                type="date"
-                className="form-control"
-                name="createdAt"
-                label="Date"
-                value={data.createdAt}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="flex justify-evenly">
-              <Button size="sm" className="mt-6" type="submit">
-                Save
-              </Button>
-              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/"); })}>
-                Cancle
-              </Button>
-            </div>
-          </form>
-        </CardBody>
-      </Card>
-    </div >
+                  cacheOptions
+                  defaultOptions={stores}
+                  isClearable
+                  placeholder="Select Store"
+                  loadOptions={searchStore}
+                  getOptionValue={(option) => option.value}
+                  getOptionLabel={(option) => option.label}
+                  onChange={(e) => {
+                    setData({ ...data, store: e ? e.value : '' })
+                  }}
+                  noOptionsMessage={({ inputValue }) =>
+                    !inputValue
+                      ? "Start Typing to View Results"
+                      : inputValue.length > 0
+                        ? "No Result Are Found Matching This Value"
+                        : "Type At Least Three Character to View Result"
+                  }
+                />
+                <Input
+                  size="sm"
+                  type="text"
+                  className="form-control"
+                  name="quantity"
+                  label="quantity"
+                  value={data.quantity}
+                  onChange={handleChange}
+                />
+                <AsyncSelect
+                  cacheOptions
+                  defaultOptions={buyers}
+                  isClearable
+                  placeholder="Select Buyer"
+                  loadOptions={searchBuyer}
+                  getOptionValue={(option) => option.value}
+                  getOptionLabel={(option) => option.label}
+                  onChange={(e) => {
+                    setData({ ...data, buyer: e ? e.value : '' })
+                  }}
+                  noOptionsMessage={({ inputValue }) =>
+                    !inputValue
+                      ? "Start Typing to View Results"
+                      : inputValue.length > 0
+                        ? "No Result Are Found Matching This Value"
+                        : "Type At Least Three Character to View Result"
+                  }
+                />
+                <Input
+                  size="sm"
+                  type="date"
+                  className="form-control"
+                  name="createdAt"
+                  label="Date"
+                  value={data.createdAt}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="flex justify-evenly">
+                <Button size="sm" className="mt-6" type="submit">
+                  Save
+                </Button>
+                <Button size="sm" className="mt-6" onClick={((e) => { navigate("/pending-cart"); })}>
+                  Cancle
+                </Button>
+              </div>
+            </form>
+          </CardBody>
+        </Card>
+      </div >
     </div>
 
   );
