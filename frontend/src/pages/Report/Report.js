@@ -38,9 +38,12 @@ const Report = () => {
     const [dialog, setDialog] = useState({ open: false, item: {} })
     const [buyers, setBuyers] = useState([]);
     const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
+    const [rsearchData, setrSearchData] = useState({ store:'', supplierName: '', productName: '' });
     const [totalProducts, setTotalProduct] = useState(0);
     const [page_Index, setPage_Index] = useState(1);
     const [page_Size, setPage_Size] = useState(5);
+    const [reportType,setReportType] = useState(1);
+    const [stores,setStores] = useState([]);
 
     const getData = async () => {
         try {
@@ -97,6 +100,7 @@ const Report = () => {
 
 
     const getBuyers = async (inputValue, loadMode) => {
+        
         try {
             const res = await axios.get(
                 `${BASE_URL}buyersSelect/?buyerName=` + inputValue
@@ -125,33 +129,100 @@ const Report = () => {
         return institutes;
     };
 
+
+    
+  const getStores = async (inputValue,loadMode) => {
+    debugger
+    try {
+      const res = await axios.get(
+        `${BASE_URL}storesSelect/?storeName=`+ inputValue
+      );
+      if(res.data.success){
+        const stores = res.data.stores?.map(item=>
+          {
+          return {...item,value:item?._id,label:item.storeName}
+        })
+        if(!loadMode){
+          setStores(stores)
+        }
+        return stores
+      }else{
+        return null
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+    const searchStore =  async (inputValue) => {
+        debugger
+        const res = await getStores(inputValue,true);
+        const institutes = res.map((val) => {
+          return { label: val.storeName, value: val._id };
+        });
+        return institutes;
+    };
+
     useEffect(() => {
         getData();
     }, [searchData, page_Index, page_Size]);
 
     useEffect(() => {
         getBuyers('', false);
+        getStores('',false)
     }, [])
 
+    const reportTypes = [
+        {label:'Company Wise',value:1},
+        {label:'Product Wise',value:2},
+        {label:'Supplier Wise',value:3},
+    ]
     return (
         <div className="container mb-8">
             <Card className="h-full w-full	">
                 <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
                     <div className="mb-3 flex justify-between items-center">
-                        <Typography> Product List </Typography>
+                        <Select
+                            menuPortalTarget={document.body}
+                            options={reportTypes}
+                            onChange={(e)=>{
+                                setReportType(e.value)
+                            }}
+                            value={reportTypes.find(item=>item.value === reportType)}
+                            />
                         <div className="flex gap-2">
-                            <Button size="sm" className="mt-6 m-0" onClick={(e) => {
-                                navigate('/add-product')
-                            }}>Add Product</Button>
                             <Button type="submit"
                                 onSubmit={(E) => {
                                 }}
                                 size="sm" className="mt-6 m-0"
-                            >Add to Cart</Button>
+                            >Print</Button>
                         </div>
                     </div>
                     <div className="w-full flex gap-5 justify-between items-center">
-                        <Input
+                        {reportType === 1 &&
+                            <AsyncSelect
+                            cacheOptions
+                            menuPortalTarget={document.body}
+                            defaultOptions={stores}
+                            isClearable
+                            placeholder="Select Company"
+                            loadOptions={searchStore}
+                            getOptionValue={(option) => option.value}
+                            getOptionLabel={(option) => option.label}
+                            onChange={(e)=>{
+                            setrSearchData({...rsearchData,store:e?e.value:''})
+                            }}
+                            // value={rsearchData.store}
+                            noOptionsMessage={({ inputValue }) =>
+                            !inputValue
+                                ? "Start Typing to View Results"
+                                : inputValue.length > 0
+                                ? "No Result Are Found Matching This Value"
+                                : "Type At Least Three Character to View Result"
+                            }
+                        />
+                        }
+                        {/* <Input
                             type="text"
                             size="sm"
                             className="form-control border rounded"
@@ -159,8 +230,8 @@ const Report = () => {
                             name="storeName"
                             value={searchData.storeName}
                             onChange={handleChange}
-                        />
-                        <Input
+                        /> */}
+                        {/* <Input
                             type="text"
                             size="sm"
                             className="form-control border rounded"
@@ -177,7 +248,7 @@ const Report = () => {
                             name="supplierName"
                             value={searchData.supplierName}
                             onChange={handleChange}
-                        />
+                        /> */}
                     </div>
                 </CardHeader>
                 <CardBody className="p-4 overflow-hidden px-0 ">
@@ -315,7 +386,6 @@ const Report = () => {
                     <Button
                         variant="text"
                         color="grey"
-                        variant='gradient'
                         onClick={(e) => { setDialog({ open: false, item: {} }) }}
                         className="mr-1"
                     >
