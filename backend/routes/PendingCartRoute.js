@@ -388,4 +388,21 @@ router.get("/pendingCart/print",
         })
 });
 
+
+router.get('/pendingCart/company',async(req,res)=>{
+
+    const companyreport = await pendingCart.aggregate(
+        [
+            {
+                $group:{
+                _id:{}
+                }
+            }
+        ]
+    )
+    res.status(200).json({
+        
+    })
+});
+
 module.exports  = router;
