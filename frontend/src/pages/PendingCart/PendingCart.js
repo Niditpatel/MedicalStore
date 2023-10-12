@@ -365,7 +365,7 @@ const PendingCart = () => {
         }}
       >
         <DialogBody divider>
-          <table className="w-full min-w-max table-auto text-left" ref={componentRef}>
+          <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
             <thead>
               <tr>
                 {TABLE_HEAD_PRINT.map((head) => (
