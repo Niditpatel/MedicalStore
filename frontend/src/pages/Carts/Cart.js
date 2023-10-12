@@ -63,7 +63,7 @@ const Cart = () => {
         + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
       );
       const dataForPrint = await axios.get(
-        `${BASE_URL}cart/search/?` + 'supplierName=' +
+        `${BASE_URL}cart/print/?` + 'supplierName=' +
         searchData.supplierName + '&buyerName=' + searchData.buyerName
         + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName
       );
