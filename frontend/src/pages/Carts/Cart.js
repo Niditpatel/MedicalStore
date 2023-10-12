@@ -16,6 +16,7 @@ import {
   CardFooter,
   Dialog,
   DialogBody,
+  DialogFooter,
   DialogHeader
 } from "@material-tailwind/react";
 import { DateRange, DateRangePicker } from 'react-date-range';
