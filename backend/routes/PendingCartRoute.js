@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Carts = require("../models/CartSchema");
-const PendingCart = require("../models/PendingCart")
+const PendingCart = require("../models/PendingCart");
+const { default: mongoose } = require("mongoose");
 
 
 router.post("/pendingcart/new", async (req, res) => {
@@ -431,17 +432,77 @@ router.get("/pendingCart/print",
 
 router.get('/pendingCart/company', async (req, res) => {
 
+<<<<<<< HEAD
     const companyreport = await pendingCart.aggregate(
         [
             {
                 $group: {
                     _id: {}
                 }
+=======
+    const company_name = req.query.company_name;
+    const lookupQuery2 = [
+        {
+            $lookup: {
+                from: 'stores',
+                localField: 'store',
+                foreignField: '_id',
+                as: 'store',
+                pipeline: [
+                    {
+                        $project: {
+                            storeName: 1,
+                            contactNumber:1,
+                            _id:1
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            $unwind: {
+                path: '$store',
+                // for not showing not matched doc 
+                 preserveNullAndEmptyArrays: false
+>>>>>>> 4ba6de489c630c81b67eebcc5fd40c47385d48bb
             }
+        }
+    ]
+
+    const companyreport = await PendingCart.aggregate(
+        [
+            ...lookupQuery2,
+            // {$match:{'store.storeName':{'$regex':company_name,'$options':'i'}}},
+            {
+                $facet: {
+                    metadata: [
+                        {
+                            $group: {
+                                _id: null,
+                                total: { $sum: 1 }
+                            }
+                        },
+                    ],
+                    data: [
+                        {
+                            $group:{
+                                    _id:'$productName',
+                                    total:{$sum:'$quantity'},
+                                    count: { $sum: 1 }
+                                    }
+                        },
+                        { $limit: 10 }
+                    ]
+                }
+            },
         ]
     )
     res.status(200).json({
+<<<<<<< HEAD
 
+=======
+        companyreport
+>>>>>>> 4ba6de489c630c81b67eebcc5fd40c47385d48bb
     })
 });
 
