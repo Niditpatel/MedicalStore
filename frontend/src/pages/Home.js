@@ -391,7 +391,7 @@ const Home = () => {
                                   color="blue-gray"
                                   className="font-normal"
                                 >
-                                  {item?.supplier?.map((x)=>x.supplierName.join(','))}
+                                  {item?.supplier?.map((x)=>x.supplierName).join(',')}
                                 </Typography>
                               </td>
                               <td className={classes}>
