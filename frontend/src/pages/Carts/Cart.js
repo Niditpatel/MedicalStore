@@ -16,7 +16,7 @@ import {
   CardFooter,
   Dialog,
   DialogBody,
-  DialogFooter
+  DialogHeader
 } from "@material-tailwind/react";
 import { DateRange, DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
@@ -161,7 +161,7 @@ const Cart = () => {
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { addInPendingCart() }}>Add In Pending Cart</Button>
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add In Cart</Button>
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { setClaerAll(true) }}>claer Cart</Button>
-              <Button className="btn btn-primary" type="primary" onClick={(e)=> setPrintCart(true)}>
+              <Button className="btn btn-primary" type="primary" onClick={(e) => setPrintCart(true)}>
                 Print Cart
               </Button>
               {/* <div>
@@ -409,6 +409,21 @@ const Cart = () => {
           unmount: { scale: 0.9, y: -100 },
         }}
       >
+        <DialogHeader className="justify-end">
+          <Button
+            color="grey"
+            variant='gradient'
+            onClick={handlePrint}
+            className="mr-1"
+          >
+            <span>Print </span>
+          </Button>
+          <Button variant="gradient" color="red" onClick={(e) => {
+            setPrintCart(false)
+          }}>
+            <span>Cancel</span>
+          </Button>
+        </DialogHeader>
         <DialogBody divider>
           <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
             <thead >
@@ -490,21 +505,6 @@ const Cart = () => {
             </tbody>
           </table>
         </DialogBody>
-        <DialogFooter>
-          <Button
-            color="grey"
-            variant='gradient'
-            onClick={handlePrint}
-            className="mr-1"
-          >
-            <span>Print </span>
-          </Button>
-          <Button variant="gradient" color="red" onClick={(e) => {
-            setPrintCart(false)
-          }}>
-            <span>Cancel</span>
-          </Button>
-        </DialogFooter>
       </Dialog>
 
     </div >
