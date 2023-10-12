@@ -247,4 +247,138 @@ router.get("/cart/search",
         })
 });
 
+
+router.get("/cart/search",
+    async (req, res) => {
+        const { productName,supplierName,storeName, offset, limit, sort_by, order,buyerName } = req.query;
+        const product = productName !== undefined ? productName :''
+        const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
+        const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
+        // const start_date = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
+        // const end_date = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
+        const filterQuery =  {$and:[{productName:{'$regex':product,'$options':'i'}},{isDeleted:{$ne:true}}]}
+       const lookupQuery1 = [
+            {
+                $lookup: {
+                    from: 'suppliers',
+                    localField: 'supplier',
+                    foreignField: '_id',
+                    as: 'supplier',
+                    pipeline: [
+                        {
+                            $project: {
+                                supplierName: 1,
+                                contactNumber:1,
+                                _id:1
+                            }
+                        }
+                    ]
+                },
+            },
+            // {
+            //     $unwind: {
+            //         path: '$supplier',
+            //         // for not showing not matched doc 
+            //          preserveNullAndEmptyArrays: false
+            //     }
+            // }
+        ]
+
+        const lookupQuery2 = [
+            {
+                $lookup: {
+                    from: 'stores',
+                    localField: 'store',
+                    foreignField: '_id',
+                    as: 'store',
+                    pipeline: [
+                        {
+                            $project: {
+                                storeName: 1,
+                                contactNumber:1,
+                                _id:0
+                            }
+                        }
+                    ]
+                },
+            },
+            {
+                $unwind: {
+                    path: '$store',
+                    // for not showing not matched doc 
+                     preserveNullAndEmptyArrays: false
+                }
+            }
+        ]
+
+
+        const lookupQuery3 = [
+            {
+                $lookup: {
+                    from: 'buyers',
+                    localField: 'buyer',
+                    foreignField: '_id',
+                    as: 'buyer',
+                    pipeline: [
+                        {
+                            $project: {
+                                buyerName: 1,
+                                contactNumber:1,
+                                _id:0
+                            }
+                        }
+                    ]
+                },
+            },
+            {
+                $unwind: {
+                    path: '$buyer',
+                    // for not showing not matched doc 
+                     preserveNullAndEmptyArrays: false
+                }
+            }
+        ]
+        const supplierFilterQuery = supplierName ? supplierName :''
+        const storeFilterQuery =storeName? storeName : '' ;
+        const buyerFilterQuery = buyerName? buyerName : '' ;
+
+    const data = await Carts.aggregate([
+        { $match: filterQuery},
+         ...lookupQuery1,
+         ...lookupQuery2,
+         ...lookupQuery3,
+         {$match:{$and:
+            [
+                {'supplier.supplierName': {'$regex':supplierFilterQuery ,'$options':'i'}},
+                {'store.storeName':{'$regex':storeFilterQuery,'$options':'i'}},
+                {'buyer.buyerName':{'$regex':buyerFilterQuery,'$options':'i'}}
+            ]
+        }},
+            {
+                $facet: {
+                    metadata: [
+                        {
+                            $group: {
+                                _id: null,
+                                total: { $sum: 1 }
+                            }
+                        },
+                    ],
+                    data: [
+                        { $sort: { [sort_field]: sort_order } }
+                    ]
+                }
+            },
+    ])
+   
+        res.status(200).json({
+            success: true,
+            data:data[0]?.data ? data[0]?.data :[],
+            total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+        })
+});
+
+
+
+
 module.exports  = router;
