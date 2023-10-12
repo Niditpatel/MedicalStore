@@ -254,7 +254,7 @@ const PendingCart = () => {
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {item?.supplier?.supplierName}
+                              {item?.supplier?.map((x) => x.supplierName).join(',')}
                             </Typography>
                           </td>
                           <td className={classes}>

@@ -19,6 +19,7 @@ import EditProduct from "./pages/Products/EditProduct";
 import AddEntries from "./pages/Entries/EntrieAdd";
 import EditEntries from "./pages/Entries/EntrieUpdate";
 import EntriesList from "./pages/Entries/EntriesList";
+import Report from "./pages/Report/Report";
 import PendingCartSave from "./pages/PendingCart/PendingCartSave";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
         <Route exact path="/add-supplier" element={<AddSupplier />} />
         <Route path="/edit-supplier/:rowIndex" element={<EditSupplier />} />
         <Route exact path="/entries" element={<EntriesList />} />
+        <Route exact path="/report" element={<Report />} />
         <Route path="/add-entry" element={<AddEntries />} />
         <Route path="/edit-entry/:rowIndex" element={<EditEntries />} />
         <Route path="/pending-cart-save" element={<PendingCartSave />} />
