@@ -135,7 +135,7 @@ const PendingCart = () => {
     getData();
   }
   const TABLE_HEAD = ["", "Product Name", "Packing", "Supplier", ""];
-  const TABLE_HEAD_PRINT = ["", "Product Name", "Packing", "Supplier"];
+  const TABLE_HEAD_PRINT = ["Product Name", "Packing", "Supplier"];
   return (
 
     <div className="container">
@@ -392,11 +392,6 @@ const PendingCart = () => {
                   : "p-1 border-b border-blue-gray-50";
                 return (
                   <tr className="h-4" key={index}>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
-                        {index}
-                      </div>
-                    </td>
                     <td className={classes}>
                       <Typography
                         variant="small"
