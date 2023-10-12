@@ -27,8 +27,6 @@ import {
   Box,
   Pagination
 } from "@mui/material";
-import Stack from '@mui/material/Stack';
-import moment from "moment/moment";
 import Select from 'react-select'
 import { options } from "../../StaticData/StaticData"
 import { useReactToPrint } from "react-to-print";
@@ -38,6 +36,7 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
+  const [printData, setPrintData] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -47,6 +46,7 @@ const Cart = () => {
 
   const [dialog, setDialog] = useState({ open: false, item: {} })
   const [claerAll, setClaerAll] = useState(false);
+  const [printCart, setPrintCart] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [page_Size, setPage_Size] = useState(5);
@@ -58,16 +58,23 @@ const Cart = () => {
   const getData = async () => {
     try {
       const data = await axios.get(
-        `${BASE_URL}cart/search/?` + 'supplierName=' +
-        searchData.supplierName +
-        '&buyerName=' +
+        `${BASE_URL}cart/search/?` + 'supplierName=' + searchData.supplierName + '&buyerName=' +
         searchData.buyerName
         + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
       );
+      const dataForPrint = await axios.get(
+        `${BASE_URL}cart/search/?` + 'supplierName=' +
+        searchData.supplierName + '&buyerName=' + searchData.buyerName
+        + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName
+      );
+      console.log("dataForPrint", dataForPrint);
       if (data.data.success) {
         setData(data.data.data)
         setTotalProduct(data.data.total)
         setFilterData(data.data.data)
+      }
+      if (dataForPrint.data.success) {
+        setPrintData(dataForPrint.data.data)
       }
     } catch (error) {
       console.log(error);
@@ -154,8 +161,8 @@ const Cart = () => {
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { addInPendingCart() }}>Add In Pending Cart</Button>
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add In Cart</Button>
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { setClaerAll(true) }}>claer Cart</Button>
-              <Button className="btn btn-primary" type="primary" onClick={handlePrint}>
-                Print
+              <Button className="btn btn-primary" type="primary" onClick={(e)=> setPrintCart(true)}>
+                Print Cart
               </Button>
               {/* <div>
                 <Popover animate={{
@@ -208,7 +215,7 @@ const Cart = () => {
           </div>
         </CardHeader>
         <CardBody className="p-4 overflow-hidden px-0">
-          <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
+          <table className="w-full min-w-max table-auto text-left" id="section-to-print" >
             <thead >
               <tr>
                 <th
@@ -268,11 +275,6 @@ const Cart = () => {
                         : "p-1 border-b border-blue-gray-50";
                       return (
                         <tr className="h-4" key={index}>
-                          {/* <td className={classes}>
-                            <div className="flex items-center gap-3">
-                               <Checkbox onChange={(e) => { addForCart(item) }} /> 
-                            </div>
-                          </td> */}
                           <td className={classes}>
                             <Typography
                               variant="small"
@@ -397,7 +399,115 @@ const Cart = () => {
           </Button>
         </DialogFooter>
       </Dialog>
-    </div>
+
+      <Dialog
+        open={printCart}
+        size="xl"
+        handler={(e) => { setPrintCart(false) }}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogBody divider>
+          <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
+            <thead >
+              <tr>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Product Name
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Packing
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Supplier Name
+                  </Typography>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {printData?.map((item, index,) => {
+                const isLast = index === data.length - 1;
+                const classes = isLast
+                  ? "p-1"
+                  : "p-1 border-b border-blue-gray-50";
+                return (
+                  <tr className="h-4" key={index}>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item?.productName}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item?.packing}
+                      </Typography>
+                    </td>
+                    <td className={classes} >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item?.supplier?.map((x) => x.supplierName).join(',')}
+                      </Typography>
+                    </td>
+                  </tr>
+                );
+              },
+              )}
+            </tbody>
+          </table>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            color="grey"
+            variant='gradient'
+            onClick={handlePrint}
+            className="mr-1"
+          >
+            <span>Print </span>
+          </Button>
+          <Button variant="gradient" color="red" onClick={(e) => {
+            setPrintCart(false)
+          }}>
+            <span>Cancel</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+    </div >
 
   );
 };

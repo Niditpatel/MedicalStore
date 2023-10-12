@@ -26,10 +26,10 @@ import axios from "axios";
 import {
   Pagination
 } from "@mui/material";
-import Stack from '@mui/material/Stack';
 import moment from "moment/moment";
 import Select from 'react-select'
-import {options} from "../../StaticData/StaticData"
+import { options } from "../../StaticData/StaticData"
+import { useReactToPrint } from "react-to-print";
 
 
 
@@ -37,6 +37,7 @@ const PendingCart = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState([]);
+  const [pendingCataData, setPendingCataData] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -46,33 +47,35 @@ const PendingCart = () => {
 
   const [dialog, setDialog] = useState({ open: false, item: {} })
   const [claerAll, setClaerAll] = useState(false);
+  const [printDialog, setPrintDialog] = useState(false);
   const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [endDate, setEndDate] = useState(new Date());
   const [page_Size, setPage_Size] = useState(5);
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
-
-  // const getTotalProducts = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `${BASE_URL}totalpendingCarts`
-  //     );
-  //     setTotalProduct(res.data.total)
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getData = async () => {
     try {
       const data = await axios.get(
         `${BASE_URL}pendingCart/search/?` + 'supplierName=' +
-        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + 
-        '&offset=' + page_Index +'&pageSize=' + page_Size +'&start_date=' +startDate  +'&end_date=' +endDate    
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +
+        '&offset=' + page_Index + '&pageSize=' + page_Size + '&start_date=' + startDate + '&end_date=' + endDate
+      );
+      const printData = await axios.get(
+        `${BASE_URL}pendingCart/print/?` + 'supplierName=' +
+        searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +
+        '&offset=' + page_Index + '&pageSize=' + page_Size + '&start_date=' + startDate + '&end_date=' + endDate
       );
       if (data.data.success) {
         setData(data.data.data)
         setFilterData(data.data.data)
         setTotalProduct(data.data.total)
         await axios.put(`${BASE_URL}clearfromcart`)
+      }
+      if (printData.data.success) {
+        setPendingCataData(printData.data.data)
       }
     } catch (error) {
       console.log(error);
@@ -96,7 +99,7 @@ const PendingCart = () => {
   };
   useEffect(() => {
     getData();
-  }, [searchData, page_Index,page_Size]);
+  }, [searchData, page_Index, page_Size]);
 
   const handleDelete = async (id) => {
     try {
@@ -132,6 +135,7 @@ const PendingCart = () => {
     getData();
   }
   const TABLE_HEAD = ["", "Product Name", "Packing", "Supplier", ""];
+  const TABLE_HEAD_PRINT = ["", "Product Name", "Packing", "Supplier"];
   return (
 
     <div className="container">
@@ -143,6 +147,7 @@ const PendingCart = () => {
               <Button className="mt-6 m-0 " onClick={(e) => { navigate("/") }}>Add In Pending Cart</Button>
               <Button className="mt-6 m-0 " onClick={(e) => { navigate("/pending-cart-save") }}>Add Forcefully</Button>
               <Button className="mt-6 m-0 " onClick={(e) => { setClaerAll(true) }}>claer Pending Cart</Button>
+              <Button className="mt-6 m-0 " onClick={(e) => { setPrintDialog(true) }}>Print Pending Cart</Button>
               <div>
                 <Popover animate={{
                   mount: { scale: 1, y: 0 },
@@ -191,7 +196,6 @@ const PendingCart = () => {
               value={searchData.supplierName}
               onChange={handleChange}
             />
-            {/* <Button variant="gradient" size="sm" className="btn btn-primary" onClick={handlesearch}>search</Button> */}
           </div>
         </CardHeader>
         <CardBody className="p-4 overflow-hidden px-0">
@@ -227,7 +231,6 @@ const PendingCart = () => {
                         <tr className="h-4" key={index}>
                           <td className={classes}>
                             <div className="flex items-center gap-3">
-                              {/* <Checkbox onChange={(e) => { addForPendingCart(item) }} /> */}
                             </div>
                           </td>
                           <td className={classes}>
@@ -281,8 +284,8 @@ const PendingCart = () => {
           </table>
         </CardBody>
         <CardFooter className="pt-0 print:hidden">
-          <div style={{ display: 'flex' ,justifyContent:'space-between'}}>
-          <Pagination
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Pagination
               count={Math.ceil(totalProducts / 10)}
               page={page_Index}
               onChange={handleChangePageNew}
@@ -348,6 +351,98 @@ const PendingCart = () => {
             handleClearPendingCart()
           }}>
             <span>Confirm</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+      <Dialog
+        open={printDialog}
+        size="xl"
+        handler={(e) => { setPrintDialog(false) }}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogBody divider>
+          <table className="w-full min-w-max table-auto text-left" ref={componentRef}>
+            <thead>
+              <tr>
+                {TABLE_HEAD_PRINT.map((head) => (
+                  <th
+                    key={head}
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      {head}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {pendingCataData?.map((item, index,) => {
+                const isLast = index === data.length - 1;
+                const classes = isLast
+                  ? "p-1"
+                  : "p-1 border-b border-blue-gray-50";
+                return (
+                  <tr className="h-4" key={index}>
+                    <td className={classes}>
+                      <div className="flex items-center gap-3">
+                        {index}
+                      </div>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item?.productName}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item?.packing}
+                      </Typography>
+                    </td>
+                    <td className={classes} >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item?.supplier?.map((x) => x.supplierName).join(',')}
+                      </Typography>
+                    </td>
+                  </tr>
+                );
+              },)}
+            </tbody>
+          </table>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            color="grey"
+            variant='gradient'
+            onClick={handlePrint}
+            className="mr-1"
+          >
+            <span>Print </span>
+          </Button>
+          <Button variant="gradient" color="red" onClick={(e) => {
+            setPrintDialog(false)
+          }}>
+            <span>Cancel</span>
           </Button>
         </DialogFooter>
       </Dialog>
