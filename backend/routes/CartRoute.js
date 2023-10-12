@@ -248,7 +248,7 @@ router.get("/cart/search",
 });
 
 
-router.get("/cart/search",
+router.get("/cart/print",
     async (req, res) => {
         const { productName,supplierName,storeName, offset, limit, sort_by, order,buyerName } = req.query;
         const product = productName !== undefined ? productName :''
