@@ -130,20 +130,11 @@ const Home = () => {
         (x._id === "" ||
           x.buyerId === "")
     ).length;
-    let validateSupplier = values?.data?.filter(
-      (x) =>
-        x.isCart === true &&
-        (x._id === "" ||
-          x.supplierId === "")
-    ).length;
     if (validateQuantiy > 0) {
       return alert("Quantity must grater than 0 in selected field")
     }
     if (validateBuyer > 0) {
       return alert("Please select Buyer in selected field ")
-    }
-    if (validateSupplier > 0) {
-      return alert("Please select Supplier in selected field ")
     }
     try {
       const data = await axios.post(
@@ -395,24 +386,13 @@ const Home = () => {
                               </td>
 
                               <td className={classes} >
-                                <Select
-                                  menuPortalTarget={document.body}
-                                  className="basic-single"
-                                  classNamePrefix="select"
-                                  isClearable={true}
-                                  isSearchable={true}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      `data[${index}].supplierId`,
-                                      e !== null ? e.value : "",
-                                      false
-                                    );
-                                  }}
-                                  name="supplier"
-                                  options={item.supplier.map((item) => {
-                                    return { ...item, label: item.supplierName, value: item._id }
-                                  })}
-                                />
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {item?.supplier?.map((x)=>x.supplierName.join(','))}
+                                </Typography>
                               </td>
                               <td className={classes}>
                                 <TextField size="small"
