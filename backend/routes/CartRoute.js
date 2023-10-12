@@ -15,7 +15,7 @@ router.post("/cart/new",async (req, res) => {
                 ,store:element.store._id
                 ,buyer:element.buyerId
                 ,quantity:element.quantity
-                ,supplier:element.supplierId
+                ,supplier:element.supplier.map(item=>item._id)
                 ,isDeleted:false
                 ,isCart:false
             })
@@ -142,13 +142,13 @@ router.get("/cart/search",
                     ]
                 },
             },
-            {
-                $unwind: {
-                    path: '$supplier',
-                    // for not showing not matched doc 
-                     preserveNullAndEmptyArrays: false
-                }
-            }
+            // {
+            //     $unwind: {
+            //         path: '$supplier',
+            //         // for not showing not matched doc 
+            //          preserveNullAndEmptyArrays: false
+            //     }
+            // }
         ]
 
         const lookupQuery2 = [
