@@ -21,7 +21,7 @@ app.use("/api/v1", Buyer)
 app.use("/api/v1", Supplier)
 app.use("/api/v1", Product)
 app.use("/api/v1", Carts)
-app.use('api/v1',PendingCart)
+app.use('/api/v1',PendingCart)
 
 
 // app.use(express.static(path.join(__dirname, "../frontend/build")));
