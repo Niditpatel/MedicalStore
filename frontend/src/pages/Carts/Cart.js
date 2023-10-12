@@ -41,7 +41,7 @@ const Cart = () => {
   const [filterData, setFilterData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' ,buyerName:''});
+  const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '', buyerName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
 
@@ -66,7 +66,7 @@ const Cart = () => {
       );
       if (data.data.success) {
         setData(data.data.data)
-setTotalProduct(data.data.total)
+        setTotalProduct(data.data.total)
         setFilterData(data.data.data)
       }
     } catch (error) {
@@ -297,7 +297,7 @@ setTotalProduct(data.data.total)
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {item?.supplier?.supplierName}
+                              {item?.supplier?.map((x) => x.supplierName).join(',')}
                             </Typography>
                           </td>
                           <td className={classes}>
