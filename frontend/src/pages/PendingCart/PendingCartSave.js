@@ -27,6 +27,7 @@ export default function AddPendingCart() {
   });
 
   const [stores, setStores] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const [buyers, setBuyers] = useState([]);
   const [product, setProducts] = useState([]);
 
@@ -95,15 +96,27 @@ export default function AddPendingCart() {
       console.log(error);
     }
   };
+  const getSuppliers = async (inputValue, loadMode) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}suppliersSelect/?supplierName=` + inputValue
+      );
+      if (res.data.success) {
 
-  const searchStore = async (inputValue) => {
-    const res = await getStores(inputValue, true);
-    const institutes = res.map((val) => {
-      return { label: val.storeName, value: val._id };
-    });
-    return institutes;
+        const suppliers = res.data.suppliers?.map((item => {
+          return { ...item, value: item._id, label: item.supplierName }
+        }))
+        if (!loadMode) {
+          setSuppliers(suppliers)
+        }
+        return suppliers
+      } else {
+        return null
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-
   const searchProduct = async (inputValue) => {
     const res = await getProducts(inputValue, true);
     const institutes = res.map((val) => {
@@ -122,7 +135,6 @@ export default function AddPendingCart() {
   };
 
   const handleSubmit = async () => {
-    debugger
     try {
       const res = await axios.post(
         `${BASE_URL}pendingcart/forceSave`,
@@ -139,8 +151,13 @@ export default function AddPendingCart() {
     getStores('', false)
     getBuyer('', false)
     getProducts('', false)
+    getSuppliers('', false)
   }, [])
-
+  const storesName = stores.find((x) => x._id === data.store)
+  const supplierNames = data?.supplier?.map(supplierId => {
+    const foundSupplier = suppliers.find(supplier => supplier._id === supplierId);
+    return foundSupplier ? foundSupplier.supplierName : 'No Supplier';
+  });
   return (
     <div className="container">
       <div class="flex items-center justify-center">
@@ -163,7 +180,7 @@ export default function AddPendingCart() {
                   getOptionValue={(option) => option.value}
                   getOptionLabel={(option) => option.label}
                   onChange={(e) => {
-                    setData({ ...data, productName: e.productName, packing: e.packing, supplier: e.supplier })
+                    setData({ ...data, productName: e.productName, packing: e.packing, supplier: e.supplier, store: e.store })
                   }}
                   noOptionsMessage={({ inputValue }) =>
                     !inputValue
@@ -173,24 +190,24 @@ export default function AddPendingCart() {
                         : "Type At Least Three Character to View Result"
                   }
                 />
-                <AsyncSelect
-                  cacheOptions
-                  defaultOptions={stores}
-                  isClearable
-                  placeholder="Select Store"
-                  loadOptions={searchStore}
-                  getOptionValue={(option) => option.value}
-                  getOptionLabel={(option) => option.label}
-                  onChange={(e) => {
-                    setData({ ...data, store: e ? e.value : '' })
-                  }}
-                  noOptionsMessage={({ inputValue }) =>
-                    !inputValue
-                      ? "Start Typing to View Results"
-                      : inputValue.length > 0
-                        ? "No Result Are Found Matching This Value"
-                        : "Type At Least Three Character to View Result"
-                  }
+
+                <Input
+                  size="sm"
+                  disabled
+                  type="text"
+                  className="form-control"
+                  name="storeName"
+                  label="store"
+                  value={storesName?.storeName}
+                />
+                <Input
+                  size="sm"
+                  type="text"
+                  className="form-control"
+                  name="supplierName"
+                  label="Supplier"
+                  disabled
+                  value={supplierNames}
                 />
                 <Input
                   size="sm"
