@@ -484,7 +484,84 @@ router.get('/companyreport', async (req, res) => {
 
 router.get('/buyerreport', async (req, res) => {
 
-    const buyer_id = req.query.buyer_id;
+    const {buyer_id,offset,limit} = req.query
+    const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
+    const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
+    const lookupQuery3 = [
+        {
+            $lookup: {
+                from: 'buyers',
+                localField: 'buyer',
+                foreignField: '_id',
+                as: 'buyer',
+                pipeline: [
+                    {
+                        $project: {
+                            buyerName: 1,
+                            contactNumber: 1,
+                            _id: 1
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            $unwind: {
+                path: '$buyer',
+                // for not showing not matched doc 
+                preserveNullAndEmptyArrays: false
+            }
+        }
+    ]
+
+    const companyreport = await PendingCart.aggregate(
+        [
+            ...lookupQuery3,
+            {$match:{'buyer._id':new mongoose.Types.ObjectId(buyer_id)}},
+            {
+                $group: {
+                  _id: "$_id", // Group by the primary key of order_items
+                //   productName:'$productName',
+                  totalQuantity: { $sum: "$quantity" },
+                  product:{$first:'$productName'},
+                  packing:{$first:'$packing'}
+                }
+            },
+            { $skip: page_limit * page_no },
+            { $limit: page_limit }
+        ]
+    )
+
+    const total = await PendingCart.aggregate(
+        [
+            ...lookupQuery3,
+            {$match:{'buyer._id':new mongoose.Types.ObjectId(buyer_id)}},
+            {
+                $group: {
+                  _id: "$_id", // Group by the primary key of order_items
+                //   productName:'$productName',
+                  totalQuantity: { $sum: "$quantity" },
+                  product:{$first:'$productName'},
+                  packing:{$first:'$packing'}
+                }
+            },
+            {$count:'total'},
+            { $skip: page_limit * page_no },
+            { $limit: page_limit }
+        ]
+    )
+
+    res.status(200).json({
+        companyreport,
+        total:total.companyreport[0].total
+    })
+});
+
+
+
+router.get('/buyerreportprint', async (req, res) => {
+
+    const {buyer_id} = req.query
     const lookupQuery3 = [
         {
             $lookup: {
@@ -525,14 +602,12 @@ router.get('/buyerreport', async (req, res) => {
                   packing:{$first:'$packing'}
                 }
             }
-            
         ]
     )
+
     res.status(200).json({
-        companyreport
+        companyreport,
     })
 });
-
-
 
 module.exports = router;
