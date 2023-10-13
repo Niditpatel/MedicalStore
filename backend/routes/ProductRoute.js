@@ -1,6 +1,10 @@
 const express =require("express");
 const router = express.Router();
 const Products = require("../models/ProductSchema");
+const { default: mongoose } = require("mongoose");
+// const { default: mongoose } = require("mongoose");
+
+const ObjectId = mongoose.Types.ObjectId
 
 
 router.post("/product/new",async (req, res) => {
@@ -197,5 +201,70 @@ router.get("/search",
             total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
         })
 });
+
+
+router.get('/supplierreport',async (req,res)=>{
+
+    const supplier_id = req.query.supplier_id
+
+    const lookupQuery1 = [
+        {
+            $lookup: {
+                from: 'suppliers',
+                localField: 'supplier',
+                foreignField: '_id',
+                as: 'supplier',
+                pipeline: [
+                    {
+                        $project: {
+                            supplierName: 1,
+                            contactNumber:1,
+                            _id:1
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            $unwind: {
+                path: '$supplier',
+                // for not showing not matched doc 
+                 preserveNullAndEmptyArrays: false
+            }
+        }
+    ]
+    const data = await Products.aggregate([
+         ...lookupQuery1,
+         {$match:
+                {'supplier._id': new mongoose.Types.ObjectId(supplier_id)},
+        },
+            {
+                $facet: {
+                    metadata: [
+                        {
+                            $group: {
+                                _id: null,
+                                total: { $sum: 1 }
+                            }
+                        },
+                    ],
+                    data:[
+                        
+                    ]
+                    
+                }
+            },
+    ])
+
+    res.status(200).json({
+        data
+    })
+})
+
+
+
+
+
+
 
 module.exports  = router;

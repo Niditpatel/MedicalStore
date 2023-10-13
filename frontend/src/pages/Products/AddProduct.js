@@ -169,8 +169,9 @@ export default function AddProduct() {
                 placeholder="Select Suppliers"
                 loadOptions={searchSupplier}
                 onChange={(e)=>{
+                  debugger
                  if(e.length >0){
-                  const suppliers = e.map(item=>item._id)
+                  const suppliers = e.map(item=>item.value)
                     setData({...data,supplier:suppliers})
                  }else{
                   setData({...data,supplier:[]})

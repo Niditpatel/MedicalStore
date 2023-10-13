@@ -463,8 +463,8 @@ router.get('/pendingCart/company', async (req, res) => {
 
     const companyreport = await PendingCart.aggregate(
         [
-            {$match:{store:{$in:["65105e50e593e1da20188f9b","65105e50e593e1da20188f9d"]}}},
-            // ...lookupQuery2,
+            {$match:{store:company_name}},
+            ...lookupQuery2,
             {
                 $group: {
                   _id: "$_id", // Group by the primary key of order_items
