@@ -205,8 +205,10 @@ router.get("/search",
 
 router.get('/supplierreport',async (req,res)=>{
 
-    const supplier_id = req.query.supplier_id
+    const {supplier_id,offset,limit} = req.query
 
+    const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
+    const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
     const lookupQuery1 = [
         {
             $lookup: {
@@ -255,8 +257,79 @@ router.get('/supplierreport',async (req,res)=>{
                                 packing:1,
                                 supplier:1
                             }
+                            
+                        },
+                        { $skip: page_limit * page_no },
+                        { $limit: page_limit },
+                    ]
+                    
+                }
+            },
+    ])
 
+    res.status(200).json({
+        success: true,
+        data:data[0]?.data ? data[0]?.data :[],
+        total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+    })
+})
+
+
+
+router.get('/supplierreportprint',async (req,res)=>{
+
+    const {supplier_id} = req.query
+    const lookupQuery1 = [
+        {
+            $lookup: {
+                from: 'suppliers',
+                localField: 'supplier',
+                foreignField: '_id',
+                as: 'supplier',
+                pipeline: [
+                    {
+                        $project: {
+                            supplierName: 1,
+                            contactNumber:1,
+                            _id:1
                         }
+                    }
+                ]
+            },
+        },
+        {
+            $unwind: {
+                path: '$supplier',
+                // for not showing not matched doc 
+                 preserveNullAndEmptyArrays: false
+            }
+        }
+    ]
+    const data = await Products.aggregate([
+         ...lookupQuery1,
+         {$match:
+                {'supplier._id': new mongoose.Types.ObjectId(supplier_id)},
+        },
+            {
+                $facet: {
+                    metadata: [
+                        {
+                            $group: {
+                                _id: null,
+                                total: { $sum: 1 }
+                            }
+                        },
+                    ],
+                    data:[
+                        {
+                            $project:{
+                                productName:1,
+                                packing:1,
+                                supplier:1
+                            }
+                            
+                        }
+                        
                     ]
                     
                 }
