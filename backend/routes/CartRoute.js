@@ -10,7 +10,7 @@ router.post("/cart/new",async (req, res) => {
        try{
         products.forEach(element => {
             const cart = new Carts({
-                _id:element._id
+                productId:element._id
                 ,productName:element.productName
                 ,packing:element.packing
                 ,store:element.store._id

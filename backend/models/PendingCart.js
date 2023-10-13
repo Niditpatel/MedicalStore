@@ -13,6 +13,7 @@ const pendingCartSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
+    productId:{ type: mongoose.Schema.Types.ObjectId, ref: 'Products', required: true },
     store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store', required: true },
     supplier: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: true }],
     buyer:{type:mongoose.Schema.Types.ObjectId, ref: 'Buyer', required: true },

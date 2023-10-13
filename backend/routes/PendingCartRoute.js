@@ -13,7 +13,7 @@ router.post("/pendingcart/new", async (req, res) => {
     if (cartProducts && cartProducts?.length > 0) {
         cartProducts.forEach(function (doc) {
             const newCart = new PendingCart({
-                 _id:doc._id
+                 productId:doc._id
                 ,productName: doc.productName
                 , packing: doc.packing
                 , store: doc.store
@@ -47,8 +47,9 @@ router.post("/pendingcart/forceSave", async (req, res) => {
         , isCart
         , isDeleted
         , createdAt,_id } = req.body;
+        const productId = _id;
     const pendingCarts = await PendingCart.create({
-        _id
+        productId
         ,productName
         , packing
         , store
@@ -123,7 +124,7 @@ router.delete("/PendingCart/:id",
     async (req, res) => {
         const pednidngCart = await PendingCart.findById(req.params.id);
 
-        if (!cart) {
+        if (!pednidngCart) {
             res.status(200).json({
                 success: true,
                 message: `item not Found`
@@ -473,7 +474,7 @@ router.get('/companyreportprint', async (req, res) => {
             },
             {
                 $group: {
-                  _id: "$_id", // Group by the primary key of order_items
+                  _id: "$productId", // Group by the primary key of order_items
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},
@@ -531,7 +532,7 @@ router.get('/companyreport', async (req, res) => {
             },
             {
                 $group: {
-                  _id: "$_id", // Group by the primary key of order_items
+                  _id: "$productId", // Group by the primary key of order_items
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},
@@ -554,7 +555,7 @@ router.get('/companyreport', async (req, res) => {
             },
             {
                 $group: {
-                  _id: "$_id", // Group by the primary key of order_items
+                  _id: "$productId", // Group by the primary key of order_items
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},
@@ -613,7 +614,7 @@ router.get('/buyerreport', async (req, res) => {
             },
             {
                 $group: {
-                  _id: "$_id", // Group by the primary key of order_items
+                  _id: "$productId", // Group by the primary key of order_items
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},
@@ -635,7 +636,7 @@ router.get('/buyerreport', async (req, res) => {
             },
             {
                 $group: {
-                  _id: "$_id", // Group by the primary key of order_items
+                  _id: "$productId", // Group by the primary key of order_items
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},
