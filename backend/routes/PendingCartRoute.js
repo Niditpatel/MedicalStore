@@ -435,6 +435,7 @@ router.get("/pendingCart/print",
 router.get('/companyreportprint', async (req, res) => {
 
     const company_name = req.query.company_id;
+    const {start_date,end_date} = req.query
     const lookupQuery2 = [
         {
             $lookup: {
@@ -465,7 +466,11 @@ router.get('/companyreportprint', async (req, res) => {
     const companyreport = await PendingCart.aggregate(
         [
             ...lookupQuery2,
-            {$match:{'store._id':new mongoose.Types.ObjectId(company_name)}},
+            {$match:
+                {$and:[
+                {'store._id':new mongoose.Types.ObjectId(company_name)},
+                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
+            },
             {
                 $group: {
                   _id: "$_id", // Group by the primary key of order_items
@@ -485,7 +490,7 @@ router.get('/companyreportprint', async (req, res) => {
 
 router.get('/companyreport', async (req, res) => {
 
-    const {company_id,offset,limit} = req.query
+    const {company_id,offset,limit,start_date,end_date} = req.query
     const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
     const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
 
@@ -519,7 +524,11 @@ router.get('/companyreport', async (req, res) => {
     const companyreport = await PendingCart.aggregate(
         [
             ...lookupQuery2,
-            {$match:{'store._id':new mongoose.Types.ObjectId(company_id)}},
+            {$match:
+                {$and:[
+                {'store._id':new mongoose.Types.ObjectId(company_id)},
+                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
+            },
             {
                 $group: {
                   _id: "$_id", // Group by the primary key of order_items
@@ -538,7 +547,11 @@ router.get('/companyreport', async (req, res) => {
     const total = await PendingCart.aggregate(
         [
             ...lookupQuery2,
-            {$match:{'store._id':new mongoose.Types.ObjectId(company_id)}},
+            {$match:
+                {$and:[
+                {'store._id':new mongoose.Types.ObjectId(company_id)},
+                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
+            },
             {
                 $group: {
                   _id: "$_id", // Group by the primary key of order_items
@@ -560,7 +573,7 @@ router.get('/companyreport', async (req, res) => {
 
 router.get('/buyerreport', async (req, res) => {
 
-    const {buyer_id,offset,limit} = req.query
+    const {buyer_id,offset,limit,start_date,end_date} = req.query
     const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
     const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
     const lookupQuery3 = [
@@ -593,7 +606,11 @@ router.get('/buyerreport', async (req, res) => {
     const companyreport = await PendingCart.aggregate(
         [
             ...lookupQuery3,
-            {$match:{'buyer._id':new mongoose.Types.ObjectId(buyer_id)}},
+            {$match:
+                {$and:[
+                {'buyer._id':new mongoose.Types.ObjectId(buyer_id)},
+                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
+            },
             {
                 $group: {
                   _id: "$_id", // Group by the primary key of order_items
@@ -611,7 +628,11 @@ router.get('/buyerreport', async (req, res) => {
     const total = await PendingCart.aggregate(
         [
             ...lookupQuery3,
-            {$match:{'buyer._id':new mongoose.Types.ObjectId(buyer_id)}},
+            {$match:
+                {$and:[
+                {'buyer._id':new mongoose.Types.ObjectId(buyer_id)},
+                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
+            },
             {
                 $group: {
                   _id: "$_id", // Group by the primary key of order_items
@@ -635,7 +656,7 @@ router.get('/buyerreport', async (req, res) => {
 
 router.get('/buyerreportprint', async (req, res) => {
 
-    const {buyer_id} = req.query
+    const {buyer_id,start_date,end_date} = req.query
     const lookupQuery3 = [
         {
             $lookup: {
@@ -666,7 +687,11 @@ router.get('/buyerreportprint', async (req, res) => {
     const companyreport = await PendingCart.aggregate(
         [
             ...lookupQuery3,
-            {$match:{'buyer._id':new mongoose.Types.ObjectId(buyer_id)}},
+            {$match:
+                {$and:[
+                {'buyer._id':new mongoose.Types.ObjectId(buyer_id)},
+                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
+            },
             {
                 $group: {
                   _id: "$_id", // Group by the primary key of order_items
