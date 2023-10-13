@@ -87,16 +87,24 @@ export function StickyNavbar() {
             Apple Medical
           </Link>
         </Typography>
+
         <div className="flex items-center gap-4">
           {/* <div className="mr-4 hidden lg:block">{navList}</div> */}
           <Button
-          variant="gradient"
-          size="sm"
-          onClick={((e) => { navigate("/products"); })}
-        >
-          <span>Products</span>
-        </Button>
-        <Button
+            variant="gradient"
+            size="sm"
+            onClick={((e) => { navigate("/report"); })}
+          >
+            <span>Reports</span>
+          </Button>
+          <Button
+            variant="gradient"
+            size="sm"
+            onClick={((e) => { navigate("/products"); })}
+          >
+            <span>Products</span>
+          </Button>
+          <Button
             variant="gradient"
             size="sm"
             className="hidden lg:inline-block"
