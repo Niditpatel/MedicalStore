@@ -430,7 +430,7 @@ router.get("/pendingCart/print",
     });
 
 
-router.get('/companyreport', async (req, res) => {
+router.get('/companyreportprint', async (req, res) => {
 
     const company_name = req.query.company_id;
     const lookupQuery2 = [
@@ -478,6 +478,80 @@ router.get('/companyreport', async (req, res) => {
     )
     res.status(200).json({
         companyreport
+    })
+});
+
+router.get('/companyreport', async (req, res) => {
+
+    const {company_id,offset,limit} = req.query
+    const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
+    const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
+
+    const lookupQuery2 = [
+        {
+            $lookup: {
+                from: 'stores',
+                localField: 'store',
+                foreignField: '_id',
+                as: 'store',
+                pipeline: [
+                    {
+                        $project: {
+                            storeName: 1,
+                            contactNumber:1,
+                            _id:1
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            $unwind: {
+                path: '$store',
+                // for not showing not matched doc 
+                 preserveNullAndEmptyArrays: false
+            }
+        }
+    ]
+
+    const companyreport = await PendingCart.aggregate(
+        [
+            ...lookupQuery2,
+            {$match:{'store._id':new mongoose.Types.ObjectId(company_id)}},
+            {
+                $group: {
+                  _id: "$_id", // Group by the primary key of order_items
+                //   productName:'$productName',
+                  totalQuantity: { $sum: "$quantity" },
+                  product:{$first:'$productName'},
+                  packing:{$first:'$packing'}
+                }
+            },
+            { $skip: page_limit * page_no },
+            { $limit: page_limit },
+            
+        ]
+    )
+
+    const total = await PendingCart.aggregate(
+        [
+            ...lookupQuery2,
+            {$match:{'store._id':new mongoose.Types.ObjectId(company_id)}},
+            {
+                $group: {
+                  _id: "$_id", // Group by the primary key of order_items
+                //   productName:'$productName',
+                  totalQuantity: { $sum: "$quantity" },
+                  product:{$first:'$productName'},
+                  packing:{$first:'$packing'}
+                }
+            },
+            {$count:'total'}
+        ]
+    )
+    res.status(200).json({
+        companyreport,
+        total:total.companyreport[0].total
     })
 });
 
@@ -545,9 +619,7 @@ router.get('/buyerreport', async (req, res) => {
                   packing:{$first:'$packing'}
                 }
             },
-            {$count:'total'},
-            { $skip: page_limit * page_no },
-            { $limit: page_limit }
+            {$count:'total'}
         ]
     )
 
