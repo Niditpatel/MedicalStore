@@ -432,7 +432,8 @@ router.get("/pendingCart/print",
 
 router.get('/pendingCart/company', async (req, res) => {
 
-    const company_name = req.query.company_name;
+    const company_name = req.query.company_name?.toString();
+    console.log(company_name)
     const lookupQuery2 = [
         {
             $lookup: {
@@ -455,17 +456,22 @@ router.get('/pendingCart/company', async (req, res) => {
             $unwind: {
                 path: '$store',
                 // for not showing not matched doc 
-                 preserveNullAndEmptyArrays: false
+                //  preserveNullAndEmptyArrays: false
             }
         }
     ]
 
     const companyreport = await PendingCart.aggregate(
         [
-            {$match:{store:mongoose.Types.ObjectId(company_name)}},
-            ...lookupQuery2,
+            {$match:{store:{$in:["65105e50e593e1da20188f9b","65105e50e593e1da20188f9d"]}}},
+            // ...lookupQuery2,
             {
-                
+                $group: {
+                  _id: "$_id", // Group by the primary key of order_items
+                //   productName:'$productName',
+                  totalQuantity: { $sum: "$quantity" },
+                  product:{$first:'$productName'}
+                }
             }
             
         ]
