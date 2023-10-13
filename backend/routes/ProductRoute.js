@@ -249,7 +249,14 @@ router.get('/supplierreport',async (req,res)=>{
                         },
                     ],
                     data:[
-                        
+                        {
+                            $project:{
+                                productName:1,
+                                packing:1,
+                                supplier:1
+                            }
+
+                        }
                     ]
                     
                 }
@@ -257,7 +264,9 @@ router.get('/supplierreport',async (req,res)=>{
     ])
 
     res.status(200).json({
-        data
+        success: true,
+        data:data[0]?.data ? data[0]?.data :[],
+        total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
     })
 })
 

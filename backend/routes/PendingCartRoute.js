@@ -430,10 +430,9 @@ router.get("/pendingCart/print",
     });
 
 
-router.get('/pendingCart/company', async (req, res) => {
+router.get('/companyreport', async (req, res) => {
 
-    const company_name = req.query.company_name?.toString();
-    console.log(company_name)
+    const company_name = req.query.company_id;
     const lookupQuery2 = [
         {
             $lookup: {
@@ -456,21 +455,22 @@ router.get('/pendingCart/company', async (req, res) => {
             $unwind: {
                 path: '$store',
                 // for not showing not matched doc 
-                //  preserveNullAndEmptyArrays: false
+                 preserveNullAndEmptyArrays: false
             }
         }
     ]
 
     const companyreport = await PendingCart.aggregate(
         [
-            {$match:{store:company_name}},
             ...lookupQuery2,
+            {$match:{'store._id':new mongoose.Types.ObjectId(company_name)}},
             {
                 $group: {
                   _id: "$_id", // Group by the primary key of order_items
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
-                  product:{$first:'$productName'}
+                  product:{$first:'$productName'},
+                  packing:{$first:'$packing'}
                 }
             }
             
@@ -480,5 +480,59 @@ router.get('/pendingCart/company', async (req, res) => {
         companyreport
     })
 });
+
+
+router.get('/buyerreport', async (req, res) => {
+
+    const buyer_id = req.query.buyer_id;
+    const lookupQuery3 = [
+        {
+            $lookup: {
+                from: 'buyers',
+                localField: 'buyer',
+                foreignField: '_id',
+                as: 'buyer',
+                pipeline: [
+                    {
+                        $project: {
+                            buyerName: 1,
+                            contactNumber: 1,
+                            _id: 1
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            $unwind: {
+                path: '$buyer',
+                // for not showing not matched doc 
+                preserveNullAndEmptyArrays: false
+            }
+        }
+    ]
+
+    const companyreport = await PendingCart.aggregate(
+        [
+            ...lookupQuery3,
+            {$match:{'buyer._id':new mongoose.Types.ObjectId(buyer_id)}},
+            {
+                $group: {
+                  _id: "$_id", // Group by the primary key of order_items
+                //   productName:'$productName',
+                  totalQuantity: { $sum: "$quantity" },
+                  product:{$first:'$productName'},
+                  packing:{$first:'$packing'}
+                }
+            }
+            
+        ]
+    )
+    res.status(200).json({
+        companyreport
+    })
+});
+
+
 
 module.exports = router;
