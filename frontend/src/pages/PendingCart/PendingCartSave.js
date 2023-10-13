@@ -23,7 +23,8 @@ export default function AddPendingCart() {
     isDeleted: false,
     isCart: false,
     createdAt: new Date(),
-    modifiedAt: ''
+    modifiedAt: '',
+    _id:''
   });
 
   const [stores, setStores] = useState([]);
@@ -180,7 +181,7 @@ export default function AddPendingCart() {
                   getOptionValue={(option) => option.value}
                   getOptionLabel={(option) => option.label}
                   onChange={(e) => {
-                    setData({ ...data, productName: e.productName, packing: e.packing, supplier: e.supplier, store: e.store })
+                    setData({ ...data, productName: e.productName, packing: e.packing, supplier: e.supplier, store: e.store ,_id:e._id})
                   }}
                   noOptionsMessage={({ inputValue }) =>
                     !inputValue

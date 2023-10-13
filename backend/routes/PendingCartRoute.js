@@ -13,7 +13,8 @@ router.post("/pendingcart/new", async (req, res) => {
     if (cartProducts && cartProducts?.length > 0) {
         cartProducts.forEach(function (doc) {
             const newCart = new PendingCart({
-                productName: doc.productName
+                 _id:doc._id
+                ,productName: doc.productName
                 , packing: doc.packing
                 , store: doc.store
                 , supplier: doc.supplier
@@ -45,9 +46,10 @@ router.post("/pendingcart/forceSave", async (req, res) => {
         , quantity
         , isCart
         , isDeleted
-        , createdAt } = req.body;
+        , createdAt,_id } = req.body;
     const pendingCarts = await PendingCart.create({
-        productName
+        _id
+        ,productName
         , packing
         , store
         , supplier
