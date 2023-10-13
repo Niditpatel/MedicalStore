@@ -37,6 +37,7 @@ const Report = () => {
     const [loading, setLoading] = useState(false);
     const [dialog, setDialog] = useState({ open: false, item: {} })
     const [buyers, setBuyers] = useState([]);
+    const [suppliers, setSuppliers] = useState([]);
     const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
     const [rsearchData, setrSearchData] = useState({ store:'', supplierName: '', productName: '' });
     const [totalProducts, setTotalProduct] = useState(0);
@@ -162,7 +163,36 @@ const Report = () => {
         });
         return institutes;
     };
-
+    const getSuppliers = async (inputValue,loadMode) => {
+        try {
+          const res = await axios.get(
+            `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
+          );
+          if(res.data.success ){
+    
+            const suppliers = res.data.suppliers?.map((item=>{
+              return {...item,value:item._id,label:item.supplierName}
+            }))
+            if(!loadMode){
+              setSuppliers(suppliers)
+            }
+            return suppliers
+          }else{
+            return null
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      const searchSupplier =  async (inputValue) => {
+        debugger
+          const res = await getSuppliers(inputValue,true);
+          const institutes = res.map((val) => {
+            return { label: val.supplierName, value: val._id };
+          });
+          return institutes;
+      };
+    
     useEffect(() => {
         getData();
     }, [searchData, page_Index, page_Size]);
@@ -170,6 +200,7 @@ const Report = () => {
     useEffect(() => {
         getBuyers('', false);
         getStores('',false)
+        getSuppliers('',false)
     }, [])
 
     const reportTypes = [
@@ -207,6 +238,29 @@ const Report = () => {
                             isClearable
                             placeholder="Select Company"
                             loadOptions={searchStore}
+                            getOptionValue={(option) => option.value}
+                            getOptionLabel={(option) => option.label}
+                            onChange={(e)=>{
+                            setrSearchData({...rsearchData,store:e?e.value:''})
+                            }}
+                            // value={rsearchData.store}
+                            noOptionsMessage={({ inputValue }) =>
+                            !inputValue
+                                ? "Start Typing to View Results"
+                                : inputValue.length > 0
+                                ? "No Result Are Found Matching This Value"
+                                : "Type At Least Three Character to View Result"
+                            }
+                        />
+                        }
+                        {reportType === 3 &&
+                            <AsyncSelect
+                            cacheOptions
+                            menuPortalTarget={document.body}
+                            defaultOptions={suppliers}
+                            isClearable
+                            placeholder="Select Company"
+                            loadOptions={searchSupplier}
                             getOptionValue={(option) => option.value}
                             getOptionLabel={(option) => option.label}
                             onChange={(e)=>{
