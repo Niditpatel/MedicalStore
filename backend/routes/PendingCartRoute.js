@@ -470,7 +470,7 @@ router.get('/companyreportprint', async (req, res) => {
             {$match:
                 {$and:[
                 {'store._id':new mongoose.Types.ObjectId(company_name)},
-                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
+                ]}
             },
             {
                 $group: {
@@ -491,7 +491,7 @@ router.get('/companyreportprint', async (req, res) => {
 
 router.get('/companyreport', async (req, res) => {
 
-    const {company_id,offset,limit,start_date,end_date} = req.query
+    const {company_id,offset,limit} = req.query
     const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
     const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
 
@@ -526,9 +526,7 @@ router.get('/companyreport', async (req, res) => {
         [
             ...lookupQuery2,
             {$match:
-                {$and:[
                 {'store._id':new mongoose.Types.ObjectId(company_id)},
-                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
             },
             {
                 $group: {
@@ -551,7 +549,7 @@ router.get('/companyreport', async (req, res) => {
             {$match:
                 {$and:[
                 {'store._id':new mongoose.Types.ObjectId(company_id)},
-                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } } ]}
+                 ]}
             },
             {
                 $group: {

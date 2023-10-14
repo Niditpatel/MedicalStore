@@ -10,12 +10,16 @@ import {
     Button,
     CardBody,
     Checkbox,
+     Popover,
+    PopoverHandler,
+    PopoverContent,
     CardFooter,
     Dialog,
     DialogHeader,
     DialogBody,
     DialogFooter
 } from "@material-tailwind/react";
+import moment from "moment/moment";
 import * as Yup from "yup";
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -27,10 +31,12 @@ import {
     Pagination,
     TextField
 } from "@mui/material";
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 import Select from 'react-select'
 import { options } from "../../StaticData/StaticData"
 import { useReactToPrint } from "react-to-print";
-
+import { DateRange, DateRangePicker } from 'react-date-range';
 
 
 const Report = () => {
@@ -40,6 +46,8 @@ const Report = () => {
     const [buyers, setBuyers] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
     const [supplierWiseData, setSupplierWiseData] = useState([]);
+    const [companyWiseData, setCompanyWiseData] = useState([]);
+    const [buyerWiseData, setBuyerWiseData] = useState([]);
     const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
     const [rsearchData, setrSearchData] = useState({ store: '', supplierName: '', productName: '' });
     const [totalProducts, setTotalProduct] = useState(0);
@@ -49,16 +57,36 @@ const Report = () => {
     const [stores, setStores] = useState([]);
     const [printCart, setPrintCart] = useState(false);
     const [supplierWisePrintData, setSupplierWisePrintData] = useState([]);
-    const [BuyerWisePrintData, set5BuyerWisePrintData] = useState([]);
+    const [BuyerWisePrintData, setBuyerWisePrintData] = useState([]);
     const [CompnanyWisePrintData, setCompnanyWisePrintData] = useState([]);
+    const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+    const [endDate, setEndDate] = useState(new Date());
+    
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
 
+    const selectionRange = {
+        startDate: startDate,
+        endDate: endDate,
+        key: 'selection',
+      }
+    
+      const handleSelect = async (date) => {
+        let filtered = supplierWiseData.filter((product) => {
+          let productDate = new Date(product.createdAt);
+          return (productDate >= date.selection.startDate &&
+            productDate <= date.selection.endDate);
+        })
+        setStartDate(date.selection.startDate);
+        setEndDate(date.selection.endDate);
+        setSupplierWiseData(filtered);
+      };
     const handleChangePageNew = (e, value) => {
         setPage_Index(value);
     }
+    
     const getBuyers = async (inputValue, loadMode) => {
         try {
             const res = await axios.get(
@@ -149,7 +177,7 @@ const Report = () => {
     const getSupplierWiseReportPrint = async (supplierId) => {
         try {
             const res = await axios.get(
-                `${BASE_URL}supplierreportprint/?supplier_id=` + supplierId + '&offset=' + page_Index + '&limit=' + page_Size
+                `${BASE_URL}supplierreportprint/?supplier_id=` + supplierId 
             );
             if (res.data.success) {
                 setSupplierWisePrintData(res.data.data)
@@ -174,6 +202,63 @@ const Report = () => {
             console.log(error);
         }
     };
+    const getCompanyrWiseReportPrint = async (companyId) => {
+        try {
+            const res = await axios.get(
+                `${BASE_URL}supplierreportprint/?company_id=` + companyId  + '&start_date='  
+            );
+            if (res.data.success) {
+                setCompnanyWisePrintData(res.data.data)
+            } else {
+                return null
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getCompanyWiseReport = async (companyId) => {
+        try {
+            const res = await axios.get(
+                `${BASE_URL}companyreport/?company_id=` + companyId + '&offset=' + page_Index + '&limit=' + page_Size  
+            );
+            if (res.data.success) {
+                setCompanyWiseData(res.data.data)
+            } else {
+                return null
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getBuyerWiseReportPrint = async (buyerId) => {
+        try {
+            const res = await axios.get(
+                `${BASE_URL}buyerreportprint/?buyer_id=` + buyerId  
+            );
+            if (res.data.success) {
+                setBuyerWisePrintData(res.data.data)
+            } else {
+                return null
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getBuyerWiseReport = async (buyerId) => {
+        try {
+            const res = await axios.get(
+                `${BASE_URL}buyerreport/?buyer_id=` + buyerId + '&offset=' + page_Index + '&limit=' + page_Size   
+            );
+            if (res.data.success) {
+                setBuyerWiseData(res.data.data)
+            } else {
+                return null
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
     }, [searchData, page_Index, page_Size]);
 
@@ -191,7 +276,7 @@ const Report = () => {
     const Company_HEAD = ["Product Name", "Packing", "Total Quantiy"];
     const Buyer_HEAD = ["Buyer Name", "Buyer Contact", "Product Name", "Total Quantity"];
     const Supplier_HEAD = ["Product Name", "Packing", "Supplier", "Supplier Contact"];
-
+console.log("supplierWisePrintData",supplierWisePrintData);
     return (
         <div className="container mb-8">
             <Card className="h-full w-full	">
@@ -205,6 +290,22 @@ const Report = () => {
                             }}
                             value={reportTypes.find(item => item.value === reportType)}
                         />
+                         <Popover animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 },
+                }} placement="bottom" >
+                  <PopoverHandler>
+                    <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
+                  </PopoverHandler>
+                  <PopoverContent className="w-96">
+                    <DateRange
+                      editableDateInputs={true}
+                      onChange={handleSelect}
+                      moveRangeOnFirstSelection={false}
+                      ranges={[selectionRange]}
+                    />
+                  </PopoverContent>
+                </Popover>
 
                         {reportType === 1 &&
                             <AsyncSelect
@@ -218,6 +319,8 @@ const Report = () => {
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
+                                    getCompanyWiseReport(e?._id)
+                                    getCompanyrWiseReportPrint(e?._id)
                                 }}
                                 // value={rsearchData.store}
                                 noOptionsMessage={({ inputValue }) =>
@@ -241,6 +344,8 @@ const Report = () => {
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
+                                    getBuyerWiseReport(e?.value)
+                                    getBuyerWiseReportPrint(e?.value)
                                 }}
                                 // value={rsearchData.store}
                                 noOptionsMessage={({ inputValue }) =>
@@ -279,7 +384,8 @@ const Report = () => {
                         }
                         <div className="flex gap-2">
                             <Button type="submit"
-                                onSubmit={(E) => {
+                                onClick={(e) => {
+                                    debugger
                                     setPrintCart(true);
                                 }}
                                 size="sm" className="mt-6 m-0"
@@ -344,7 +450,7 @@ const Report = () => {
                         </thead>
                         {reportType === 1 &&
                             <tbody>
-                                {supplierWiseData?.map((item, index,) => {
+                                {companyWiseData?.map((item, index,) => {
                                     const isLast = index === supplierWiseData.length - 1;
                                     const classes = isLast
                                         ? "py-1 px-2"
@@ -396,7 +502,7 @@ const Report = () => {
                             </tbody>}
                         {reportType === 2 &&
                             <tbody>
-                                {supplierWiseData?.map((item, index,) => {
+                                {buyerWiseData?.map((item, index,) => {
                                     const isLast = index === supplierWiseData.length - 1;
                                     const classes = isLast
                                         ? "py-1 px-2"
