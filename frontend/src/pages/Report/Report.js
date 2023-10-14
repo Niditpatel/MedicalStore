@@ -12,6 +12,7 @@ import {
     Checkbox,
     CardFooter,
     Dialog,
+    DialogHeader,
     DialogBody,
     DialogFooter
 } from "@material-tailwind/react";
@@ -28,80 +29,37 @@ import {
 } from "@mui/material";
 import Select from 'react-select'
 import { options } from "../../StaticData/StaticData"
+import { useReactToPrint } from "react-to-print";
 
 
 
 const Report = () => {
     const navigate = useNavigate();
-    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [dialog, setDialog] = useState({ open: false, item: {} })
     const [buyers, setBuyers] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
+    const [supplierWiseData, setSupplierWiseData] = useState([]);
     const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
-    const [rsearchData, setrSearchData] = useState({ store:'', supplierName: '', productName: '' });
+    const [rsearchData, setrSearchData] = useState({ store: '', supplierName: '', productName: '' });
     const [totalProducts, setTotalProduct] = useState(0);
     const [page_Index, setPage_Index] = useState(1);
     const [page_Size, setPage_Size] = useState(5);
-    const [reportType,setReportType] = useState(1);
-    const [stores,setStores] = useState([]);
+    const [reportType, setReportType] = useState(1);
+    const [stores, setStores] = useState([]);
+    const [printCart, setPrintCart] = useState(false);
+    const [supplierWisePrintData, setSupplierWisePrintData] = useState([]);
+    const [BuyerWisePrintData, set5BuyerWisePrintData] = useState([]);
+    const [CompnanyWisePrintData, setCompnanyWisePrintData] = useState([]);
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
 
-    const getData = async () => {
-        try {
-            const data = await axios.get(
-                `${BASE_URL}search/?` + 'supplierName=' +
-                searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName + '&offset=' + page_Index + '&limit=' + page_Size
-            );
-            if (data.data.success) {
-                let dataMake = data?.data?.data
-                dataMake.map((x) => {
-                    x.buyerId = "";
-                    x.supplierId = "";
-                    x.quantity = 0;
-                    x.isCart = false;
-                    return x;
-                });
-                setData(dataMake)
-                setTotalProduct(data.data.total)
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-
-    const handleDelete = async (id) => {
-        try {
-            const data = await axios.delete(
-                `${BASE_URL}product/` + id
-            );
-            if (data.data.success) {
-                console.log(data.data.message)
-            }
-        } catch (error) {
-            console.log(error);
-        }
-        getData();
-    };
-
-    const handleChange = (e) => {
-        setSearchData({ ...searchData, [e.target.name]: e.target.value });
-    }
     const handleChangePageNew = (e, value) => {
         setPage_Index(value);
     }
-    const addAll = (e) => {
-        const newData = data.map((x) => {
-            x.isCart = e
-            return x
-        })
-        setData(newData)
-    }
-
-
-
     const getBuyers = async (inputValue, loadMode) => {
-        
         try {
             const res = await axios.get(
                 `${BASE_URL}buyersSelect/?buyerName=` + inputValue
@@ -130,84 +88,110 @@ const Report = () => {
         return institutes;
     };
 
-
-    
-  const getStores = async (inputValue,loadMode) => {
-    debugger
-    try {
-      const res = await axios.get(
-        `${BASE_URL}storesSelect/?storeName=`+ inputValue
-      );
-      if(res.data.success){
-        const stores = res.data.stores?.map(item=>
-          {
-          return {...item,value:item?._id,label:item.storeName}
-        })
-        if(!loadMode){
-          setStores(stores)
+    const getStores = async (inputValue, loadMode) => {
+        try {
+            const res = await axios.get(
+                `${BASE_URL}storesSelect/?storeName=` + inputValue
+            );
+            if (res.data.success) {
+                const stores = res.data.stores?.map(item => {
+                    return { ...item, value: item?._id, label: item.storeName }
+                })
+                if (!loadMode) {
+                    setStores(stores)
+                }
+                return stores
+            } else {
+                return null
+            }
+        } catch (error) {
+            console.log(error);
         }
-        return stores
-      }else{
-        return null
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
 
-    const searchStore =  async (inputValue) => {
-        debugger
-        const res = await getStores(inputValue,true);
+    const searchStore = async (inputValue) => {
+        const res = await getStores(inputValue, true);
         const institutes = res.map((val) => {
-          return { label: val.storeName, value: val._id };
+            return { label: val.storeName, value: val._id };
         });
         return institutes;
     };
-    const getSuppliers = async (inputValue,loadMode) => {
+    const getSuppliers = async (inputValue, loadMode) => {
         try {
-          const res = await axios.get(
-            `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
-          );
-          if(res.data.success ){
-    
-            const suppliers = res.data.suppliers?.map((item=>{
-              return {...item,value:item._id,label:item.supplierName}
-            }))
-            if(!loadMode){
-              setSuppliers(suppliers)
+            const res = await axios.get(
+                `${BASE_URL}suppliersSelect/?supplierName=` + inputValue
+            );
+            if (res.data.success) {
+
+                const suppliers = res.data.suppliers?.map((item => {
+                    return { ...item, value: item._id, label: item.supplierName }
+                }))
+                if (!loadMode) {
+                    setSuppliers(suppliers)
+                }
+                return suppliers
+            } else {
+                return null
             }
-            return suppliers
-          }else{
-            return null
-          }
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
-      const searchSupplier =  async (inputValue) => {
-        debugger
-          const res = await getSuppliers(inputValue,true);
-          const institutes = res.map((val) => {
+    };
+    const searchSupplier = async (inputValue) => {
+
+        const res = await getSuppliers(inputValue, true);
+        const institutes = res.map((val) => {
             return { label: val.supplierName, value: val._id };
-          });
-          return institutes;
-      };
-    
+        });
+        return institutes;
+    };
+
+    const getSupplierWiseReportPrint = async (supplierId) => {
+        try {
+            const res = await axios.get(
+                `${BASE_URL}supplierreportprint/?supplier_id=` + supplierId + '&offset=' + page_Index + '&limit=' + page_Size
+            );
+            if (res.data.success) {
+                setSupplierWisePrintData(res.data.data)
+            } else {
+                return null
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getSupplierWiseReport = async (supplierId) => {
+        try {
+            const res = await axios.get(
+                `${BASE_URL}supplierreport/?supplier_id=` + supplierId + '&offset=' + page_Index + '&limit=' + page_Size
+            );
+            if (res.data.success) {
+                setSupplierWiseData(res.data.data)
+            } else {
+                return null
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     useEffect(() => {
-        getData();
     }, [searchData, page_Index, page_Size]);
 
     useEffect(() => {
-        getBuyers('', false);
-        getStores('',false)
-        getSuppliers('',false)
+        getStores('', false)
+        getSuppliers('', false)
+        getBuyers('', false)
     }, [])
 
     const reportTypes = [
-        {label:'Company Wise',value:1},
-        {label:'Product Wise',value:2},
-        {label:'Supplier Wise',value:3},
+        { label: 'Company Wise', value: 1 },
+        { label: 'Buyer Wise', value: 2 },
+        { label: 'Supplier Wise', value: 3 },
     ]
+    const Company_HEAD = ["Product Name", "Packing", "Total Quantiy"];
+    const Buyer_HEAD = ["Buyer Name", "Buyer Contact", "Product Name", "Total Quantity"];
+    const Supplier_HEAD = ["Product Name", "Packing", "Supplier", "Supplier Contact"];
+
     return (
         <div className="container mb-8">
             <Card className="h-full w-full	">
@@ -216,156 +200,152 @@ const Report = () => {
                         <Select
                             menuPortalTarget={document.body}
                             options={reportTypes}
-                            onChange={(e)=>{
+                            onChange={(e) => {
                                 setReportType(e.value)
                             }}
-                            value={reportTypes.find(item=>item.value === reportType)}
-                            />
-                        <div className="flex gap-2">
-                            <Button type="submit"
-                                onSubmit={(E) => {
-                                }}
-                                size="sm" className="mt-6 m-0"
-                            >Print</Button>
-                        </div>
-                    </div>
-                    <div className="w-full flex gap-5 justify-between items-center">
+                            value={reportTypes.find(item => item.value === reportType)}
+                        />
+
                         {reportType === 1 &&
                             <AsyncSelect
-                            cacheOptions
-                            menuPortalTarget={document.body}
-                            defaultOptions={stores}
-                            isClearable
-                            placeholder="Select Company"
-                            loadOptions={searchStore}
-                            getOptionValue={(option) => option.value}
-                            getOptionLabel={(option) => option.label}
-                            onChange={(e)=>{
-                            setrSearchData({...rsearchData,store:e?e.value:''})
-                            }}
-                            // value={rsearchData.store}
-                            noOptionsMessage={({ inputValue }) =>
-                            !inputValue
-                                ? "Start Typing to View Results"
-                                : inputValue.length > 0
-                                ? "No Result Are Found Matching This Value"
-                                : "Type At Least Three Character to View Result"
-                            }
-                        />
+                                cacheOptions
+                                menuPortalTarget={document.body}
+                                defaultOptions={stores}
+                                isClearable
+                                placeholder="Select Company"
+                                loadOptions={searchStore}
+                                getOptionValue={(option) => option.value}
+                                getOptionLabel={(option) => option.label}
+                                onChange={(e) => {
+                                    setrSearchData({ ...rsearchData, store: e ? e.value : '' })
+                                }}
+                                // value={rsearchData.store}
+                                noOptionsMessage={({ inputValue }) =>
+                                    !inputValue
+                                        ? "Start Typing to View Results"
+                                        : inputValue.length > 0
+                                            ? "No Result Are Found Matching This Value"
+                                            : "Type At Least Three Character to View Result"
+                                }
+                            />
+                        }
+                        {reportType === 2 &&
+                            <AsyncSelect
+                                cacheOptions
+                                menuPortalTarget={document.body}
+                                defaultOptions={buyers}
+                                isClearable
+                                placeholder="Select Buyer"
+                                loadOptions={searchBuyer}
+                                getOptionValue={(option) => option.value}
+                                getOptionLabel={(option) => option.label}
+                                onChange={(e) => {
+                                    setrSearchData({ ...rsearchData, store: e ? e.value : '' })
+                                }}
+                                // value={rsearchData.store}
+                                noOptionsMessage={({ inputValue }) =>
+                                    !inputValue
+                                        ? "Start Typing to View Results"
+                                        : inputValue.length > 0
+                                            ? "No Result Are Found Matching This Value"
+                                            : "Type At Least Three Character to View Result"
+                                }
+                            />
                         }
                         {reportType === 3 &&
                             <AsyncSelect
-                            cacheOptions
-                            menuPortalTarget={document.body}
-                            defaultOptions={suppliers}
-                            isClearable
-                            placeholder="Select Company"
-                            loadOptions={searchSupplier}
-                            getOptionValue={(option) => option.value}
-                            getOptionLabel={(option) => option.label}
-                            onChange={(e)=>{
-                            setrSearchData({...rsearchData,store:e?e.value:''})
-                            }}
-                            // value={rsearchData.store}
-                            noOptionsMessage={({ inputValue }) =>
-                            !inputValue
-                                ? "Start Typing to View Results"
-                                : inputValue.length > 0
-                                ? "No Result Are Found Matching This Value"
-                                : "Type At Least Three Character to View Result"
-                            }
-                        />
+                                cacheOptions
+                                menuPortalTarget={document.body}
+                                defaultOptions={suppliers}
+                                isClearable
+                                placeholder="Select Supplier"
+                                loadOptions={searchSupplier}
+                                getOptionValue={(option) => option.value}
+                                getOptionLabel={(option) => option.label}
+                                onChange={(e) => {
+                                    setrSearchData({ ...rsearchData, store: e ? e.value : '' })
+                                    getSupplierWiseReport(e?.value)
+                                    getSupplierWiseReportPrint(e?.value)
+                                }}
+                                // value={rsearchData.store}
+                                noOptionsMessage={({ inputValue }) =>
+                                    !inputValue
+                                        ? "Start Typing to View Results"
+                                        : inputValue.length > 0
+                                            ? "No Result Are Found Matching This Value"
+                                            : "Type At Least Three Character to View Result"
+                                }
+                            />
                         }
-                        {/* <Input
-                            type="text"
-                            size="sm"
-                            className="form-control border rounded"
-                            label="Company Name"
-                            name="storeName"
-                            value={searchData.storeName}
-                            onChange={handleChange}
-                        /> */}
-                        {/* <Input
-                            type="text"
-                            size="sm"
-                            className="form-control border rounded"
-                            label="Product Name"
-                            name="productName"
-                            value={searchData.productName}
-                            onChange={handleChange}
-                        />
-                        <Input
-                            type="text"
-                            size="sm"
-                            className="form-control border rounded"
-                            label="Supplier Name"
-                            name="supplierName"
-                            value={searchData.supplierName}
-                            onChange={handleChange}
-                        /> */}
+                        <div className="flex gap-2">
+                            <Button type="submit"
+                                onSubmit={(E) => {
+                                    setPrintCart(true);
+                                }}
+                                size="sm" className="mt-6 m-0"
+                            >Print Report</Button>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardBody className="p-4 overflow-hidden px-0 ">
                     <table className="w-full min-w-max table-auto text-left">
                         <thead>
-                            <tr>
-                                <th
-                                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                                >
-                                    <Typography
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                    >
-                                        Product Name
-                                    </Typography>
-                                </th><th
-                                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                                >
-                                    <Typography
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                    >Packing
-                                    </Typography>
-                                </th>
-
-                                <th
-                                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                                >
-                                    <Typography
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                    >Supplier
-                                    </Typography>
-                                </th>
-                                <th
-                                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                                >
-                                    <Typography
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                    >Quantity
-                                    </Typography>
-                                </th>
-                                <th
-                                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
-                                >
-                                    <Typography
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                    >Buyer
-                                    </Typography>
-                                </th>
-                            </tr>
+                            {reportType === 1 &&
+                                <tr>
+                                    {Company_HEAD.map((head) => (
+                                        <th
+                                            key={head}
+                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal leading-none opacity-70"
+                                            >
+                                                {head}
+                                            </Typography>
+                                        </th>
+                                    ))}
+                                </tr>}
+                            {reportType === 2 &&
+                                <tr>
+                                    {Buyer_HEAD.map((head) => (
+                                        <th
+                                            key={head}
+                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal leading-none opacity-70"
+                                            >
+                                                {head}
+                                            </Typography>
+                                        </th>
+                                    ))}
+                                </tr>}
+                            {reportType === 3 &&
+                                <tr>
+                                    {Supplier_HEAD.map((head) => (
+                                        <th
+                                            key={head}
+                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal leading-none opacity-70"
+                                            >
+                                                {head}
+                                            </Typography>
+                                        </th>
+                                    ))}
+                                </tr>}
                         </thead>
-                        {loading === false ?
+                        {reportType === 1 &&
                             <tbody>
-                                {data?.map((item, index,) => {
-                                    const isLast = index === data.length - 1;
+                                {supplierWiseData?.map((item, index,) => {
+                                    const isLast = index === supplierWiseData.length - 1;
                                     const classes = isLast
                                         ? "py-1 px-2"
                                         : "py-1 px-2 border-b border-blue-gray-50";
@@ -399,12 +379,125 @@ const Report = () => {
                                                     {item?.supplier?.map((x) => x.supplierName).join(',')}
                                                 </Typography>
                                             </td>
+
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.map((x) => x.contactNumber).join(',')}
+                                                </Typography>
+                                            </td>
                                         </tr>
                                     );
                                 },
                                 )}
-                            </tbody>
-                            : <>Wait </>}
+                            </tbody>}
+                        {reportType === 2 &&
+                            <tbody>
+                                {supplierWiseData?.map((item, index,) => {
+                                    const isLast = index === supplierWiseData.length - 1;
+                                    const classes = isLast
+                                        ? "py-1 px-2"
+                                        : "py-1 px-2 border-b border-blue-gray-50";
+                                    return (
+                                        <tr className="h-4" key={index}>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.productName}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.packing}
+                                                </Typography>
+                                            </td>
+
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.map((x) => x.supplierName).join(',')}
+                                                </Typography>
+                                            </td>
+
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.map((x) => x.contactNumber).join(',')}
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                    );
+                                },
+                                )}
+                            </tbody>}
+                        {reportType === 3 &&
+                            <tbody>
+                                {supplierWiseData?.map((item, index,) => {
+                                    const isLast = index === supplierWiseData.length - 1;
+                                    const classes = isLast
+                                        ? "py-1 px-2"
+                                        : "py-1 px-2 border-b border-blue-gray-50";
+                                    return (
+                                        <tr className="h-4" key={index}>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.productName}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.packing}
+                                                </Typography>
+                                            </td>
+
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.supplierName}
+                                                </Typography>
+                                            </td>
+
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.contactNumber}
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                    );
+                                },
+                                )}
+                            </tbody>}
                     </table>
                 </CardBody>
 
@@ -424,34 +517,220 @@ const Report = () => {
                     </div>
                 </CardFooter>
             </Card>
-
             <Dialog
-                open={dialog.open}
-                handler={(e) => { setDialog({ open: false, item: {} }) }}
+                open={printCart}
+                size="xl"
+                handler={(e) => { setPrintCart(false) }}
                 animate={{
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0.9, y: -100 },
                 }}
             >
-                <DialogBody divider>
-                    Are you sure you Want to delete Store <span className="font-bold">{dialog?.item?.storeName}</span>.
-                </DialogBody>
-                <DialogFooter>
+                <DialogHeader className="justify-end">
                     <Button
-                        variant="text"
                         color="grey"
-                        onClick={(e) => { setDialog({ open: false, item: {} }) }}
+                        variant='gradient'
+                        onClick={handlePrint}
                         className="mr-1"
                     >
-                        <span>Cancel</span>
+                        <span>Print </span>
                     </Button>
                     <Button variant="gradient" color="red" onClick={(e) => {
-                        setDialog({ open: false, item: {} })
-                        handleDelete(dialog.item?._id)
+                        setPrintCart(false)
                     }}>
-                        <span>Confirm</span>
+                        <span>Cancel</span>
                     </Button>
-                </DialogFooter>
+                </DialogHeader>
+                <DialogBody divider>
+                    <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
+                        <thead >
+                            {reportType === 1 &&
+                                <tr>
+                                    {Company_HEAD.map((head) => (
+                                        <th
+                                            key={head}
+                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal leading-none opacity-70"
+                                            >
+                                                {head}
+                                            </Typography>
+                                        </th>
+                                    ))}
+                                </tr>}
+                            {reportType === 2 &&
+                                <tr>
+                                    {Buyer_HEAD.map((head) => (
+                                        <th
+                                            key={head}
+                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal leading-none opacity-70"
+                                            >
+                                                {head}
+                                            </Typography>
+                                        </th>
+                                    ))}
+                                </tr>}
+                            {reportType === 3 &&
+                                <tr>
+                                    {Supplier_HEAD.map((head) => (
+                                        <th
+                                            key={head}
+                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal leading-none opacity-70"
+                                            >
+
+                                                {head}
+                                            </Typography>
+                                        </th>
+                                    ))}
+                                </tr>}
+                        </thead>
+                        {reportType === 1}
+                        <tbody>
+                            {supplierWisePrintData?.map((item, index,) => {
+                                const isLast = index === supplierWisePrintData.length - 1;
+                                const classes = isLast
+                                    ? "p-1"
+                                    : "p-1 border-b border-blue-gray-50";
+                                return (
+                                    <tr className="h-4" key={index}>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.productName}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.packing}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes} >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.supplier?.supplierName}
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                );
+                            },
+                            )}
+                        </tbody>
+                        {reportType === 2}
+                        <tbody>
+                            {supplierWisePrintData?.map((item, index,) => {
+                                const isLast = index === supplierWisePrintData.length - 1;
+                                const classes = isLast
+                                    ? "p-1"
+                                    : "p-1 border-b border-blue-gray-50";
+                                return (
+                                    <tr className="h-4" key={index}>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.productName}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.packing}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes} >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.supplier?.supplierName}
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                );
+                            },
+                            )}
+                        </tbody>
+                        {reportType === 3}
+                        <tbody>
+                            {supplierWisePrintData?.map((item, index,) => {
+                                const isLast = index === supplierWisePrintData.length - 1;
+                                const classes = isLast
+                                    ? "p-1"
+                                    : "p-1 border-b border-blue-gray-50";
+                                return (
+                                    <tr className="h-4" key={index}>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.productName}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.packing}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes} >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.supplier?.supplierName}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes} >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.supplier?.contactNumber}
+                                            </Typography>
+                                        </td>
+                                    </tr>
+                                );
+                            },
+                            )}
+                        </tbody>
+                    </table>
+                </DialogBody>
             </Dialog>
         </div >
     );
