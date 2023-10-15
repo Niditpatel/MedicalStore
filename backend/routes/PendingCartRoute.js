@@ -739,4 +739,37 @@ router.get('/buyerreportprint', async (req, res) => {
     })
 });
 
+router.post('/checkIsExixsts',async(req,res)=>{
+    const {products} = req.body;
+    console.log(products)
+    try {
+
+        let FinalQuery =[]
+        let firstQuery={productId:''}
+        let secondQuery={buyer:''}
+         products.forEach(query => {
+                firstQuery={
+                    productId:query._id
+                }   
+                secondQuery={
+                    buyer:query.buyerId
+                }   
+            FinalQuery.push({$and:[firstQuery,secondQuery,{isDeleted:{$ne:true}}]})
+        });
+
+
+         const result =   await  PendingCart.find({$or:FinalQuery})
+        res.status(200).json({
+            success:true,
+            result
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            success:false,
+            error
+        })
+    }
+});
+
 module.exports = router;

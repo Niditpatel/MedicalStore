@@ -98,7 +98,7 @@ const Home = () => {
     getData();
   };
 
-  const handleChange = (e) => {
+  const handleSearchChange = (e) => {
     setSearchData({ ...searchData, [e.target.name]: e.target.value });
   }
   const handleChangePageNew = (e, value) => {
@@ -115,27 +115,34 @@ const Home = () => {
     setData(newData)
   }
 
+const checkISExists = async (values) =>{
+  debugger
+  let validateQuantiy = values?.data?.filter(
+    (x) =>
+      x.isCart === true &&
+      (x._id === " " ||
+        x.quantity < 1)
+  ).length;
 
+  let validateBuyer = values?.data?.filter(
+    (x) =>
+      x.isCart === true &&
+      (x._id === "" ||
+        x.buyerId === "")
+  ).length;
+  if (validateQuantiy > 0) {
+    return alert("Quantity must grater than 0 in selected field")
+  }
+  if (validateBuyer > 0) {
+    return alert("Please select Buyer in selected field ")
+  }
+ const postData =  values?.data.filter((item) => item?.isCart === true)
+  const checkIsExist = await axios.post(
+    `${BASE_URL}checkIsExixsts`,postData);
+  console.log("xxxx",checkIsExist);
+}
   const handleAddCart = async (values) => {
-    let validateQuantiy = values?.data?.filter(
-      (x) =>
-        x.isCart === true &&
-        (x._id === " " ||
-          x.quantity < 1)
-    ).length;
-
-    let validateBuyer = values?.data?.filter(
-      (x) =>
-        x.isCart === true &&
-        (x._id === "" ||
-          x.buyerId === "")
-    ).length;
-    if (validateQuantiy > 0) {
-      return alert("Quantity must grater than 0 in selected field")
-    }
-    if (validateBuyer > 0) {
-      return alert("Please select Buyer in selected field ")
-    }
+    
     try {
       const data = await axios.post(
         `${BASE_URL}cart/new`,
@@ -183,7 +190,6 @@ const Home = () => {
 
   useEffect(() => {
     getData();
-    // getTotalProducts();
   }, [searchData, page_Index, page_Size]);
 
   useEffect(() => {
@@ -217,7 +223,7 @@ const Home = () => {
           data: data
         }}
         onSubmit={(values) => {
-          handleAddCart(values)
+          checkISExists(values)
         }}
       // validateOnMount
       // validationSchema={validationSchema}
@@ -260,7 +266,7 @@ const Home = () => {
                       label="Company Name"
                       name="storeName"
                       value={searchData.storeName}
-                      onChange={handleChange}
+                      onChange={handleSearchChange}
                     />
                     <Input
                       type="text"
@@ -269,7 +275,7 @@ const Home = () => {
                       label="Product Name"
                       name="productName"
                       value={searchData.productName}
-                      onChange={handleChange}
+                      onChange={handleSearchChange}
                     />
                     <Input
                       type="text"
@@ -278,7 +284,7 @@ const Home = () => {
                       label="Supplier Name"
                       name="supplierName"
                       value={searchData.supplierName}
-                      onChange={handleChange}
+                      onChange={handleSearchChange}
                     />
                   </div>
                 </CardHeader>
