@@ -95,7 +95,6 @@ export default function AddProduct() {
   };
 
   const searchSupplier =  async (inputValue) => {
-    debugger
       const res = await getSuppliers(inputValue,true);
       const institutes = res.map((val) => {
         return { label: val.supplierName, value: val._id };

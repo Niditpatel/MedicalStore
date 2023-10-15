@@ -740,8 +740,7 @@ router.get('/buyerreportprint', async (req, res) => {
 });
 
 router.post('/checkIsExixsts',async(req,res)=>{
-    const {products} = req.body;
-    console.log(products)
+    const products = req.body;
     try {
 
         let FinalQuery =[]
@@ -758,10 +757,12 @@ router.post('/checkIsExixsts',async(req,res)=>{
         });
 
 
-         const result =   await  PendingCart.find({$or:FinalQuery})
+         const pendingCartResult =   await  PendingCart.find({$or:FinalQuery})
+         const cartResult =   await  Carts.find({$or:FinalQuery})
         res.status(200).json({
             success:true,
-            result
+            cartResult,
+            pendingCartResult,
         })
 
     } catch (error) {

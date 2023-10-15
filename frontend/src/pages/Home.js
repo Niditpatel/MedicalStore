@@ -54,6 +54,7 @@ const Home = () => {
   }]);
   const [loading, setLoading] = useState(false);
   const [dialog, setDialog] = useState({ open: false, item: {} })
+  const [forceAddDialog, setForceAddDialog] = useState({ open: false, item: [],finalData:[] })
   const [buyers, setBuyers] = useState([]);
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
@@ -115,8 +116,30 @@ const Home = () => {
     setData(newData)
   }
 
+  const handleAddCart = async (values) => {
+    
+    console.log("values",values)
+    try {
+      const data = await axios.post(
+        `${BASE_URL}cart/new`,
+        values
+      );
+      if (data.data.success) {
+        navigate('/cart');
+      } else {
+        console.log(data.data.error)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 const checkISExists = async (values) =>{
-  debugger
+  
+  let firstValid = values?.data?.filter((x)=> x.isCart === true)
+  if(firstValid.length === 0){
+    return alert("please select field")
+  }
   let validateQuantiy = values?.data?.filter(
     (x) =>
       x.isCart === true &&
@@ -139,24 +162,28 @@ const checkISExists = async (values) =>{
  const postData =  values?.data.filter((item) => item?.isCart === true)
   const checkIsExist = await axios.post(
     `${BASE_URL}checkIsExixsts`,postData);
-  console.log("xxxx",checkIsExist);
-}
-  const handleAddCart = async (values) => {
-    
-    try {
-      const data = await axios.post(
-        `${BASE_URL}cart/new`,
-        values?.data.filter((item) => item?.isCart === true)
-      );
-      if (data.data.success) {
-        navigate('/cart');
-      } else {
-        console.log(data.data.error)
-      }
-    } catch (error) {
-      console.log(error);
+  if(checkIsExist && checkIsExist.data && checkIsExist.data.success){
+    const  Pitem =[];
+    if(checkIsExist.data?.pendingCartResult?.length > 0 ){
+      const pendingResult = checkIsExist.data?.pendingCartResult;
+      Pitem.push(...pendingResult)
     }
+    if( checkIsExist.data?.cartResult?.length > 0 ){
+      const cartResult = checkIsExist.data?.cartResult;
+      Pitem.push(...cartResult)
+    }
+   if(Pitem.length>0){
+    setForceAddDialog({open:true,item:Pitem,finalData:postData})
+   }else{
+    handleAddCart(postData)
+   }
   }
+  // else{
+  //   handleAddCart(postData)
+  // }
+}
+
+ 
 
 
   const getBuyers = async (inputValue, loadMode) => {
@@ -476,29 +503,30 @@ const checkISExists = async (values) =>{
         }}
       </Formik>
       <Dialog
-        open={dialog.open}
-        handler={(e) => { setDialog({ open: false, item: {} }) }}
+        open={forceAddDialog.open}
+        handler={(e) => { setForceAddDialog({...forceAddDialog,open:false}) }}
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
         }}
       >
         <DialogBody divider>
-          Are you sure you Want to delete Store <span className="font-bold">{dialog?.item?.storeName}</span>.
+        This data already exists in pending Cart or cart<span className="font-bold">
+            {/* {forceAddDialog?.item?.storeName} */}
+             </span>.
         </DialogBody>
         <DialogFooter>
           <Button
             variant="text"
             color="grey"
-            variant='gradient'
-            onClick={(e) => { setDialog({ open: false, item: {} }) }}
+            onClick={(e) => { setForceAddDialog({ ...forceAddDialog,open: false, item: [] }) }}
             className="mr-1"
           >
             <span>Cancel</span>
           </Button>
           <Button variant="gradient" color="red" onClick={(e) => {
-            setDialog({ open: false, item: {} })
-            handleDelete(dialog.item?._id)
+            handleAddCart(forceAddDialog?.finalData)
+            setForceAddDialog({ open: false, item: [],finalData:[] })
           }}>
             <span>Confirm</span>
           </Button>
