@@ -169,7 +169,6 @@ router.get("/pendingCart/search",
                 { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
             ]
         }
-
         const lookupQuery1 = [
             {
                 $lookup: {
@@ -464,11 +463,12 @@ router.get('/companyreportprint', async (req, res) => {
     ]
 
 
-    const match_query = start_date ?
-    {$and:[
-        {'store._id':new mongoose.Types.ObjectId(company_id)},
-        { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
-        ]} :
+    const match_query = 
+    // start_date ?
+    // {$and:[
+    //     {'store._id':new mongoose.Types.ObjectId(company_id)},
+    //     { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
+    //     ]} :
         {$and:[
             {'store._id':new mongoose.Types.ObjectId(company_id)},
             ]}
@@ -492,17 +492,21 @@ router.get('/companyreportprint', async (req, res) => {
         ]
     )
     res.status(200).json({
-        companyreport
+        companyreport,
+        success:true
     })
 });
 
 router.get('/companyreport', async (req, res) => {
 
     const {company_id,offset,limit,start_date,end_date} = req.query
+
+console.log("start_date",start_date)
     const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
     const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
 
-    const match_query = start_date ?
+    const match_query =
+     start_date ?
     {$and:[
         {'store._id':new mongoose.Types.ObjectId(company_id)},
         { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
@@ -510,7 +514,7 @@ router.get('/companyreport', async (req, res) => {
         {$and:[
             {'store._id':new mongoose.Types.ObjectId(company_id)},
             ]}
-
+console.log("match_query",match_query);
     const lookupQuery2 = [
         {
             $lookup: {
@@ -578,6 +582,7 @@ router.get('/companyreport', async (req, res) => {
         ]
     )
     res.status(200).json({
+        success:true,
         companyreport,
         total
     })
@@ -625,7 +630,7 @@ router.get('/buyerreport', async (req, res) => {
             ]}
 
 
-    const companyreport = await PendingCart.aggregate(
+    const buyerReport = await PendingCart.aggregate(
         [
             ...lookupQuery3,
             {$match:
@@ -665,8 +670,9 @@ router.get('/buyerreport', async (req, res) => {
     )
 
     res.status(200).json({
-        companyreport,
-        total
+        buyerReport,
+        total,
+        success:true
     })
 });
 
@@ -709,7 +715,7 @@ router.get('/buyerreportprint', async (req, res) => {
             {'buyer._id':new mongoose.Types.ObjectId(buyer_id)},
             ]}
 
-    const companyreport = await PendingCart.aggregate(
+    const buyerReport = await PendingCart.aggregate(
         [
             ...lookupQuery3,
             {$match:
@@ -728,7 +734,8 @@ router.get('/buyerreportprint', async (req, res) => {
     )
 
     res.status(200).json({
-        companyreport,
+        buyerReport,
+        success:true
     })
 });
 

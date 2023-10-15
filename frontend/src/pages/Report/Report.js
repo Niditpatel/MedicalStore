@@ -45,6 +45,7 @@ const Report = () => {
     const [dialog, setDialog] = useState({ open: false, item: {} })
     const [buyers, setBuyers] = useState([]);
     const [data, setData] = useState([]);
+    const [selectedId, setSelecetedId] = useState(null);
     const [printData, setPrintData] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
     const [supplierWiseData, setSupplierWiseData] = useState([]);
@@ -170,7 +171,7 @@ const Report = () => {
 
         const res = await getSuppliers(inputValue, true);
         const institutes = res.map((val) => {
-            return { label: val.supplierName, value: val._id };
+            return {...val, label: val.supplierName, value: val._id };
         });
         return institutes;
     };
@@ -239,6 +240,7 @@ const Report = () => {
             const res = await axios.get(
                 `${BASE_URL}buyerreportprint/?buyer_id=` + buyerId + '&start_date=' + startDate + '&end_date=' + endDate
             );
+
             if (res.data.success) {
                 setPrintData(res.data.buyerReport)
             } else {
@@ -249,14 +251,11 @@ const Report = () => {
         }
     };
     const getBuyerWiseReport = async (buyerId) => {
-        debugger
-
         try {
             const res = await axios.get(
                 `${BASE_URL}buyerreport/?buyer_id=` + buyerId + '&offset=' + page_Index + '&limit=' + page_Size
                 + '&start_date=' + startDate + '&end_date=' + endDate
             );
-            console.log("res",res.data);
             if (res.data.success) {
                 setData(res.data.buyerReport)
                 setTotalData(res.data.total)
@@ -269,7 +268,24 @@ const Report = () => {
     };
 
     useEffect(() => {
-    }, [searchData, page_Index, page_Size]);
+    if(selectedId !== ''  && selectedId !== undefined && selectedId !==null)
+     {
+        if( reportType === 1 )
+       {
+        getCompanyWiseReport(selectedId)
+        getCompanyrWiseReportPrint(selectedId)
+       }
+        if( reportType === 2 ){
+            getBuyerWiseReport(selectedId)
+            getBuyerWiseReportPrint(selectedId)
+        }
+        if( reportType === 3)
+        {
+            getSupplierWiseReport(selectedId)
+            getSupplierWiseReportPrint(selectedId)
+        }
+     }
+    }, [selectedId,startDate,endDate]);
 
     useEffect(() => {
         getStores('', false)
@@ -278,21 +294,20 @@ const Report = () => {
     }, [])
 
 
+
     const reportTypes = [
         { label: 'Company Wise', value: 1 },
         { label: 'Buyer Wise', value: 2 },
         { label: 'Supplier Wise', value: 3 },
     ]
     const Company_HEAD = ["Product Name", "Packing", "Total Quantiy"];
-    const Buyer_HEAD = ["Buyer Name", "Buyer Contact", "Product Name", "Total Quantity"];
+    const Buyer_HEAD = ["Product Name", "Packing", "Total Quantiy"];
     const Supplier_HEAD = ["Product Name", "Packing", "Supplier", "Supplier Contact"];
-    console.log("data",data);
-console.log("Printdata",printData);
     return (
         <div className="container mb-8">
             <Card className="h-full w-full	">
                 <CardHeader floated={false} shadow={false} className=" rounded-none print:hidden">
-                    <div className="mb-3 flex justify-between items-center">
+                    <div className="mb-3 flex gap-2 items-center">
                         <Select
                             menuPortalTarget={document.body}
                             options={reportTypes}
@@ -303,22 +318,6 @@ console.log("Printdata",printData);
                             }}
                             value={reportTypes.find(item => item.value === reportType)}
                         />
-                        <Popover animate={{
-                            mount: { scale: 1, y: 0 },
-                            unmount: { scale: 0, y: 25 },
-                        }} placement="bottom" >
-                            <PopoverHandler>
-                                <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
-                            </PopoverHandler>
-                            <PopoverContent className="w-96">
-                                <DateRange
-                                    editableDateInputs={true}
-                                    onChange={handleSelect}
-                                    moveRangeOnFirstSelection={false}
-                                    ranges={[selectionRange]}
-                                />
-                            </PopoverContent>
-                        </Popover>
 
                         {reportType === 1 &&
                             <AsyncSelect
@@ -331,10 +330,10 @@ console.log("Printdata",printData);
                                 getOptionValue={(option) => option.value}
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
-                                    debugger
+                                    
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                    getCompanyWiseReport(e?._id)
-                                    getCompanyrWiseReportPrint(e?._id)
+                                    setSelecetedId(e?._id)
+                                   
                                 }}
                                 // value={rsearchData.store}
                                 noOptionsMessage={({ inputValue }) =>
@@ -358,8 +357,8 @@ console.log("Printdata",printData);
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                    getBuyerWiseReport(e?._id)
-                                    getBuyerWiseReportPrint(e?._id)
+                                    setSelecetedId(e?._id)
+                                   
                                 }}
                                 // value={rsearchData.store}
                                 noOptionsMessage={({ inputValue }) =>
@@ -383,8 +382,7 @@ console.log("Printdata",printData);
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                    getSupplierWiseReport(e?._id)
-                                    getSupplierWiseReportPrint(e?._id)
+                                    setSelecetedId(e?._id)
                                 }}
                                 // value={rsearchData.store}
                                 noOptionsMessage={({ inputValue }) =>
@@ -396,10 +394,27 @@ console.log("Printdata",printData);
                                 }
                             />
                         }
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 justify-end w-full">
+                        {reportType !== 3 &&
+                        <Popover animate={{
+                            mount: { scale: 1, y: 0 },
+                            unmount: { scale: 0, y: 25 },
+                        }} placement="bottom" >
+                            <PopoverHandler>
+                                <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
+                            </PopoverHandler>
+                            <PopoverContent className="w-96">
+                                <DateRange
+                                    editableDateInputs={true}
+                                    onChange={handleSelect}
+                                    moveRangeOnFirstSelection={false}
+                                    ranges={[selectionRange]}
+                                />
+                            </PopoverContent>
+                        </Popover>}
                             <Button type="submit"
                                 onClick={(e) => {
-                                    debugger
+                                    
                                     setPrintCart(true);
                                 }}
                                 size="sm" className="mt-6 m-0"
@@ -754,7 +769,7 @@ console.log("Printdata",printData);
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.productName}
+                                                    {item?.product}
                                                 </Typography>
                                             </td>
                                             <td className={classes}>
@@ -772,7 +787,7 @@ console.log("Printdata",printData);
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.supplier?.supplierName}
+                                                    {item?.supplier?.totalQuantity}
                                                 </Typography>
                                             </td>
                                         </tr>
@@ -795,7 +810,7 @@ console.log("Printdata",printData);
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.product}
+                                                    {item?.productName}
                                                 </Typography>
                                             </td>
                                             <td className={classes}>
@@ -814,7 +829,17 @@ console.log("Printdata",printData);
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.totalQuantity}
+                                                    {item?.supplier?.supplierName}
+                                                </Typography>
+                                            </td>
+
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.contactNumber}
                                                 </Typography>
                                             </td>
                                         </tr>
