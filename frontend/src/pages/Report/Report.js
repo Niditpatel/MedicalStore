@@ -297,6 +297,8 @@ console.log("Printdata",printData);
                             menuPortalTarget={document.body}
                             options={reportTypes}
                             onChange={(e) => {
+                                setData(null)
+                                setPrintData(null)
                                 setReportType(e.value)
                             }}
                             value={reportTypes.find(item => item.value === reportType)}
