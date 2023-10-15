@@ -10,7 +10,7 @@ import {
     Button,
     CardBody,
     Checkbox,
-     Popover,
+    Popover,
     PopoverHandler,
     PopoverContent,
     CardFooter,
@@ -63,7 +63,7 @@ const Report = () => {
     const [CompnanyWisePrintData, setCompnanyWisePrintData] = useState([]);
     const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
     const [endDate, setEndDate] = useState(new Date());
-    
+
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
@@ -73,21 +73,21 @@ const Report = () => {
         startDate: startDate,
         endDate: endDate,
         key: 'selection',
-      }
-    
-      const handleSelect = async (date) => {
+    }
+
+    const handleSelect = async (date) => {
         let filtered = supplierWiseData.filter((product) => {
-          let productDate = new Date(product.createdAt);
-          return (productDate >= date.selection.startDate &&
-            productDate <= date.selection.endDate);
+            let productDate = new Date(product.createdAt);
+            return (productDate >= date.selection.startDate &&
+                productDate <= date.selection.endDate);
         })
         setStartDate(date.selection.startDate);
         setEndDate(date.selection.endDate);
-      };
+    };
     const handleChangePageNew = (e, value) => {
         setPage_Index(value);
     }
-    
+
     const getBuyers = async (inputValue, loadMode) => {
         try {
             const res = await axios.get(
@@ -178,7 +178,7 @@ const Report = () => {
     const getSupplierWiseReportPrint = async (supplierId) => {
         try {
             const res = await axios.get(
-                `${BASE_URL}supplierreportprint/?supplier_id=` + supplierId 
+                `${BASE_URL}supplierreportprint/?supplier_id=` + supplierId
             );
             if (res.data.success) {
                 setPrintData(res.data.data)
@@ -220,7 +220,7 @@ const Report = () => {
     const getCompanyWiseReport = async (companyId) => {
         try {
             const res = await axios.get(
-                `${BASE_URL}companyreport/?company_id=` + companyId + '&offset=' + page_Index + '&limit=' + page_Size  
+                `${BASE_URL}companyreport/?company_id=` + companyId + '&offset=' + page_Index + '&limit=' + page_Size
                 + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
@@ -235,7 +235,7 @@ const Report = () => {
     const getBuyerWiseReportPrint = async (buyerId) => {
         try {
             const res = await axios.get(
-                `${BASE_URL}buyerreportprint/?buyer_id=` + buyerId  + '&start_date=' + startDate + '&end_date=' + endDate
+                `${BASE_URL}buyerreportprint/?buyer_id=` + buyerId + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
                 setPrintData(res.data.data)
@@ -250,7 +250,7 @@ const Report = () => {
         try {
             const res = await axios.get(
                 `${BASE_URL}buyerreport/?buyer_id=` + buyerId + '&offset=' + page_Index + '&limit=' + page_Size
-                + '&start_date=' + startDate + '&end_date=' + endDate   
+                + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
                 setData(res.data.data)
@@ -292,22 +292,22 @@ const Report = () => {
                             }}
                             value={reportTypes.find(item => item.value === reportType)}
                         />
-                         <Popover animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 },
-                }} placement="bottom" >
-                  <PopoverHandler>
-                    <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
-                  </PopoverHandler>
-                  <PopoverContent className="w-96">
-                    <DateRange
-                      editableDateInputs={true}
-                      onChange={handleSelect}
-                      moveRangeOnFirstSelection={false}
-                      ranges={[selectionRange]}
-                    />
-                  </PopoverContent>
-                </Popover>
+                        <Popover animate={{
+                            mount: { scale: 1, y: 0 },
+                            unmount: { scale: 0, y: 25 },
+                        }} placement="bottom" >
+                            <PopoverHandler>
+                                <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
+                            </PopoverHandler>
+                            <PopoverContent className="w-96">
+                                <DateRange
+                                    editableDateInputs={true}
+                                    onChange={handleSelect}
+                                    moveRangeOnFirstSelection={false}
+                                    ranges={[selectionRange]}
+                                />
+                            </PopoverContent>
+                        </Popover>
 
                         {reportType === 1 &&
                             <AsyncSelect
@@ -705,138 +705,138 @@ const Report = () => {
                                     ))}
                                 </tr>}
                         </thead>
-                        {reportType === 1}
-                        <tbody>
-                            {printData?.map((item, index,) => {
-                                const isLast = index === supplierWisePrintData.length - 1;
-                                const classes = isLast
-                                    ? "p-1"
-                                    : "p-1 border-b border-blue-gray-50";
-                                return (
-                                    <tr className="h-4" key={index}>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.productName}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.packing}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes} >
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.supplier?.supplierName}
-                                            </Typography>
-                                        </td>
-                                    </tr>
-                                );
-                            },
-                            )}
-                        </tbody>
-                        {reportType === 2}
-                        <tbody>
-                            {printData?.map((item, index,) => {
-                                const isLast = index === supplierWisePrintData.length - 1;
-                                const classes = isLast
-                                    ? "p-1"
-                                    : "p-1 border-b border-blue-gray-50";
-                                return (
-                                    <tr className="h-4" key={index}>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.productName}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.packing}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes} >
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.supplier?.supplierName}
-                                            </Typography>
-                                        </td>
-                                    </tr>
-                                );
-                            },
-                            )}
-                        </tbody>
-                        {reportType === 3}
-                        <tbody>
-                            {printData?.map((item, index,) => {
-                                const isLast = index === supplierWisePrintData.length - 1;
-                                const classes = isLast
-                                    ? "p-1"
-                                    : "p-1 border-b border-blue-gray-50";
-                                return (
-                                    <tr className="h-4" key={index}>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.productName}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.packing}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes} >
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.supplier?.supplierName}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes} >
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {item?.supplier?.contactNumber}
-                                            </Typography>
-                                        </td>
-                                    </tr>
-                                );
-                            },
-                            )}
-                        </tbody>
+                        {reportType === 1 &&
+                            <tbody>
+                                {printData?.map((item, index,) => {
+                                    const isLast = index === supplierWisePrintData.length - 1;
+                                    const classes = isLast
+                                        ? "p-1"
+                                        : "p-1 border-b border-blue-gray-50";
+                                    return (
+                                        <tr className="h-4" key={index}>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.productName}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.packing}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.supplierName}
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                    );
+                                },
+                                )}
+                            </tbody>}
+                        {reportType === 2 &&
+                            <tbody>
+                                {printData?.map((item, index,) => {
+                                    const isLast = index === supplierWisePrintData.length - 1;
+                                    const classes = isLast
+                                        ? "p-1"
+                                        : "p-1 border-b border-blue-gray-50";
+                                    return (
+                                        <tr className="h-4" key={index}>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.productName}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.packing}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.supplierName}
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                    );
+                                },
+                                )}
+                            </tbody>}
+                        {reportType === 3 &&
+                            <tbody>
+                                {printData?.map((item, index,) => {
+                                    const isLast = index === supplierWisePrintData.length - 1;
+                                    const classes = isLast
+                                        ? "p-1"
+                                        : "p-1 border-b border-blue-gray-50";
+                                    return (
+                                        <tr className="h-4" key={index}>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.productName}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes}>
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.packing}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.supplierName}
+                                                </Typography>
+                                            </td>
+                                            <td className={classes} >
+                                                <Typography
+                                                    variant="small"
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {item?.supplier?.contactNumber}
+                                                </Typography>
+                                            </td>
+                                        </tr>
+                                    );
+                                },
+                                )}
+                            </tbody>}
                     </table>
                 </DialogBody>
             </Dialog>
