@@ -44,6 +44,8 @@ const Report = () => {
     const [loading, setLoading] = useState(false);
     const [dialog, setDialog] = useState({ open: false, item: {} })
     const [buyers, setBuyers] = useState([]);
+    const [data, setData] = useState([]);
+    const [printData, setPrintData] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
     const [supplierWiseData, setSupplierWiseData] = useState([]);
     const [companyWiseData, setCompanyWiseData] = useState([]);
@@ -81,7 +83,6 @@ const Report = () => {
         })
         setStartDate(date.selection.startDate);
         setEndDate(date.selection.endDate);
-        setSupplierWiseData(filtered);
       };
     const handleChangePageNew = (e, value) => {
         setPage_Index(value);
@@ -180,7 +181,7 @@ const Report = () => {
                 `${BASE_URL}supplierreportprint/?supplier_id=` + supplierId 
             );
             if (res.data.success) {
-                setSupplierWisePrintData(res.data.data)
+                setPrintData(res.data.data)
             } else {
                 return null
             }
@@ -194,7 +195,7 @@ const Report = () => {
                 `${BASE_URL}supplierreport/?supplier_id=` + supplierId + '&offset=' + page_Index + '&limit=' + page_Size
             );
             if (res.data.success) {
-                setSupplierWiseData(res.data.data)
+                setData(res.data.data)
             } else {
                 return null
             }
@@ -205,10 +206,10 @@ const Report = () => {
     const getCompanyrWiseReportPrint = async (companyId) => {
         try {
             const res = await axios.get(
-                `${BASE_URL}supplierreportprint/?company_id=` + companyId  + '&start_date='  
+                `${BASE_URL}supplierreportprint/?company_id=` + companyId + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
-                setCompnanyWisePrintData(res.data.data)
+                setPrintData(res.data.data)
             } else {
                 return null
             }
@@ -220,9 +221,10 @@ const Report = () => {
         try {
             const res = await axios.get(
                 `${BASE_URL}companyreport/?company_id=` + companyId + '&offset=' + page_Index + '&limit=' + page_Size  
+                + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
-                setCompanyWiseData(res.data.data)
+                setPrintData(res.data.data)
             } else {
                 return null
             }
@@ -233,10 +235,10 @@ const Report = () => {
     const getBuyerWiseReportPrint = async (buyerId) => {
         try {
             const res = await axios.get(
-                `${BASE_URL}buyerreportprint/?buyer_id=` + buyerId  
+                `${BASE_URL}buyerreportprint/?buyer_id=` + buyerId  + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
-                setBuyerWisePrintData(res.data.data)
+                setPrintData(res.data.data)
             } else {
                 return null
             }
@@ -247,10 +249,11 @@ const Report = () => {
     const getBuyerWiseReport = async (buyerId) => {
         try {
             const res = await axios.get(
-                `${BASE_URL}buyerreport/?buyer_id=` + buyerId + '&offset=' + page_Index + '&limit=' + page_Size   
+                `${BASE_URL}buyerreport/?buyer_id=` + buyerId + '&offset=' + page_Index + '&limit=' + page_Size
+                + '&start_date=' + startDate + '&end_date=' + endDate   
             );
             if (res.data.success) {
-                setBuyerWiseData(res.data.data)
+                setData(res.data.data)
             } else {
                 return null
             }
@@ -276,7 +279,6 @@ const Report = () => {
     const Company_HEAD = ["Product Name", "Packing", "Total Quantiy"];
     const Buyer_HEAD = ["Buyer Name", "Buyer Contact", "Product Name", "Total Quantity"];
     const Supplier_HEAD = ["Product Name", "Packing", "Supplier", "Supplier Contact"];
-console.log("supplierWisePrintData",supplierWisePrintData);
     return (
         <div className="container mb-8">
             <Card className="h-full w-full	">
@@ -450,8 +452,8 @@ console.log("supplierWisePrintData",supplierWisePrintData);
                         </thead>
                         {reportType === 1 &&
                             <tbody>
-                                {companyWiseData?.map((item, index,) => {
-                                    const isLast = index === supplierWiseData.length - 1;
+                                {data?.map((item, index,) => {
+                                    const isLast = index === data.length - 1;
                                     const classes = isLast
                                         ? "py-1 px-2"
                                         : "py-1 px-2 border-b border-blue-gray-50";
@@ -502,8 +504,8 @@ console.log("supplierWisePrintData",supplierWisePrintData);
                             </tbody>}
                         {reportType === 2 &&
                             <tbody>
-                                {buyerWiseData?.map((item, index,) => {
-                                    const isLast = index === supplierWiseData.length - 1;
+                                {data?.map((item, index,) => {
+                                    const isLast = index === data.length - 1;
                                     const classes = isLast
                                         ? "py-1 px-2"
                                         : "py-1 px-2 border-b border-blue-gray-50";
@@ -554,8 +556,8 @@ console.log("supplierWisePrintData",supplierWisePrintData);
                             </tbody>}
                         {reportType === 3 &&
                             <tbody>
-                                {supplierWiseData?.map((item, index,) => {
-                                    const isLast = index === supplierWiseData.length - 1;
+                                {data?.map((item, index,) => {
+                                    const isLast = index === data.length - 1;
                                     const classes = isLast
                                         ? "py-1 px-2"
                                         : "py-1 px-2 border-b border-blue-gray-50";
@@ -705,7 +707,7 @@ console.log("supplierWisePrintData",supplierWisePrintData);
                         </thead>
                         {reportType === 1}
                         <tbody>
-                            {supplierWisePrintData?.map((item, index,) => {
+                            {printData?.map((item, index,) => {
                                 const isLast = index === supplierWisePrintData.length - 1;
                                 const classes = isLast
                                     ? "p-1"
@@ -746,7 +748,7 @@ console.log("supplierWisePrintData",supplierWisePrintData);
                         </tbody>
                         {reportType === 2}
                         <tbody>
-                            {supplierWisePrintData?.map((item, index,) => {
+                            {printData?.map((item, index,) => {
                                 const isLast = index === supplierWisePrintData.length - 1;
                                 const classes = isLast
                                     ? "p-1"
@@ -787,7 +789,7 @@ console.log("supplierWisePrintData",supplierWisePrintData);
                         </tbody>
                         {reportType === 3}
                         <tbody>
-                            {supplierWisePrintData?.map((item, index,) => {
+                            {printData?.map((item, index,) => {
                                 const isLast = index === supplierWisePrintData.length - 1;
                                 const classes = isLast
                                     ? "p-1"

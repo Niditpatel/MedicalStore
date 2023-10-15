@@ -95,11 +95,10 @@ const PendingCart = () => {
     })
     setStartDate(date.selection.startDate);
     setEndDate(date.selection.endDate);
-    setFilterData(filtered);
   };
   useEffect(() => {
     getData();
-  }, [searchData, page_Index, page_Size]);
+  }, [searchData, page_Index, page_Size, startDate, endDate]);
 
   const handleDelete = async (id) => {
     try {
@@ -222,7 +221,7 @@ const PendingCart = () => {
               <tbody>
                 {data && data.length > 0 ?
                   <>
-                    {filterData?.map((item, index,) => {
+                    {data?.map((item, index,) => {
                       const isLast = index === data.length - 1;
                       const classes = isLast
                         ? "p-1"
