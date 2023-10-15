@@ -52,7 +52,7 @@ const Report = () => {
     const [buyerWiseData, setBuyerWiseData] = useState([]);
     const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
     const [rsearchData, setrSearchData] = useState({ store: '', supplierName: '', productName: '' });
-    const [totalProducts, setTotalProduct] = useState(0);
+    const [totalData, setTotalData] = useState(0);
     const [page_Index, setPage_Index] = useState(1);
     const [page_Size, setPage_Size] = useState(5);
     const [reportType, setReportType] = useState(1);
@@ -194,6 +194,7 @@ const Report = () => {
             const res = await axios.get(
                 `${BASE_URL}supplierreport/?supplier_id=` + supplierId + '&offset=' + page_Index + '&limit=' + page_Size
             );
+            
             if (res.data.success) {
                 setData(res.data.data)
             } else {
@@ -206,17 +207,17 @@ const Report = () => {
     const getCompanyrWiseReportPrint = async (companyId) => {
         try {
             const res = await axios.get(
-                `${BASE_URL}supplierreportprint/?company_id=` + companyId + '&start_date=' + startDate + '&end_date=' + endDate
+                `${BASE_URL}companyreportprint/?company_id=` + companyId + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
-                setPrintData(res.data.data)
+                setPrintData(res.data.companyreport)
             } else {
                 return null
             }
         } catch (error) {
             console.log(error);
         }
-    };
+    }
     const getCompanyWiseReport = async (companyId) => {
         try {
             const res = await axios.get(
@@ -224,7 +225,8 @@ const Report = () => {
                 + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
-                setPrintData(res.data.data)
+                setData(res.data.companyreport)
+                setTotalData(res.data.total)
             } else {
                 return null
             }
@@ -238,7 +240,7 @@ const Report = () => {
                 `${BASE_URL}buyerreportprint/?buyer_id=` + buyerId + '&start_date=' + startDate + '&end_date=' + endDate
             );
             if (res.data.success) {
-                setPrintData(res.data.data)
+                setPrintData(res.data.buyerReport)
             } else {
                 return null
             }
@@ -247,13 +249,17 @@ const Report = () => {
         }
     };
     const getBuyerWiseReport = async (buyerId) => {
+        debugger
+
         try {
             const res = await axios.get(
                 `${BASE_URL}buyerreport/?buyer_id=` + buyerId + '&offset=' + page_Index + '&limit=' + page_Size
                 + '&start_date=' + startDate + '&end_date=' + endDate
             );
+            console.log("res",res.data);
             if (res.data.success) {
-                setData(res.data.data)
+                setData(res.data.buyerReport)
+                setTotalData(res.data.total)
             } else {
                 return null
             }
@@ -271,6 +277,7 @@ const Report = () => {
         getBuyers('', false)
     }, [])
 
+
     const reportTypes = [
         { label: 'Company Wise', value: 1 },
         { label: 'Buyer Wise', value: 2 },
@@ -279,6 +286,8 @@ const Report = () => {
     const Company_HEAD = ["Product Name", "Packing", "Total Quantiy"];
     const Buyer_HEAD = ["Buyer Name", "Buyer Contact", "Product Name", "Total Quantity"];
     const Supplier_HEAD = ["Product Name", "Packing", "Supplier", "Supplier Contact"];
+    console.log("data",data);
+console.log("Printdata",printData);
     return (
         <div className="container mb-8">
             <Card className="h-full w-full	">
@@ -320,6 +329,7 @@ const Report = () => {
                                 getOptionValue={(option) => option.value}
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
+                                    debugger
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
                                     getCompanyWiseReport(e?._id)
                                     getCompanyrWiseReportPrint(e?._id)
@@ -346,8 +356,8 @@ const Report = () => {
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                    getBuyerWiseReport(e?.value)
-                                    getBuyerWiseReportPrint(e?.value)
+                                    getBuyerWiseReport(e?._id)
+                                    getBuyerWiseReportPrint(e?._id)
                                 }}
                                 // value={rsearchData.store}
                                 noOptionsMessage={({ inputValue }) =>
@@ -371,8 +381,8 @@ const Report = () => {
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                    getSupplierWiseReport(e?.value)
-                                    getSupplierWiseReportPrint(e?.value)
+                                    getSupplierWiseReport(e?._id)
+                                    getSupplierWiseReportPrint(e?._id)
                                 }}
                                 // value={rsearchData.store}
                                 noOptionsMessage={({ inputValue }) =>
@@ -465,7 +475,7 @@ const Report = () => {
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.productName}
+                                                    {item?.product}
                                                 </Typography>
                                             </td>
                                             <td className={classes}>
@@ -484,17 +494,7 @@ const Report = () => {
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.supplier?.map((x) => x.supplierName).join(',')}
-                                                </Typography>
-                                            </td>
-
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.map((x) => x.contactNumber).join(',')}
+                                                    {item?.totalQuantity}
                                                 </Typography>
                                             </td>
                                         </tr>
@@ -511,45 +511,35 @@ const Report = () => {
                                         : "py-1 px-2 border-b border-blue-gray-50";
                                     return (
                                         <tr className="h-4" key={index}>
-                                            <td className={classes}>
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.productName}
-                                                </Typography>
-                                            </td>
-                                            <td className={classes}>
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.packing}
-                                                </Typography>
-                                            </td>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.product}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.packing}
+                                            </Typography>
+                                        </td>
 
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.map((x) => x.supplierName).join(',')}
-                                                </Typography>
-                                            </td>
-
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.map((x) => x.contactNumber).join(',')}
-                                                </Typography>
-                                            </td>
-                                        </tr>
+                                        <td className={classes} >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.totalQuantity}
+                                            </Typography>
+                                        </td>
+                                    </tr>
                                     );
                                 },
                                 )}
@@ -612,7 +602,7 @@ const Report = () => {
                 <CardFooter className="pt-0 print:hidden">
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Pagination
-                            count={Math.ceil(totalProducts / page_Size)}
+                            count={Math.ceil(totalData / page_Size)}
                             page={page_Index}
                             onChange={handleChangePageNew}
                         />
@@ -708,40 +698,41 @@ const Report = () => {
                         {reportType === 1 &&
                             <tbody>
                                 {printData?.map((item, index,) => {
-                                    const isLast = index === supplierWisePrintData.length - 1;
+                                    const isLast = index === printData.length - 1;
                                     const classes = isLast
                                         ? "p-1"
                                         : "p-1 border-b border-blue-gray-50";
                                     return (
                                         <tr className="h-4" key={index}>
-                                            <td className={classes}>
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.productName}
-                                                </Typography>
-                                            </td>
-                                            <td className={classes}>
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.packing}
-                                                </Typography>
-                                            </td>
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.supplierName}
-                                                </Typography>
-                                            </td>
-                                        </tr>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.product}
+                                            </Typography>
+                                        </td>
+                                        <td className={classes}>
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.packing}
+                                            </Typography>
+                                        </td>
+
+                                        <td className={classes} >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.totalQuantity}
+                                            </Typography>
+                                        </td>
+                                    </tr>
                                     );
                                 },
                                 )}
@@ -749,7 +740,7 @@ const Report = () => {
                         {reportType === 2 &&
                             <tbody>
                                 {printData?.map((item, index,) => {
-                                    const isLast = index === supplierWisePrintData.length - 1;
+                                    const isLast = index === printData.length - 1;
                                     const classes = isLast
                                         ? "p-1"
                                         : "p-1 border-b border-blue-gray-50";
@@ -790,7 +781,7 @@ const Report = () => {
                         {reportType === 3 &&
                             <tbody>
                                 {printData?.map((item, index,) => {
-                                    const isLast = index === supplierWisePrintData.length - 1;
+                                    const isLast = index === printData.length - 1;
                                     const classes = isLast
                                         ? "p-1"
                                         : "p-1 border-b border-blue-gray-50";
@@ -802,7 +793,7 @@ const Report = () => {
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.productName}
+                                                    {item?.product}
                                                 </Typography>
                                             </td>
                                             <td className={classes}>
@@ -814,22 +805,14 @@ const Report = () => {
                                                     {item?.packing}
                                                 </Typography>
                                             </td>
+
                                             <td className={classes} >
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.supplier?.supplierName}
-                                                </Typography>
-                                            </td>
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.contactNumber}
+                                                    {item?.totalQuantity}
                                                 </Typography>
                                             </td>
                                         </tr>
