@@ -201,7 +201,7 @@ export default function SupplierList() {
         <CardFooter className="pt-0 ">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Pagination
-              count={Math.ceil(totalSupplier / page_Index)}
+              count={Math.ceil(totalSupplier / page_Size)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
