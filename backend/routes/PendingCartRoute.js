@@ -464,11 +464,11 @@ router.get('/companyreportprint', async (req, res) => {
 
 
     const match_query = 
-    // start_date ?
-    // {$and:[
-    //     {'store._id':new mongoose.Types.ObjectId(company_id)},
-    //     { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
-    //     ]} :
+    start_date ?
+    {$and:[
+        {'store._id':new mongoose.Types.ObjectId(company_id)},
+        { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
+        ]} :
         {$and:[
             {'store._id':new mongoose.Types.ObjectId(company_id)},
             ]}
@@ -723,7 +723,7 @@ router.get('/buyerreportprint', async (req, res) => {
             },
             {
                 $group: {
-                  _id: "$_id", // Group by the primary key of order_items
+                  _id: "$productId", // Group by the primary key of order_items
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},

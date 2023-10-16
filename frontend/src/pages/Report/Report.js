@@ -270,21 +270,23 @@ const Report = () => {
     };
 
     useEffect(() => {
-    if(selectedId !== ''  && selectedId !== undefined && selectedId !==null)
+        console.log("suppplierID",selectedId);
+        debugger
+    if(selectedId?.e?._id !== ''  && selectedId?.e?._id !== undefined && selectedId?.e?._id !==null)
      {
         if( reportType === 1 )
        {
-        getCompanyWiseReport(selectedId)
-        getCompanyrWiseReportPrint(selectedId)
+        getCompanyWiseReport(selectedId?.e?._id)
+        getCompanyrWiseReportPrint(selectedId?.e?._id)
        }
         if( reportType === 2 ){
-            getBuyerWiseReport(selectedId)
-            getBuyerWiseReportPrint(selectedId)
+            getBuyerWiseReport(selectedId?.e?._id)
+            getBuyerWiseReportPrint(selectedId?.e?._id)
         }
         if( reportType === 3)
         {
-            getSupplierWiseReport(selectedId)
-            getSupplierWiseReportPrint(selectedId)
+            getSupplierWiseReport(selectedId?.e?._id)
+            getSupplierWiseReportPrint(selectedId?.e?._id)
         }
      }
     }, [selectedId,startDate,endDate]);
@@ -304,7 +306,7 @@ const Report = () => {
     ]
     const Company_HEAD = ["Product Name", "Packing", "Total Quantiy"];
     const Buyer_HEAD = ["Product Name", "Packing", "Total Quantiy"];
-    const Supplier_HEAD = ["Product Name", "Packing", "Supplier", "Supplier Contact"];
+    const Supplier_HEAD = ["Product Name", "Packing"];
     return (
         <div className="container mb-8">
             <Card className="h-full w-full	">
@@ -335,7 +337,7 @@ const Report = () => {
                                 onChange={(e) => {
                                     
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                    setSelecetedId(e?._id)
+                                    setSelecetedId({e})
                                    
                                 }}
                                 // value={rsearchData.store}
@@ -362,7 +364,7 @@ const Report = () => {
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                    setSelecetedId(e?._id)
+                                    setSelecetedId({e})
                                    
                                 }}
                                 // value={rsearchData.store}
@@ -388,8 +390,9 @@ const Report = () => {
                                 getOptionValue={(option) => option.value}
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
+                                    console.log("esupplier",e);
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                    setSelecetedId(e?._id)
+                                    setSelecetedId({e})
                                 }}
                                 // value={rsearchData.store}
                                 noOptionsMessage={({ inputValue }) =>
@@ -597,25 +600,7 @@ const Report = () => {
                                                 </Typography>
                                             </td>
 
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.supplierName}
-                                                </Typography>
-                                            </td>
-
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.contactNumber}
-                                                </Typography>
-                                            </td>
+                                            
                                         </tr>
                                     );
                                 },
@@ -666,6 +651,7 @@ const Report = () => {
                 </DialogHeader>
                 <DialogBody divider>
                     <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
+                      <thead colspan="4">{selectedId?.e?.label}</thead>
                         <thead >
                             {reportType === 1 &&
                                 <tr>
@@ -677,10 +663,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal leading-none opacity-70"
-                                            >
-                                                {head}
-                                            </Typography>
+                                                className="font-normal leading-none opacity-70">{head}  </Typography>
                                         </th>
                                     ))}
                                 </tr>}
@@ -795,7 +778,7 @@ const Report = () => {
                                                     color="blue-gray"
                                                     className="font-normal"
                                                 >
-                                                    {item?.supplier?.totalQuantity}
+                                                    {item?.totalQuantity}
                                                 </Typography>
                                             </td>
                                         </tr>
@@ -830,27 +813,7 @@ const Report = () => {
                                                     {item?.packing}
                                                 </Typography>
                                             </td>
-
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.supplierName}
-                                                </Typography>
-                                            </td>
-
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.supplier?.contactNumber}
-                                                </Typography>
-                                            </td>
-                                        </tr>
+                                         </tr>
                                     );
                                 },
                                 )}
