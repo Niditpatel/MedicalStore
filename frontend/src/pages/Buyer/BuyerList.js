@@ -202,7 +202,7 @@ const Buyer = () => {
           <CardFooter className="pt-0 ">
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Pagination
-                count={Math.ceil(totalBuyer / 10)}
+                count={Math.ceil(totalBuyer / page_Size)}
                 page={page_Index}
                 onChange={handleChangePageNew}
               />
@@ -210,6 +210,7 @@ const Buyer = () => {
                 defaultValue={options[0]}
                 onChange={(e) => {
                   setPage_Size(parseInt(e?.value))
+                  setPage_Index(1)
                 }} options={options} />
             </div>
           </CardFooter>

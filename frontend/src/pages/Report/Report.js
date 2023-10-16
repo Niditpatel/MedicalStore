@@ -198,6 +198,7 @@ const Report = () => {
             
             if (res.data.success) {
                 setData(res.data.data)
+                setTotalData(res.data.total)
             } else {
                 return null
             }
@@ -220,6 +221,7 @@ const Report = () => {
         }
     }
     const getCompanyWiseReport = async (companyId) => {
+        debugger
         try {
             const res = await axios.get(
                 `${BASE_URL}companyreport/?company_id=` + companyId + '&offset=' + page_Index + '&limit=' + page_Size
@@ -227,7 +229,7 @@ const Report = () => {
             );
             if (res.data.success) {
                 setData(res.data.companyreport)
-                setTotalData(res.data.total)
+                setTotalData(res.data.total[0].total)
             } else {
                 return null
             }
@@ -258,7 +260,7 @@ const Report = () => {
             );
             if (res.data.success) {
                 setData(res.data.buyerReport)
-                setTotalData(res.data.total)
+                setTotalData(res.data.total[0].total)
             } else {
                 return null
             }
@@ -320,6 +322,7 @@ const Report = () => {
                         />
 
                         {reportType === 1 &&
+                        <Box sx={{minWidth:'200px'}}>
                             <AsyncSelect
                                 cacheOptions
                                 menuPortalTarget={document.body}
@@ -344,8 +347,10 @@ const Report = () => {
                                             : "Type At Least Three Character to View Result"
                                 }
                             />
+                        </Box>
                         }
                         {reportType === 2 &&
+                        <Box sx={{minWidth:'200px'}}>
                             <AsyncSelect
                                 cacheOptions
                                 menuPortalTarget={document.body}
@@ -369,8 +374,10 @@ const Report = () => {
                                             : "Type At Least Three Character to View Result"
                                 }
                             />
+                            </Box>
                         }
                         {reportType === 3 &&
+                        <Box sx={{minWidth:'200px'}}>
                             <AsyncSelect
                                 cacheOptions
                                 menuPortalTarget={document.body}
@@ -393,6 +400,7 @@ const Report = () => {
                                             : "Type At Least Three Character to View Result"
                                 }
                             />
+                            </Box>
                         }
                         <div className="flex gap-2 justify-end w-full">
                         {reportType !== 3 &&

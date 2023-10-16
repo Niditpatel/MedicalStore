@@ -57,16 +57,17 @@ const PendingCart = () => {
   });
 
   const getData = async () => {
+    debugger
     try {
       const data = await axios.get(
         `${BASE_URL}pendingCart/search/?` + 'supplierName=' +
         searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +
-        '&offset=' + page_Index + '&pageSize=' + page_Size + '&start_date=' + startDate + '&end_date=' + endDate
+        '&offset=' + page_Index + '&limit=' + page_Size + '&start_date=' + startDate + '&end_date=' + endDate
       );
       const printData = await axios.get(
         `${BASE_URL}pendingCart/print/?` + 'supplierName=' +
         searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +
-        '&offset=' + page_Index + '&pageSize=' + page_Size + '&start_date=' + startDate + '&end_date=' + endDate
+         '&start_date=' + startDate + '&end_date=' + endDate
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -285,7 +286,7 @@ const PendingCart = () => {
         <CardFooter className="pt-0 print:hidden">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Pagination
-              count={Math.ceil(totalProducts / 10)}
+              count={Math.ceil(totalProducts / page_Size)}
               page={page_Index}
               onChange={handleChangePageNew}
             />
@@ -293,6 +294,7 @@ const PendingCart = () => {
               defaultValue={options[0]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
+                setPage_Index(1)
               }} options={options} />
           </div>
         </CardFooter>
