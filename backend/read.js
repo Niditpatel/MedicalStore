@@ -37,6 +37,7 @@ temp.forEach(async(res) => {
        if(companyIndex[2]===undefined){
         // console.log(res[companyIndex[0]])
         const store = await Store.find({storeName:res[companyIndex[0]]})
+        
     //    await createCompany(res[companyIndex[0]])
        }
     //    if(companyIndex[2] === undefined){
