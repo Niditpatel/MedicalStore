@@ -15,6 +15,27 @@ router.post("/store/new",async (req, res) => {
 }
 );
 
+router.post("/dataRoute/new", async (req, res) => {
+    const dataAdd = req.body;
+    console.log(dataAdd)
+    if (dataAdd && dataAdd?.length > 0) {
+        dataAdd.forEach(function (doc) {
+            const newCart = new Store({
+                 storeName:doc.storeName,
+            })
+            newCart.save();
+        });
+        res.status(200).json({
+            success: true,
+        })
+    } else {
+        res.status(200).json({
+            success: false,
+        })
+    }
+}
+);
+
 router.get("/stores", async (req, res) => {
     const storeName = req.query.storeName?req.query.storeName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
