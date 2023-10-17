@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import logo_apple from "../StaticData/logo_apple.png";
 import {
   Navbar,
   Collapse,
@@ -78,15 +78,8 @@ export function StickyNavbar() {
   return (
     <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none py-2 px-4 lg:px-8 lg:py-4 mb-6 print:hidden">
       <div className="flex items-center justify-between text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          className="mr-4 cursor-pointer py-1.5 font-medium"
-        >
-          <Link to="/">
-            Apple Medical
-          </Link>
-        </Typography>
+        
+           <img style={{width:"40%",maxWidth: "19%"}}src={logo_apple}/>
 
         <div className="flex items-center gap-4">
           {/* <div className="mr-4 hidden lg:block">{navList}</div> */}

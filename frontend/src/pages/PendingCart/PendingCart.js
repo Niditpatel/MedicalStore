@@ -57,7 +57,7 @@ const PendingCart = () => {
   });
 
   const getData = async () => {
-    debugger
+    
     try {
       const data = await axios.get(
         `${BASE_URL}pendingCart/search/?` + 'supplierName=' +

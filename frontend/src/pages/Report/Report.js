@@ -221,7 +221,7 @@ const Report = () => {
         }
     }
     const getCompanyWiseReport = async (companyId) => {
-        debugger
+        
         try {
             const res = await axios.get(
                 `${BASE_URL}companyreport/?company_id=` + companyId + '&offset=' + page_Index + '&limit=' + page_Size
@@ -271,7 +271,7 @@ const Report = () => {
 
     useEffect(() => {
         console.log("suppplierID",selectedId);
-        debugger
+        
     if(selectedId?.e?._id !== ''  && selectedId?.e?._id !== undefined && selectedId?.e?._id !==null)
      {
         if( reportType === 1 )
