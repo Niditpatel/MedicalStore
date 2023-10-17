@@ -651,7 +651,7 @@ const Report = () => {
                 </DialogHeader>
                 <DialogBody divider>
                     <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
-                      <thead colspan="4">{selectedId?.e?.label}</thead>
+                      <thead colspan="4"><span style={{fontSize:"20px"}}>{selectedId?.e?.label}</span></thead>
                         <thead >
                             {reportType === 1 &&
                                 <tr>

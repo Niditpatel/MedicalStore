@@ -95,7 +95,7 @@ const ProductList = () => {
     getData();
   };
 
-  const handleChange = (e) => {
+  const handleChangeSearch = (e) => {
     setSearchData({ ...searchData, [e.target.name]: e.target.value });
   }
   const handleChangePageNew = (e, value) => {
@@ -219,7 +219,7 @@ const ProductList = () => {
                       label="Company Name"
                       name="storeName"
                       value={searchData.storeName}
-                      onChange={handleChange}
+                      onChange={handleChangeSearch}
                     />
                     <Input
                       type="text"
@@ -228,7 +228,7 @@ const ProductList = () => {
                       label="Product Name"
                       name="productName"
                       value={searchData.productName}
-                      onChange={handleChange}
+                      onChange={handleChangeSearch}
                     />
                     <Input
                       type="text"
@@ -237,7 +237,7 @@ const ProductList = () => {
                       label="Supplier Name"
                       name="supplierName"
                       value={searchData.supplierName}
-                      onChange={handleChange}
+                      onChange={handleChangeSearch}
                     />
                   </div>
                 </CardHeader>
