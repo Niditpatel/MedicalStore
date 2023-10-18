@@ -37,7 +37,7 @@ temp.forEach(async(res) => {
        const companyIndex = Object.keys(res)
         const name = res[companyIndex[0]]
         const packing = res[companyIndex[1]]
-        companies.push({storeName:name,packing:packing?packing:''})
+        companies.push({productName:name,packing:packing?packing:'',store:'65300ce3c322ce8608df3580',supplier:['65300cf8c322ce8608df3586']})
 }) 
 } 
 console.log(companies)
