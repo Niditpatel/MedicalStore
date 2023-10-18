@@ -19,6 +19,35 @@ router.post("/product/new",async (req, res) => {
 }
 );
 
+router.post("/products/new",async (req, res) => {
+    const products= req.body;
+    if(products && products?.length > 0){
+        try{
+         products.forEach(element => {
+             const product = new Products({
+                 productName:element.productName
+                 ,packing:element.packing
+                 ,store:element.store._id
+                 ,supplier:element.supplier
+                 ,isDeleted:false
+                 ,isCart:false
+             })
+             product.save()
+         });
+         res.status(200).json({
+             success:true,
+             message:'success fully created.'
+         })
+        }catch(e){
+         res.status(400).json({
+             success:false,
+             message:'something was wromg.'
+         })
+        }
+     }
+}
+);
+
 // router.get("/products", async (req, res) => {
 //     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
 //     const pageSize = req.query.pageSize?req.query.pageSize:15

@@ -15,13 +15,13 @@ router.post("/store/new",async (req, res) => {
 }
 );
 
-router.post("/dataRoute/new", async (req, res) => {
+router.post("/stores/new", async (req, res) => {
     const dataAdd = req.body;
-    console.log(dataAdd)
     if (dataAdd && dataAdd?.length > 0) {
         dataAdd.forEach(function (doc) {
             const newCart = new Store({
                  storeName:doc.storeName,
+                 isDeleted:false
             })
             newCart.save();
         });
