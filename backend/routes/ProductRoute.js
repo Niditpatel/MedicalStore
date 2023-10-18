@@ -21,13 +21,14 @@ router.post("/product/new",async (req, res) => {
 
 router.post("/products/new",async (req, res) => {
     const products= req.body;
+    console.log(products)
     if(products && products?.length > 0){
         try{
          products.forEach(element => {
              const product = new Products({
                  productName:element.productName
                  ,packing:element.packing
-                 ,store:element.store._id
+                 ,store:element.store
                  ,supplier:element.supplier
                  ,isDeleted:false
                  ,isCart:false
