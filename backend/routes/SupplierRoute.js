@@ -77,6 +77,27 @@ router.get("/supplier/:id",async (req, res) => {
     }
 
 });
+
+router.post("/suppliers/new", async (req, res) => {
+    const dataAdd = req.body;
+    if (dataAdd && dataAdd?.length > 0) {
+        dataAdd.forEach(function (doc) {
+            const newCart = new Supplier({
+                supplierName:doc.supplierName,
+                 isDeleted:false
+            })
+            newCart.save();
+        });
+        res.status(200).json({
+            success: true,
+        })
+    } else {
+        res.status(200).json({
+            success: false,
+        })
+    }
+}
+);
 router.delete("/supplier/:id",
     async (req, res) => {
     const supplier = await Supplier.findById(req.params.id);
