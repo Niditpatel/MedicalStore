@@ -221,7 +221,6 @@ const Report = () => {
         }
     }
     const getCompanyWiseReport = async (companyId) => {
-        
         try {
             const res = await axios.get(
                 `${BASE_URL}companyreport/?company_id=` + companyId + '&offset=' + page_Index + '&limit=' + page_Size
@@ -270,8 +269,6 @@ const Report = () => {
     };
 
     useEffect(() => {
-        console.log("suppplierID",selectedId);
-        
     if(selectedId?.e?._id !== ''  && selectedId?.e?._id !== undefined && selectedId?.e?._id !==null)
      {
         if( reportType === 1 )
@@ -289,7 +286,7 @@ const Report = () => {
             getSupplierWiseReportPrint(selectedId?.e?._id)
         }
      }
-    }, [selectedId,startDate,endDate]);
+    }, [selectedId,startDate,endDate,page_Size,page_Index]);
 
     useEffect(() => {
         getStores('', false)
@@ -390,7 +387,6 @@ const Report = () => {
                                 getOptionValue={(option) => option.value}
                                 getOptionLabel={(option) => option.label}
                                 onChange={(e) => {
-                                    console.log("esupplier",e);
                                     setrSearchData({ ...rsearchData, store: e ? e.value : '' })
                                     setSelecetedId({e})
                                 }}
@@ -649,7 +645,7 @@ const Report = () => {
                         <span>Cancel</span>
                     </Button>
                 </DialogHeader>
-                <DialogBody divider>
+                <DialogBody divider >
                     <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
                       <thead colspan="4"><span style={{fontSize:"20px"}}>{selectedId?.e?.label}</span></thead>
                         <thead >
