@@ -497,7 +497,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal ml-2"
                                                 >
                                                     {item?.product}
                                                 </Typography>
@@ -539,7 +539,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal"
+                                                className="font-normal ml-2"
                                             >
                                                 {item?.product}
                                             </Typography>
@@ -581,7 +581,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal ml-2"
                                                 >
                                                     {item?.productName}
                                                 </Typography>
@@ -629,8 +629,10 @@ const Report = () => {
                     mount: { scale: 1, y: 0 },
                     unmount: { scale: 0.9, y: -100 },
                 }}
+                
+
             >
-                <DialogHeader className="justify-end">
+                <DialogHeader className="justify-end ">
                     <Button
                         color="grey"
                         variant='gradient'
@@ -645,21 +647,21 @@ const Report = () => {
                         <span>Cancel</span>
                     </Button>
                 </DialogHeader>
-                <DialogBody divider >
-                    <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
-                      <thead colspan="4"><span style={{fontSize:"20px"}}>{selectedId?.e?.label}</span></thead>
+                <DialogBody divider className="padding-none">
+                    <table className="w-full min-w-max table-auto text-left bg-white " id="section-to-print" ref={componentRef}>
+                      <thead> <tr><th colSpan={20} className="text-center py-2">{selectedId?.e?.label}</th></tr></thead>
                         <thead >
                             {reportType === 1 &&
                                 <tr>
                                     {Company_HEAD.map((head) => (
                                         <th
                                             key={head}
-                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50"
                                         >
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal leading-none opacity-70">{head}  </Typography>
+                                                className="font-normal my-4 leading-none opacity-70">{head}  </Typography>
                                         </th>
                                     ))}
                                 </tr>}
@@ -712,7 +714,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal"
+                                                className="font-normal ml-4"
                                             >
                                                 {item?.product}
                                             </Typography>
@@ -721,7 +723,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal"
+                                                className="font-normal ml-3"
                                             >
                                                 {item?.packing}
                                             </Typography>
@@ -731,7 +733,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal"
+                                                className="font-normal ml-3"
                                             >
                                                 {item?.totalQuantity}
                                             </Typography>
@@ -754,7 +756,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal ml-4"
                                                 >
                                                     {item?.product}
                                                 </Typography>
@@ -763,7 +765,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal ml-3"
                                                 >
                                                     {item?.packing}
                                                 </Typography>
@@ -772,7 +774,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal ml-3"
                                                 >
                                                     {item?.totalQuantity}
                                                 </Typography>
@@ -795,7 +797,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal ml-4"
                                                 >
                                                     {item?.productName}
                                                 </Typography>
@@ -804,7 +806,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal ml-3"
                                                 >
                                                     {item?.packing}
                                                 </Typography>
