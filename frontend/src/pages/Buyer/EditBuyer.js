@@ -57,10 +57,10 @@ const Edit = () => {
   return (
     <div className="flex items-center justify-center">
       <Card className="w-96">
-        <CardHeader floated={false}>
-          <Typography className="text-center text-2xl">Buyer</Typography>
-        </CardHeader>
         <CardBody>
+          <div className="mb-4 text-center">
+            <Typography className="text-2xl">Edit Buyer</Typography>
+          </div>
           <form className="mb-2  max-w-screen-lg " onSubmit={(e) => {
             handleSubmit(e);
           }}>

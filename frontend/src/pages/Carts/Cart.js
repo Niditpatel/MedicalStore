@@ -225,7 +225,7 @@ const Cart = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="font-normal leading-none opacity-70"
+                    className="font-normal leading-none opacity-70 pl-3"
                   >
                     Product Name
                   </Typography>
@@ -269,7 +269,7 @@ const Cart = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="font-normal leading-none opacity-70 text-right print:hidden"
+                    className="font-normal leading-none opacity-70 text-right print:hidden pr-8"
                   >
                     Delete
                   </Typography>
@@ -291,7 +291,7 @@ const Cart = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-normal pl-5"
                             >
                               {item?.productName}
                             </Typography>
@@ -324,7 +324,7 @@ const Cart = () => {
                             </Typography>
                           </td>
                           <td className={classes}>
-                            <Box className={'flex justify-end'}>
+                            <Box className={'flex justify-end pr-9'} >
                               <Button
                                 variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
                                 onClick={(e) => setDialog({ open: true, item: item })}

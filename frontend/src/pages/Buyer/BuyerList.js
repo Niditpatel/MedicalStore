@@ -109,7 +109,7 @@ const Buyer = () => {
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+                      className="font-normal leading-none opacity-70 pl-4"
                     >
                       Name
                     </Typography>
@@ -126,12 +126,12 @@ const Buyer = () => {
                     </Typography>
                   </th>
                   <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-12"
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right "
                   >
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+                      className="font-normal leading-none opacity-70 mr-6"
                     >
                       Edit/Delete
                     </Typography>
@@ -153,6 +153,7 @@ const Buyer = () => {
                               <Typography
                                 variant="small"
                                 color="blue-gray"
+                                className="pl-6"
                               >
                                 {item?.buyerName}
                               </Typography>
@@ -179,7 +180,7 @@ const Buyer = () => {
                                 &#x1F589;
                               </Button>
                               <Button
-                                className="btn btn-sm btn-danger ms-1"
+                                className="btn btn-sm btn-danger ms-4 mr-8"
                                 variant="gradient"
                                 size="sm"
                                 color='red'

@@ -109,7 +109,7 @@ export default function SupplierList() {
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="font-normal leading-none opacity-70"
+                    className="font-normal leading-none opacity-70 pl-4"
                   >
                     Name
                   </Typography>
@@ -154,6 +154,7 @@ export default function SupplierList() {
                               <Typography
                                 variant="small"
                                 color="blue-gray"
+                                className="pl-5"
                               >
                                 {item?.supplierName}
                               </Typography>
@@ -181,7 +182,7 @@ export default function SupplierList() {
                               </Button>
                               <Button
                                 variant="gradient"
-                                size="sm" color='red' className="btn btn-danger ms-2"
+                                size="sm" color='red' className="btn btn-danger ms-4 mr-4"
                                 onClick={(e) => setDialog({ open: true, item: item })}
                               >X
                               </Button>

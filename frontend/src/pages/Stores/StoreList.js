@@ -106,7 +106,7 @@ const Store = () => {
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+                      className="font-normal leading-none opacity-70 pl-3"
                     >Name
                     </Typography>
                   </th>
@@ -147,6 +147,7 @@ const Store = () => {
                               <Typography
                                 variant="small"
                                 color="blue-gray"
+                                className="pl-4"
                               >
                                 {item?.storeName}
                               </Typography>
@@ -182,7 +183,7 @@ const Store = () => {
                                 &#x1F589;
                               </Button>
                               <Button
-                                className="btn btn-sm btn-danger ms-2"
+                                className="btn btn-sm btn-danger ms-4 mr-4"
                                 variant="gradient"
                                 size="sm"
                                 color='red'

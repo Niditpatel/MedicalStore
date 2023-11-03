@@ -320,7 +320,7 @@ const checkISExists = async (values) =>{
                     <thead>
                       <tr>
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2 pl-5"
                         >
                           <Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }} className="m-0 p-0 print:hidden" />
                         </th>
@@ -387,8 +387,8 @@ const checkISExists = async (values) =>{
                           return (
                             <tr className="h-4" key={index}>
                               <td className={classes} >
-                                <div className="flex items-center">
-                                  <Checkbox className="print:hidden" size={'small'} onChange={(e) => {
+                                <div className="flex items-center pl-3">
+                                  <Checkbox className="print:hidden " size={'small'} onChange={(e) => {
                                     setFieldValue(
                                       `data[${index}].isCart`,
                                       e.target?.checked ? e.target.checked : false,
@@ -447,8 +447,9 @@ const checkISExists = async (values) =>{
                                 />
                                 {/*  <ErrorMessage name={`data[${index}].quantity`} /> */}
                               </td>
-                              <td className={classes}>
+                              <td className={classes} >
                                 <AsyncSelect
+                                className="pr-9"
                                   cacheOptions
                                   menuPortalTarget={document.querySelector('body')}
                                   defaultOptions={buyers}

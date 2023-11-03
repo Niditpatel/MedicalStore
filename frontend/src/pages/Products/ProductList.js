@@ -167,7 +167,7 @@ const ProductList = () => {
   useEffect(() => {
     getBuyers('', false);
   }, [])
-   
+
   return (
     <div className="container mb-8">
       <Formik
@@ -203,7 +203,6 @@ const ProductList = () => {
                         navigate('/add-product')
                       }}>Add Product</Button>
                       <Button type="submit"
-                        //disabled={isSubmitting}
                         onSubmit={(E) => {
                           console.log("errora", props.errors);
                         }}
@@ -243,7 +242,7 @@ const ProductList = () => {
                 </CardHeader>
                 <CardBody className="p-4 overflow-hidden px-0 ">
                   <table className="w-full min-w-max table-auto text-left">
-                    <thead>
+                    <thead >
                       <tr>
                         <th
                           className="border-y border-blue-gray-100 bg-blue-gray-50/50 py-4"
@@ -251,7 +250,7 @@ const ProductList = () => {
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal leading-none opacity-70"
+                            className="font-normal leading-none opacity-70 pl-7"
                           >
                             Product Name
                           </Typography>
@@ -282,7 +281,7 @@ const ProductList = () => {
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal leading-none opacity-70 text-right"
+                            className="font-normal leading-none opacity-70 text-right pr-8"
                           >Edit/Delete
                           </Typography>
                         </th>
@@ -301,7 +300,7 @@ const ProductList = () => {
                                 <Typography
                                   variant="small"
                                   color="blue-gray"
-                                  className="font-normal"
+                                  className="font-normal pl-5"
                                 >
                                   {item?.productName}
                                 </Typography>
@@ -337,7 +336,7 @@ const ProductList = () => {
                                     &#x1F589;
                                   </Button>
                                   <Button
-                                    variant="gradient" size="sm" color='red' className="btn btn-danger ms-2 print:hidden"
+                                    variant="gradient" size="sm" color='red' className="mr-4 btn btn-danger ms-6 print:hidden"
                                     onClick={(e) => setDialog({ open: true, item: item })}
                                   >X
                                   </Button>
