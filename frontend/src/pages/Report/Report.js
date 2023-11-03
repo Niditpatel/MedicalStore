@@ -171,7 +171,7 @@ const Report = () => {
 
         const res = await getSuppliers(inputValue, true);
         const institutes = res.map((val) => {
-            return { ...val, label: val.supplierName, value: val._id };
+            return {...val, label: val.supplierName, value: val._id };
         });
         return institutes;
     };
@@ -195,7 +195,7 @@ const Report = () => {
             const res = await axios.get(
                 `${BASE_URL}supplierreport/?supplier_id=` + supplierId + '&offset=' + page_Index + '&limit=' + page_Size
             );
-
+            
             if (res.data.success) {
                 setData(res.data.data)
                 setTotalData(res.data.total)
@@ -269,21 +269,24 @@ const Report = () => {
     };
 
     useEffect(() => {
-        if (selectedId?.e?._id !== '' && selectedId?.e?._id !== undefined && selectedId?.e?._id !== null) {
-            if (reportType === 1) {
-                getCompanyWiseReport(selectedId?.e?._id)
-                getCompanyrWiseReportPrint(selectedId?.e?._id)
-            }
-            if (reportType === 2) {
-                getBuyerWiseReport(selectedId?.e?._id)
-                getBuyerWiseReportPrint(selectedId?.e?._id)
-            }
-            if (reportType === 3) {
-                getSupplierWiseReport(selectedId?.e?._id)
-                getSupplierWiseReportPrint(selectedId?.e?._id)
-            }
+    if(selectedId?.e?._id !== ''  && selectedId?.e?._id !== undefined && selectedId?.e?._id !==null)
+     {
+        if( reportType === 1 )
+       {
+        getCompanyWiseReport(selectedId?.e?._id)
+        getCompanyrWiseReportPrint(selectedId?.e?._id)
+       }
+        if( reportType === 2 ){
+            getBuyerWiseReport(selectedId?.e?._id)
+            getBuyerWiseReportPrint(selectedId?.e?._id)
         }
-    }, [selectedId, startDate, endDate, page_Size, page_Index]);
+        if( reportType === 3)
+        {
+            getSupplierWiseReport(selectedId?.e?._id)
+            getSupplierWiseReportPrint(selectedId?.e?._id)
+        }
+     }
+    }, [selectedId,startDate,endDate,page_Size,page_Index]);
 
     useEffect(() => {
         getStores('', false)
@@ -318,107 +321,107 @@ const Report = () => {
                         />
 
                         {reportType === 1 &&
-                            <Box sx={{ minWidth: '200px' }}>
-                                <AsyncSelect
-                                    cacheOptions
-                                    menuPortalTarget={document.body}
-                                    defaultOptions={stores}
-                                    isClearable
-                                    placeholder="Select Company"
-                                    loadOptions={searchStore}
-                                    getOptionValue={(option) => option.value}
-                                    getOptionLabel={(option) => option.label}
-                                    onChange={(e) => {
-
-                                        setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                        setSelecetedId({ e })
-
-                                    }}
-                                    // value={rsearchData.store}
-                                    noOptionsMessage={({ inputValue }) =>
-                                        !inputValue
-                                            ? "Start Typing to View Results"
-                                            : inputValue.length > 0
-                                                ? "No Result Are Found Matching This Value"
-                                                : "Type At Least Three Character to View Result"
-                                    }
-                                />
-                            </Box>
+                        <Box sx={{minWidth:'200px'}}>
+                            <AsyncSelect
+                                cacheOptions
+                                menuPortalTarget={document.body}
+                                defaultOptions={stores}
+                                isClearable
+                                placeholder="Select Company"
+                                loadOptions={searchStore}
+                                getOptionValue={(option) => option.value}
+                                getOptionLabel={(option) => option.label}
+                                onChange={(e) => {
+                                    
+                                    setrSearchData({ ...rsearchData, store: e ? e.value : '' })
+                                    setSelecetedId({e})
+                                   
+                                }}
+                                // value={rsearchData.store}
+                                noOptionsMessage={({ inputValue }) =>
+                                    !inputValue
+                                        ? "Start Typing to View Results"
+                                        : inputValue.length > 0
+                                            ? "No Result Are Found Matching This Value"
+                                            : "Type At Least Three Character to View Result"
+                                }
+                            />
+                        </Box>
                         }
                         {reportType === 2 &&
-                            <Box sx={{ minWidth: '200px' }}>
-                                <AsyncSelect
-                                    cacheOptions
-                                    menuPortalTarget={document.body}
-                                    defaultOptions={buyers}
-                                    isClearable
-                                    placeholder="Select Buyer"
-                                    loadOptions={searchBuyer}
-                                    getOptionValue={(option) => option.value}
-                                    getOptionLabel={(option) => option.label}
-                                    onChange={(e) => {
-                                        setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                        setSelecetedId({ e })
-
-                                    }}
-                                    // value={rsearchData.store}
-                                    noOptionsMessage={({ inputValue }) =>
-                                        !inputValue
-                                            ? "Start Typing to View Results"
-                                            : inputValue.length > 0
-                                                ? "No Result Are Found Matching This Value"
-                                                : "Type At Least Three Character to View Result"
-                                    }
-                                />
+                        <Box sx={{minWidth:'200px'}}>
+                            <AsyncSelect
+                                cacheOptions
+                                menuPortalTarget={document.body}
+                                defaultOptions={buyers}
+                                isClearable
+                                placeholder="Select Buyer"
+                                loadOptions={searchBuyer}
+                                getOptionValue={(option) => option.value}
+                                getOptionLabel={(option) => option.label}
+                                onChange={(e) => {
+                                    setrSearchData({ ...rsearchData, store: e ? e.value : '' })
+                                    setSelecetedId({e})
+                                   
+                                }}
+                                // value={rsearchData.store}
+                                noOptionsMessage={({ inputValue }) =>
+                                    !inputValue
+                                        ? "Start Typing to View Results"
+                                        : inputValue.length > 0
+                                            ? "No Result Are Found Matching This Value"
+                                            : "Type At Least Three Character to View Result"
+                                }
+                            />
                             </Box>
                         }
                         {reportType === 3 &&
-                            <Box sx={{ minWidth: '200px' }}>
-                                <AsyncSelect
-                                    cacheOptions
-                                    menuPortalTarget={document.body}
-                                    defaultOptions={suppliers}
-                                    isClearable
-                                    placeholder="Select Supplier"
-                                    loadOptions={searchSupplier}
-                                    getOptionValue={(option) => option.value}
-                                    getOptionLabel={(option) => option.label}
-                                    onChange={(e) => {
-                                        setrSearchData({ ...rsearchData, store: e ? e.value : '' })
-                                        setSelecetedId({ e })
-                                    }}
-                                    // value={rsearchData.store}
-                                    noOptionsMessage={({ inputValue }) =>
-                                        !inputValue
-                                            ? "Start Typing to View Results"
-                                            : inputValue.length > 0
-                                                ? "No Result Are Found Matching This Value"
-                                                : "Type At Least Three Character to View Result"
-                                    }
-                                />
+                        <Box sx={{minWidth:'200px'}}>
+                            <AsyncSelect
+                                cacheOptions
+                                menuPortalTarget={document.body}
+                                defaultOptions={suppliers}
+                                isClearable
+                                placeholder="Select Supplier"
+                                loadOptions={searchSupplier}
+                                getOptionValue={(option) => option.value}
+                                getOptionLabel={(option) => option.label}
+                                onChange={(e) => {
+                                    setrSearchData({ ...rsearchData, store: e ? e.value : '' })
+                                    setSelecetedId({e})
+                                }}
+                                // value={rsearchData.store}
+                                noOptionsMessage={({ inputValue }) =>
+                                    !inputValue
+                                        ? "Start Typing to View Results"
+                                        : inputValue.length > 0
+                                            ? "No Result Are Found Matching This Value"
+                                            : "Type At Least Three Character to View Result"
+                                }
+                            />
                             </Box>
                         }
                         <div className="flex gap-2 justify-end w-full">
-                            {reportType !== 3 &&
-                                <Popover animate={{
-                                    mount: { scale: 1, y: 0 },
-                                    unmount: { scale: 0, y: 25 },
-                                }} placement="bottom" >
-                                    <PopoverHandler>
-                                        <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
-                                    </PopoverHandler>
-                                    <PopoverContent className="w-96">
-                                        <DateRange
-                                            editableDateInputs={true}
-                                            onChange={handleSelect}
-                                            moveRangeOnFirstSelection={false}
-                                            ranges={[selectionRange]}
-                                        />
-                                    </PopoverContent>
-                                </Popover>}
+                        {reportType !== 3 &&
+                        <Popover animate={{
+                            mount: { scale: 1, y: 0 },
+                            unmount: { scale: 0, y: 25 },
+                        }} placement="bottom" >
+                            <PopoverHandler>
+                                <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
+                            </PopoverHandler>
+                            <PopoverContent className="w-96">
+                                <DateRange
+                                    editableDateInputs={true}
+                                    onChange={handleSelect}
+                                    moveRangeOnFirstSelection={false}
+                                    ranges={[selectionRange]}
+                                />
+                            </PopoverContent>
+                        </Popover>}
                             <Button type="submit"
                                 onClick={(e) => {
-
+                                    
                                     setPrintCart(true);
                                 }}
                                 size="sm" className="mt-6 m-0"
@@ -536,7 +539,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal"
+                                                className="font-normal ml-2"
                                             >
                                                 {item?.product}
                                             </Typography>
@@ -551,16 +554,16 @@ const Report = () => {
                                             </Typography>
                                         </td>
 
-                                            <td className={classes} >
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.totalQuantity}
-                                                </Typography>
-                                            </td>
-                                        </tr>
+                                        <td className={classes} >
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal"
+                                            >
+                                                {item?.totalQuantity}
+                                            </Typography>
+                                        </td>
+                                    </tr>
                                     );
                                 },
                                 )}
@@ -593,7 +596,7 @@ const Report = () => {
                                                 </Typography>
                                             </td>
 
-
+                                            
                                         </tr>
                                     );
                                 },
@@ -604,25 +607,11 @@ const Report = () => {
 
                 <CardFooter className="pt-0 print:hidden">
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Button variant="text" onClick={(e) => {
-                                if (page_Index > 1) {
-                                    handleChangePageNew(e, page_Index - 1);
-                                }
-                            }}>
-                                <Typography>&lt;</Typography>
-                            </Button>
-                            <Typography>{page_Index}</Typography>
-                            <Button variant="text" onClick={(e) => {
-                                if (data?.length < page_Size) {
-                                    return;
-                                } else {
-                                    handleChangePageNew(e, page_Index + 1)
-                                }
-                            }}>
-                                <Typography>&gt;</Typography>
-                            </Button>
-                        </Box>
+                        <Pagination
+                            count={Math.ceil(totalData / page_Size)}
+                            page={page_Index}
+                            onChange={handleChangePageNew}
+                        />
                         <Select
                             defaultValue={options[0]}
                             onChange={(e) => {
@@ -658,9 +647,9 @@ const Report = () => {
                         <span>Cancel</span>
                     </Button>
                 </DialogHeader>
-                <DialogBody divider >
-                    <table className="w-full min-w-max table-auto text-left" id="section-to-print" ref={componentRef}>
-                      <thead colspan="4"><span style={{fontSize:"20px"}}>{selectedId?.e?.label}</span></thead>
+                <DialogBody divider className="padding-none">
+                    <table className="w-full min-w-max table-auto text-left bg-white" id="section-to-print" ref={componentRef}>
+                      <thead> <tr><th colSpan={20} className="text-center py-2">{selectedId?.e?.label}</th></tr></thead>
                         <thead >
                             {reportType === 1 &&
                                 <tr>
@@ -725,7 +714,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal"
+                                                className="font-normal ml-4"
                                             >
                                                 {item?.product}
                                             </Typography>
@@ -734,7 +723,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal"
+                                                className="font-normal ml-3"
                                             >
                                                 {item?.packing}
                                             </Typography>
@@ -744,7 +733,7 @@ const Report = () => {
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal"
+                                                className="font-normal ml-3"
                                             >
                                                 {item?.totalQuantity}
                                             </Typography>
@@ -822,7 +811,7 @@ const Report = () => {
                                                     {item?.packing}
                                                 </Typography>
                                             </td>
-                                        </tr>
+                                         </tr>
                                     );
                                 },
                                 )}
