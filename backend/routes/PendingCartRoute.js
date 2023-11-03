@@ -268,29 +268,33 @@ router.get("/pendingCart/search",
                         ]
                 }
             },
-            {
-                $facet: {
-                    metadata: [
-                        {
-                            $group: {
-                                _id: null,
-                                total: { $sum: 1 }
-                            }
-                        },
-                    ],
-                    data: [
-                        { $sort: { [sort_field]: sort_order } },
-                        { $skip: page_limit * page_no },
-                        { $limit: page_limit },
-                    ]
-                }
-            },
+            { $skip: page_limit * page_no },
+            { $limit: page_limit },
+            // {
+            //     $facet: {
+            //         metadata: [
+            //             {
+            //                 $group: {
+            //                     _id: null,
+            //                     total: { $sum: 1 }
+            //                 }
+            //             },
+            //         ],
+            //         data: [
+            //             { $sort: { [sort_field]: sort_order } },
+            //             { $skip: page_limit * page_no },
+            //             { $limit: page_limit },
+            //         ]
+            //     }
+            // },
         ])
 
         res.status(200).json({
             success: true,
-            data: data[0]?.data ? data[0]?.data : [],
-            total: data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total : 0
+            // data: data[0]?.data ? data[0]?.data : [],
+            data:data,
+            // total: data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total : 0
+            total:0
         })
     });
 
@@ -407,27 +411,29 @@ router.get("/pendingCart/print",
                         ]
                 }
             },
-            {
-                $facet: {
-                    metadata: [
-                        {
-                            $group: {
-                                _id: null,
-                                total: { $sum: 1 }
-                            }
-                        },
-                    ],
-                    data: [
-                        { $sort: { [sort_field]: sort_order } }
-                    ]
-                }
-            },
+            // {
+            //     $facet: {
+            //         metadata: [
+            //             {
+            //                 $group: {
+            //                     _id: null,
+            //                     total: { $sum: 1 }
+            //                 }
+            //             },
+            //         ],
+            //         data: [
+            //             { $sort: { [sort_field]: sort_order } }
+            //         ]
+            //     }
+            // },
         ])
 
         res.status(200).json({
             success: true,
-            data: data[0]?.data ? data[0]?.data : [],
-            total: data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total : 0
+            // data: data[0]?.data ? data[0]?.data : [],
+            // total: data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total : 0
+            data:data
+
         })
     });
 
@@ -514,7 +520,7 @@ console.log("start_date",start_date)
         {$and:[
             {'store._id':new mongoose.Types.ObjectId(company_id)},
             ]}
-console.log("match_query",match_query);
+            
     const lookupQuery2 = [
         {
             $lookup: {
