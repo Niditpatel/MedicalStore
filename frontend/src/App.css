@@ -2,6 +2,8 @@ html,
 body {
   height: 100%;
   background: radial-gradient(at 50% -20%, #ffcc59, #dfd4fa) fixed;
+  -webkit-print-color-adjust: white !important;
+  print-color-adjust:white !important;
 }
 
 .App {
@@ -51,12 +53,13 @@ input::-webkit-inner-spin-button {
 }
 
 @media print {
-  body * {
+   * {
     visibility: hidden;
     background-color: #fff  !important;
   }
+ 
 
-  @page {
+  @page { 
     width: 100%;
     margin: 5mm;
   }
