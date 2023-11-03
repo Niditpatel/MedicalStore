@@ -131,7 +131,7 @@ const Buyer = () => {
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70 mr-6"
+                      className="font-normal leading-none opacity-70 mr-9"
                     >
                       Edit/Delete
                     </Typography>
