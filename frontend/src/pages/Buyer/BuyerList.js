@@ -202,11 +202,25 @@ const Buyer = () => {
           </CardBody>
           <CardFooter className="pt-0 ">
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Pagination
-                count={Math.ceil(totalBuyer / page_Size)}
-                page={page_Index}
-                onChange={handleChangePageNew}
-              />
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Button variant="text" onClick={(e) => {
+                  if (page_Index > 1) {
+                    handleChangePageNew(e, page_Index - 1);
+                  }
+                }}>
+                  <Typography>&lt;</Typography>
+                </Button>
+                <Typography>{page_Index}</Typography>
+                <Button variant="text" onClick={(e) => {
+                  if (data?.length < page_Size) {
+                    return;
+                  } else {
+                    handleChangePageNew(e, page_Index + 1)
+                  }
+                }}>
+                  <Typography>&gt;</Typography>
+                </Button>
+              </Box>
               <Select
                 defaultValue={options[0]}
                 onChange={(e) => {
