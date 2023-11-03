@@ -54,7 +54,7 @@ const Home = () => {
   }]);
   const [loading, setLoading] = useState(false);
   const [dialog, setDialog] = useState({ open: false, item: {} })
-  const [forceAddDialog, setForceAddDialog] = useState({ open: false, item: [],finalData:[] })
+  const [forceAddDialog, setForceAddDialog] = useState({ open: false, item: [], finalData: [] })
   const [buyers, setBuyers] = useState([]);
   const [searchData, setSearchData] = useState({ storeName: '', supplierName: '', productName: '' });
   const [totalProducts, setTotalProduct] = useState(0);
@@ -117,8 +117,8 @@ const Home = () => {
   }
 
   const handleAddCart = async (values) => {
-    
-    console.log("values",values)
+
+    console.log("values", values)
     try {
       const data = await axios.post(
         `${BASE_URL}cart/new`,
@@ -134,56 +134,56 @@ const Home = () => {
     }
   }
 
-const checkISExists = async (values) =>{
-  
-  let firstValid = values?.data?.filter((x)=> x.isCart === true)
-  if(firstValid.length === 0){
-    return alert("please select field")
-  }
-  let validateQuantiy = values?.data?.filter(
-    (x) =>
-      x.isCart === true &&
-      (x._id === " " ||
-        x.quantity < 1)
-  ).length;
+  const checkISExists = async (values) => {
 
-  let validateBuyer = values?.data?.filter(
-    (x) =>
-      x.isCart === true &&
-      (x._id === "" ||
-        x.buyerId === "")
-  ).length;
-  if (validateQuantiy > 0) {
-    return alert("Quantity must grater than 0 in selected field")
-  }
-  if (validateBuyer > 0) {
-    return alert("Please select Buyer in selected field ")
-  }
- const postData =  values?.data.filter((item) => item?.isCart === true)
-  const checkIsExist = await axios.post(
-    `${BASE_URL}checkIsExixsts`,postData);
-  if(checkIsExist && checkIsExist.data && checkIsExist.data.success){
-    const  Pitem =[];
-    if(checkIsExist.data?.pendingCartResult?.length > 0 ){
-      const pendingResult = checkIsExist.data?.pendingCartResult;
-      Pitem.push(...pendingResult)
+    let firstValid = values?.data?.filter((x) => x.isCart === true)
+    if (firstValid.length === 0) {
+      return alert("please select field")
     }
-    if( checkIsExist.data?.cartResult?.length > 0 ){
-      const cartResult = checkIsExist.data?.cartResult;
-      Pitem.push(...cartResult)
-    }
-   if(Pitem.length>0){
-    setForceAddDialog({open:true,item:Pitem,finalData:postData})
-   }else{
-    handleAddCart(postData)
-   }
-  }
-  // else{
-  //   handleAddCart(postData)
-  // }
-}
+    let validateQuantiy = values?.data?.filter(
+      (x) =>
+        x.isCart === true &&
+        (x._id === " " ||
+          x.quantity < 1)
+    ).length;
 
- 
+    let validateBuyer = values?.data?.filter(
+      (x) =>
+        x.isCart === true &&
+        (x._id === "" ||
+          x.buyerId === "")
+    ).length;
+    if (validateQuantiy > 0) {
+      return alert("Quantity must grater than 0 in selected field")
+    }
+    if (validateBuyer > 0) {
+      return alert("Please select Buyer in selected field ")
+    }
+    const postData = values?.data.filter((item) => item?.isCart === true)
+    const checkIsExist = await axios.post(
+      `${BASE_URL}checkIsExixsts`, postData);
+    if (checkIsExist && checkIsExist.data && checkIsExist.data.success) {
+      const Pitem = [];
+      if (checkIsExist.data?.pendingCartResult?.length > 0) {
+        const pendingResult = checkIsExist.data?.pendingCartResult;
+        Pitem.push(...pendingResult)
+      }
+      if (checkIsExist.data?.cartResult?.length > 0) {
+        const cartResult = checkIsExist.data?.cartResult;
+        Pitem.push(...cartResult)
+      }
+      if (Pitem.length > 0) {
+        setForceAddDialog({ open: true, item: Pitem, finalData: postData })
+      } else {
+        handleAddCart(postData)
+      }
+    }
+    // else{
+    //   handleAddCart(postData)
+    // }
+  }
+
+
 
 
   const getBuyers = async (inputValue, loadMode) => {
@@ -424,7 +424,7 @@ const checkISExists = async (values) =>{
                                   color="blue-gray"
                                   className="font-normal"
                                 >
-                                  {item?.supplier?.map((x)=>x.supplierName).join(',')}
+                                  {item?.supplier?.map((x) => x.supplierName).join(',')}
                                 </Typography>
                               </td>
                               <td className={classes}>
@@ -449,7 +449,7 @@ const checkISExists = async (values) =>{
                               </td>
                               <td className={classes} >
                                 <AsyncSelect
-                                className="pr-9"
+                                  className="pr-9"
                                   cacheOptions
                                   menuPortalTarget={document.querySelector('body')}
                                   defaultOptions={buyers}
@@ -485,11 +485,25 @@ const checkISExists = async (values) =>{
 
                 <CardFooter className="pt-0 print:hidden">
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Pagination
-                      count={Math.ceil(totalProducts / page_Size)}
-                      page={page_Index}
-                      onChange={handleChangePageNew}
-                    />
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <Button variant="text" onClick={(e) => {
+                        if (page_Index > 1) {
+                          handleChangePageNew(e, page_Index - 1);
+                        }
+                      }}>
+                        <Typography>&lt;</Typography>
+                      </Button>
+                      <Typography>{page_Index}</Typography>
+                      <Button variant="text" onClick={(e) => {
+                        if (data?.length < page_Size) {
+                          return;
+                        } else {
+                          handleChangePageNew(e, page_Index + 1)
+                        }
+                      }}>
+                        <Typography>&gt;</Typography>
+                      </Button>
+                    </Box>
                     <Select
                       defaultValue={options[0]}
                       onChange={(e) => {
@@ -505,29 +519,29 @@ const checkISExists = async (values) =>{
       </Formik>
       <Dialog
         open={forceAddDialog.open}
-        handler={(e) => { setForceAddDialog({...forceAddDialog,open:false}) }}
+        handler={(e) => { setForceAddDialog({ ...forceAddDialog, open: false }) }}
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
         }}
       >
         <DialogBody divider>
-        This data already exists in pending Cart or cart<span className="font-bold">
+          This data already exists in pending Cart or cart<span className="font-bold">
             {/* {forceAddDialog?.item?.storeName} */}
-             </span>.
+          </span>.
         </DialogBody>
         <DialogFooter>
           <Button
             variant="text"
             color="grey"
-            onClick={(e) => { setForceAddDialog({ ...forceAddDialog,open: false, item: [] }) }}
+            onClick={(e) => { setForceAddDialog({ ...forceAddDialog, open: false, item: [] }) }}
             className="mr-1"
           >
             <span>Cancel</span>
           </Button>
           <Button variant="gradient" color="red" onClick={(e) => {
             handleAddCart(forceAddDialog?.finalData)
-            setForceAddDialog({ open: false, item: [],finalData:[] })
+            setForceAddDialog({ open: false, item: [], finalData: [] })
           }}>
             <span>Confirm</span>
           </Button>

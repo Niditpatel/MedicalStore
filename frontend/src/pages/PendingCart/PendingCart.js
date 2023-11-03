@@ -18,6 +18,9 @@ import {
   DialogBody,
   DialogFooter
 } from "@material-tailwind/react";
+import {
+  Box,
+} from "@mui/material";
 import { DateRange, DateRangePicker } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -57,7 +60,7 @@ const PendingCart = () => {
   });
 
   const getData = async () => {
-    
+
     try {
       const data = await axios.get(
         `${BASE_URL}pendingCart/search/?` + 'supplierName=' +
@@ -67,7 +70,7 @@ const PendingCart = () => {
       const printData = await axios.get(
         `${BASE_URL}pendingCart/print/?` + 'supplierName=' +
         searchData.supplierName + '&storeName=' + searchData.storeName + '&productName=' + searchData.productName +
-         '&start_date=' + startDate + '&end_date=' + endDate
+        '&start_date=' + startDate + '&end_date=' + endDate
       );
       if (data.data.success) {
         setData(data.data.data)
@@ -285,11 +288,25 @@ const PendingCart = () => {
         </CardBody>
         <CardFooter className="pt-0 print:hidden">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Pagination
-              count={Math.ceil(totalProducts / page_Size)}
-              page={page_Index}
-              onChange={handleChangePageNew}
-            />
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Button variant="text" onClick={(e) => {
+                if (page_Index > 1) {
+                  handleChangePageNew(e, page_Index - 1);
+                }
+              }}>
+                <Typography>&lt;</Typography>
+              </Button>
+              <Typography>{page_Index}</Typography>
+              <Button variant="text" onClick={(e) => {
+                if (data?.length < page_Size) {
+                  return;
+                } else {
+                  handleChangePageNew(e, page_Index + 1)
+                }
+              }}>
+                <Typography>&gt;</Typography>
+              </Button>
+            </Box>
             <Select
               defaultValue={options[0]}
               onChange={(e) => {
