@@ -136,10 +136,8 @@ router.get("/search",
         const product = productName !== undefined ? productName :''
         const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
         const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
-        const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
-        const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
 
-        const filterQuery =  {$and:[{productName:{'$regex':product,'$options':'i'}},{isDeleted:{$ne:true}}]}
+       const filterQuery =  {$and:[{productName:{'$regex':product,'$options':'i'}},{isDeleted:{$ne:true}}]}
        const lookupQuery1 = [
             {
                 $lookup: {
@@ -206,29 +204,33 @@ router.get("/search",
                 {'store.storeName':{'$regex':storeFilterQuery,'$options':'i'}}
             ]
         }},
-            {
-                $facet: {
-                    metadata: [
-                        {
-                            $group: {
-                                _id: null,
-                                total: { $sum: 1 }
-                            }
-                        },
-                    ],
-                    data: [
-                        { $sort: { [sort_field]: sort_order } },
-                        { $skip: page_limit * page_no },
-                        { $limit: page_limit },
-                    ]
-                }
-            },
+        { $skip: page_limit * page_no },
+        { $limit: page_limit },
+    //         {
+    //             $facet: {
+    //                 // metadata: [
+    //                 //     {
+    //                 //         $group: {
+    //                 //             _id: null,
+    //                 //             total: { $sum: 1 }
+    //                 //         }
+    //                 //     },
+    //                 // ],
+    //                 data: [
+    //                     // { $sort: { [sort_field]: sort_order } },
+    //                     { $skip: page_limit * page_no },
+    //                     { $limit: page_limit },
+    //                 ]
+    //             }
+    //         },
     ])
    
         res.status(200).json({
             success: true,
-            data:data[0]?.data ? data[0]?.data :[],
-            total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+            // data:data[0]?.data ? data[0]?.data :[],
+            data:data,
+            total:500
+            // data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
         })
 });
 
@@ -270,37 +272,41 @@ router.get('/supplierreport',async (req,res)=>{
          {$match:
                 {'supplier._id': new mongoose.Types.ObjectId(supplier_id)},
         },
-            {
-                $facet: {
-                    metadata: [
-                        {
-                            $group: {
-                                _id: null,
-                                total: { $sum: 1 }
-                            }
-                        },
-                    ],
-                    data:[
-                        {
-                            $project:{
-                                productName:1,
-                                packing:1,
-                                supplier:1
-                            }
+        { $skip: page_limit * page_no },
+        { $limit: page_limit },
+            // {
+            //     $facet: {
+            //         metadata: [
+            //             {
+            //                 $group: {
+            //                     _id: null,
+            //                     total: { $sum: 1 }
+            //                 }
+            //             },
+            //         ],
+            //         data:[
+            //             {
+            //                 $project:{
+            //                     productName:1,
+            //                     packing:1,
+            //                     supplier:1
+            //                 }
                             
-                        },
-                        { $skip: page_limit * page_no },
-                        { $limit: page_limit },
-                    ]
+            //             },
+            //             { $skip: page_limit * page_no },
+            //             { $limit: page_limit },
+            //         ]
                     
-                }
-            },
+            //     }
+            // },
     ])
 
     res.status(200).json({
         success: true,
-        data:data[0]?.data ? data[0]?.data :[],
-        total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+        // data:data[0]?.data ? data[0]?.data :[],
+        data:data,
+        // total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+        total:500
     })
 })
 
@@ -340,36 +346,11 @@ router.get('/supplierreportprint',async (req,res)=>{
          {$match:
                 {'supplier._id': new mongoose.Types.ObjectId(supplier_id)},
         },
-            {
-                $facet: {
-                    metadata: [
-                        {
-                            $group: {
-                                _id: null,
-                                total: { $sum: 1 }
-                            }
-                        },
-                    ],
-                    data:[
-                        {
-                            $project:{
-                                productName:1,
-                                packing:1,
-                                supplier:1
-                            }
-                            
-                        }
-                        
-                    ]
-                    
-                }
-            },
     ])
 
     res.status(200).json({
         success: true,
-        data:data[0]?.data ? data[0]?.data :[],
-        total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+        data:data,
     })
 })
 

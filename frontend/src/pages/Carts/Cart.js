@@ -258,6 +258,17 @@ const Cart = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Quantity
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
                     className="font-normal leading-none opacity-70 text-right print:hidden"
                   >
                     Delete
@@ -301,6 +312,15 @@ const Cart = () => {
                               className="font-normal"
                             >
                               {item?.supplier?.map((x) => x.supplierName).join(',')}
+                            </Typography>
+                          </td>
+                          <td className={classes} >
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {item?.quantity}
                             </Typography>
                           </td>
                           <td className={classes}>
@@ -462,6 +482,17 @@ const Cart = () => {
                     Supplier Name
                   </Typography>
                 </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Quantity
+                  </Typography>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -497,6 +528,15 @@ const Cart = () => {
                         className="font-normal"
                       >
                         {item?.supplier?.map((x) => x.supplierName).join(',')}
+                      </Typography>
+                    </td>
+                    <td className={classes} >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {item?.quantity}
                       </Typography>
                     </td>
                   </tr>
