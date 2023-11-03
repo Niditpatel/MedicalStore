@@ -532,29 +532,11 @@ const Report = () => {
                                         : "py-1 px-2 border-b border-blue-gray-50";
                                     return (
                                         <tr className="h-4" key={index}>
-                                            <td className={classes}>
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.product}
-                                                </Typography>
-                                            </td>
-                                            <td className={classes}>
-                                                <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {item?.packing}
-                                                </Typography>
-                                            </td>
                                         <td className={classes}>
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal ml-2"
+                                                className="font-normal"
                                             >
                                                 {item?.product}
                                             </Typography>
