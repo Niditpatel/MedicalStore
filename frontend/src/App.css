@@ -53,6 +53,7 @@ input::-webkit-inner-spin-button {
 @media print {
   body * {
     visibility: hidden;
+    background-color: #fff  !important;
   }
 
   @page {
@@ -63,6 +64,7 @@ input::-webkit-inner-spin-button {
   #section-to-print,
   #section-to-print * {
     visibility: visible;
+    background-color: #fff !important;
   }
 
   table {
