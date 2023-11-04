@@ -74,7 +74,6 @@ const Buyer = () => {
   const handleChangePageNew = (e, value) => {
     setPage_Index(value);
   }
-  const TABLE_HEAD = ["Buyer Name", "Contact Number", "Edit/Delete"];
   return (
     <div className="container ">
       <div className="mb-3 flex gap-2 justify-end">

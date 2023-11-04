@@ -471,12 +471,12 @@ const Report = () => {
                                     {Supplier_HEAD.map((head) => (
                                         <th
                                             key={head}
-                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                            className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[50%]"
                                         >
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
-                                                className="font-normal leading-none opacity-70"
+                                                className="font-normal leading-none opacity-70 ml-5"
                                             >
                                                 {head}
                                             </Typography>
@@ -581,7 +581,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal ml-2"
+                                                    className="font-normal ml-5 "
                                                 >
                                                     {item?.productName}
                                                 </Typography>
@@ -590,7 +590,7 @@ const Report = () => {
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal"
+                                                    className="font-normal ml-5"
                                                 >
                                                     {item?.packing}
                                                 </Typography>
