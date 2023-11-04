@@ -663,7 +663,7 @@ const Report = () => {
                 </DialogHeader>
                 <DialogBody divider className="padding-none">
                     <table className="w-full min-w-max table-auto text-left bg-white" id="section-to-print" ref={componentRef}>
-                      <thead> <tr><th colSpan={20} className="text-center py-2">{selectedId?.e?.label}</th></tr></thead>
+                      <thead> <tr><th colSpan={5} className="text-center py-2">{selectedId?.e?.label}</th></tr></thead>
                         <thead >
                             {reportType === 1 &&
                                 <tr>
