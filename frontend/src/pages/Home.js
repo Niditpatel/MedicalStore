@@ -125,7 +125,8 @@ const Home = () => {
         values
       );
       if (data.data.success) {
-        navigate('/cart');
+        // navigate('/cart');
+        console.log('added in cart successfully');
       } else {
         console.log(data.data.error)
       }
