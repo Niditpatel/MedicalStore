@@ -159,12 +159,12 @@ const Cart = () => {
           <div className="mb-3 flex justify-between items-center">
             <Typography> Cart </Typography>
             <div className="flex gap-3">
-              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add In Pending Cart</Button>
-              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add In Cart</Button>
-              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { setClaerAll(true) }}>claer Cart</Button>
+              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add to Pending Cart</Button>
+              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add</Button>
               <Button className="btn btn-primary" type="primary" onClick={(e) => setPrintCart(true)}>
-                Print Cart
+                Print
               </Button>
+              <Button className="mt-6 m-0 " size="sm" color="red" onClick={(e) => { setClaerAll(true) }}>clear All</Button>
               {/* <div>
                 <Popover animate={{
                   mount: { scale: 1, y: 0 },
@@ -269,6 +269,17 @@ const Cart = () => {
                   <Typography
                     variant="small"
                     color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Buyer Name
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
                     className="font-normal leading-none opacity-70 text-right print:hidden pr-8"
                   >
                     Delete
@@ -291,7 +302,7 @@ const Cart = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal pl-5"
+                              className="font-normal ml-4"
                             >
                               {item?.productName}
                             </Typography>
@@ -300,7 +311,7 @@ const Cart = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-normal ml-4"
                             >
                               {item?.packing}
                             </Typography>
@@ -309,7 +320,7 @@ const Cart = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-normal ml-4"
                             >
                               {item?.supplier?.map((x) => x.supplierName).join(',')}
                             </Typography>
@@ -318,9 +329,18 @@ const Cart = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-normal ml-4"
                             >
                               {item?.quantity}
+                            </Typography>
+                          </td>
+                          <td className={classes} >
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal ml-4"
+                            >
+                              {item?.buyer?.buyerName}
                             </Typography>
                           </td>
                           <td className={classes}>
@@ -507,6 +527,17 @@ const Cart = () => {
                     Quantity
                   </Typography>
                 </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Buyer Name
+                  </Typography>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -521,7 +552,7 @@ const Cart = () => {
                       <Typography
                         variant="small"
                         color="blue-gray"
-                        className="font-normal"
+                        className="font-normal ml-4"
                       >
                         {item?.productName}
                       </Typography>
@@ -530,7 +561,7 @@ const Cart = () => {
                       <Typography
                         variant="small"
                         color="blue-gray"
-                        className="font-normal"
+                        className="font-normal ml-4"
                       >
                         {item?.packing}
                       </Typography>
@@ -539,7 +570,7 @@ const Cart = () => {
                       <Typography
                         variant="small"
                         color="blue-gray"
-                        className="font-normal"
+                        className="font-normal ml-4"
                       >
                         {item?.supplier?.map((x) => x.supplierName).join(',')}
                       </Typography>
@@ -548,9 +579,18 @@ const Cart = () => {
                       <Typography
                         variant="small"
                         color="blue-gray"
-                        className="font-normal"
+                        className="font-normal ml-4"
                       >
                         {item?.quantity}
+                      </Typography>
+                    </td>
+                    <td className={classes} >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal ml-4"
+                      >
+                        {item?.buyer?.buyerName}
                       </Typography>
                     </td>
                   </tr>

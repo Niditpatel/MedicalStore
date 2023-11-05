@@ -201,13 +201,13 @@ const ProductList = () => {
                     <div className="flex gap-2">
                       <Button size="sm" className="mt-6 m-0" onClick={(e) => {
                         navigate('/add-product')
-                      }}>Add Product</Button>
-                      <Button type="submit"
+                      }}>Add</Button>
+                      {/* <Button type="submit"
                         onSubmit={(E) => {
                           console.log("errora", props.errors);
                         }}
                         size="sm" className="mt-6 m-0"
-                      >Add to Cart</Button>
+                      >Add to Cart</Button> */}
                     </div>
                   </div>
                   <div className="w-full flex gap-5 justify-between items-center">

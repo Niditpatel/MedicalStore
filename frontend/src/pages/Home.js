@@ -125,7 +125,7 @@ const Home = () => {
         values
       );
       if (data.data.success) {
-        // navigate('/cart');
+        // navigate('/');
         console.log('added in cart successfully');
       } else {
         console.log(data.data.error)
@@ -276,9 +276,9 @@ const Home = () => {
                   <div className="mb-3 flex justify-between items-center">
                     <Typography> Product List </Typography>
                     <div className="flex gap-2">
-                      <Button size="sm" className="mt-6 m-0" onClick={(e) => {
+                      {/* <Button size="sm" className="mt-6 m-0" onClick={(e) => {
                         navigate('/add-product')
-                      }}>Add Product</Button>
+                      }}>Add Product</Button> */}
                       <Button type="submit"
                         onSubmit={(E) => {
                         }}

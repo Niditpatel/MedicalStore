@@ -408,7 +408,7 @@ const Report = () => {
                             unmount: { scale: 0, y: 25 },
                         }} placement="bottom" >
                             <PopoverHandler>
-                                <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
+                                <Button className="mr-12" variant="outlined">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
                             </PopoverHandler>
                             <PopoverContent className="w-96">
                                 <DateRange
@@ -421,11 +421,10 @@ const Report = () => {
                         </Popover>}
                             <Button type="submit"
                                 onClick={(e) => {
-                                    
                                     setPrintCart(true);
                                 }}
                                 size="sm" className="mt-6 m-0"
-                            >Print Report</Button>
+                            >Print</Button>
                         </div>
                     </div>
                 </CardHeader>

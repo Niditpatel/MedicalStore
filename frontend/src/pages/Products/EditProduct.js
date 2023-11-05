@@ -29,31 +29,49 @@ export default function EditProduct() {
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
-  const getStores = async (inputValue) => {
+  const getStores = async (inputValue,init) => {
     try {
       const res = await axios.get(
         `${BASE_URL}storesSelect/?storeName=`+ inputValue
       );
       if(res.data.success){
-          setStores(res.data.stores?.map(item=>
-            {
-            return {...item,value:item?._id,label:item.storeName}
-          }))
+        const companies = res.data.stores?.map(item=>
+          {
+          return {...item,value:item?._id,label:item.storeName}
+        })
+        if(init){
+          setStores(companies)
+        }
+        if(res.data?.stores?.length >0){
+          return companies;
+        }else{
+          return [];
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getSuppliers = async (inputValue) => {
+  const getSuppliers = async (inputValue,init) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}suppliersSelect/?supplierName=`+inputValue
+        `${BASE_URL}suppliersSelect/?supplierName=${inputValue}`
       );
       if(res.data.success){
-        setSuppliers(res.data.suppliers?.map((item=>{
-          return {...item,value:item._id,label:item.supplierName}
-        })))
+        const newsupps = res.data.suppliers?.map((item=>{
+          if(!data.supplier?.includes(item?._id)){
+            return {...item,value:item._id,label:item.supplierName}
+          }
+        }))
+        if(init){
+          setSuppliers(newsupps);
+        }
+        if(res.data?.suppliers?.length >0){
+        return res.data.suppliers
+        }else{
+          return [];
+        }
       }
     } catch (error) {
       console.log(error);
@@ -67,7 +85,7 @@ export default function EditProduct() {
         data
       );
       if(res.data.success){
-        navigate('/');
+        navigate('/products');
       }
     } catch (error) {
       console.log(error);
@@ -75,19 +93,27 @@ export default function EditProduct() {
   };
 
   const searchStore =  async (inputValue) => {
-      const res = await getStores(inputValue);
+      const res = await getStores(inputValue,false);
       const institutes = res.map((val) => {
         return { label: val.storeName, value: val._id };
       });
-      return institutes;
+      if(institutes?.length >0){
+        return institutes;
+        }else{
+          return [];
+        }
   };
 
   const searchSupplier =  async (inputValue) => {
-      const res = await getSuppliers(inputValue);
+      const res = await getSuppliers(inputValue,false);
       const institutes = res.map((val) => {
         return { label: val.supplierName, value: val._id };
       });
+      if(institutes?.length >0){
       return institutes;
+      }else{
+        return [];
+      }
   };
 
   const getData = async ()=>{
@@ -104,8 +130,8 @@ export default function EditProduct() {
   }
 
   useEffect(()=>{
-    getStores('')
-    getSuppliers('')
+    getStores('',true)
+    getSuppliers('',true)
     getData()
   },[])
   
@@ -172,7 +198,7 @@ export default function EditProduct() {
                 loadOptions={searchSupplier}
                 onChange={(e)=>{
                  if(e.length >0){
-                  const suppliers = e.map(item=>item._id)
+                  const suppliers = e.map(item=>item.value)
                     setData({...data,supplier:suppliers})
                  }else{
                   setData({...data,supplier:[]})
@@ -194,7 +220,7 @@ export default function EditProduct() {
               <Button size="sm" className="mt-6" type="submit">
                 Save
               </Button>
-              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/"); })}>
+              <Button size="sm" className="mt-6" onClick={((e) => { navigate("/products"); })}>
                 Cancle
               </Button>
             </div>

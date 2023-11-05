@@ -147,17 +147,17 @@ const PendingCart = () => {
           <div className="mb-3 flex justify-between items-center">
             <Typography> Pending Cart </Typography>
             <div className="flex gap-3">
-              <Button className="mt-6 m-0 " onClick={(e) => { navigate("/") }}>Add In Pending Cart</Button>
+              <Button className="mt-6 m-0 " onClick={(e) => { navigate("/cart") }}>Add</Button>
               <Button className="mt-6 m-0 " onClick={(e) => { navigate("/pending-cart-save") }}>Add Forcefully</Button>
-              <Button className="mt-6 m-0 " onClick={(e) => { setClaerAll(true) }}>claer Pending Cart</Button>
-              <Button className="mt-6 m-0 " onClick={(e) => { setPrintDialog(true) }}>Print Pending Cart</Button>
+              <Button className="mt-6 m-0 " onClick={(e) => { setPrintDialog(true) }}>Print</Button>
+              <Button className="mt-6 m-0 " variant="filled" color="red" onClick={(e) => { setClaerAll(true) }}>clear All</Button>
               <div>
                 <Popover animate={{
                   mount: { scale: 1, y: 0 },
                   unmount: { scale: 0, y: 25 },
                 }} placement="bottom" >
                   <PopoverHandler>
-                    <Button className="mr-12">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
+                    <Button className="mr-12" variant="outlined">{(moment(startDate).format("DD-MM-YYYY"))} {" to "} {(moment(endDate).format("DD-MM-YYYY"))} </Button>
                   </PopoverHandler>
                   <PopoverContent className="w-96">
                     <DateRange

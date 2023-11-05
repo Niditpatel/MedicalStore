@@ -145,7 +145,7 @@ export default function AddProduct() {
                 cacheOptions
                 defaultOptions={stores}
                 isClearable
-                placeholder="Select Store"
+                placeholder="Select Company"
                 loadOptions={searchStore}
                 getOptionValue={(option) => option.value}
                 getOptionLabel={(option) => option.label}
