@@ -137,7 +137,7 @@ const PendingCart = () => {
     }
     getData();
   }
-  const TABLE_HEAD = ["", "Product Name", "Packing", "Supplier", ""];
+  const TABLE_HEAD = [ "Product Name", "Packing", "Supplier", "Delete"];
   const TABLE_HEAD_PRINT = ["Product Name", "Packing", "Supplier"];
   return (
 
@@ -209,6 +209,7 @@ const PendingCart = () => {
                   <th
                     key={head}
                     className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    align="left"
                   >
                     <Typography
                       variant="small"
@@ -233,14 +234,10 @@ const PendingCart = () => {
                       return (
                         <tr className="h-4" key={index}>
                           <td className={classes}>
-                            <div className="flex items-center gap-3">
-                            </div>
-                          </td>
-                          <td className={classes}>
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-normal ml-4"
                             >
                               {item?.productName}
                             </Typography>
@@ -249,7 +246,7 @@ const PendingCart = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-normal ml-4"
                             >
                               {item?.packing}
                             </Typography>
@@ -258,14 +255,14 @@ const PendingCart = () => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-normal ml-4"
                             >
                               {item?.supplier?.map((x) => x.supplierName).join(',')}
                             </Typography>
                           </td>
                           <td className={classes}>
                             <Button
-                              variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden"
+                              variant="gradient" size="sm" color='red' className="btn btn-danger print:hidden ml-4"
                               onClick={(e) => setDialog({ open: true, item: item })}
                             >X
                             </Button>

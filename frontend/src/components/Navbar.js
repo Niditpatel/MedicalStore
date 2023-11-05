@@ -86,13 +86,6 @@ export function StickyNavbar() {
           <Button
             variant="gradient"
             size="sm"
-            onClick={((e) => { navigate("/report"); })}
-          >
-            <span>Reports</span>
-          </Button>
-          <Button
-            variant="gradient"
-            size="sm"
             onClick={((e) => { navigate("/products"); })}
           >
             <span>Products</span>
@@ -113,6 +106,14 @@ export function StickyNavbar() {
           >
             <span>Supplier</span>
           </Button>
+          <Button
+            variant="gradient"
+            size="sm"
+            onClick={((e) => { navigate("/buyer"); })}
+          >
+            <span>BUyer</span>
+          </Button>
+         
           <Button
             variant="gradient"
             size="sm"
@@ -139,9 +140,9 @@ export function StickyNavbar() {
           <Button
             variant="gradient"
             size="sm"
-            onClick={((e) => { navigate("/buyer"); })}
+            onClick={((e) => { navigate("/report"); })}
           >
-            <span>BUyer</span>
+            <span>Reports</span>
           </Button>
           <IconButton
             variant="text"
