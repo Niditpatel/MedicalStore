@@ -137,7 +137,7 @@ const PendingCart = () => {
     }
     getData();
   }
-  const TABLE_HEAD = [ "Product Name", "Packing", "Supplier","Date", "Delete"];
+  const TABLE_HEAD = [ "Product Name", "Packing","Quantity", "Supplier","Buyer","Date", "Delete"];
   const TABLE_HEAD_PRINT = ["Product Name", "Packing", "Supplier"];
   return (
 
@@ -251,6 +251,15 @@ const PendingCart = () => {
                               {item?.packing}
                             </Typography>
                           </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal ml-4"
+                            >
+                              {item?.quantity}
+                            </Typography>
+                          </td>
                           <td className={classes} >
                             <Typography
                               variant="small"
@@ -258,6 +267,15 @@ const PendingCart = () => {
                               className="font-normal ml-4"
                             >
                               {item?.supplier?.map((x) => x.supplierName).join(',')}
+                            </Typography>
+                          </td>
+                          <td className={classes} >
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal ml-4"
+                            >
+                              {item?.buyer?.buyerName}
                             </Typography>
                           </td>
                           <td className={classes} >
