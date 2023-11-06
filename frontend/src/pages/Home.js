@@ -117,8 +117,6 @@ const Home = () => {
   }
 
   const handleAddCart = async (values) => {
-
-    console.log("values", values)
     try {
       const data = await axios.post(
         `${BASE_URL}cart/new`,
@@ -126,8 +124,10 @@ const Home = () => {
       );
       if (data.data.success) {
         // navigate('/');
+        window.location.reload();
         console.log('added in cart successfully');
       } else {
+        alert("something went wrong.");
         console.log(data.data.error)
       }
     } catch (error) {

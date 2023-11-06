@@ -84,7 +84,7 @@ const Buyer = () => {
           <CardHeader floated={false} shadow={false} className="	 rounded-none">
             <div className="w-full flex justify-between mb-3 items-center" style={{ justifyContent: 'space-between' }}>
               <Typography> Buyer List</Typography>
-              <Button size="sm" className="mt-6 m-0" onClick={handleAdd}>Add Buyer</Button>
+              <Button size="sm" className="mt-6 m-0" onClick={handleAdd}>Add</Button>
             </div>
             <div className="w-full flex justify-between gap-10 items-center">
               <Input

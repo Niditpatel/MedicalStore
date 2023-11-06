@@ -112,6 +112,7 @@ const Cart = () => {
       console.log(error);
     }
   }
+
   const handleDelete = async (id) => {
     try {
       const data = await axios.delete(
@@ -159,7 +160,7 @@ const Cart = () => {
           <div className="mb-3 flex justify-between items-center">
             <Typography> Cart </Typography>
             <div className="flex gap-3">
-              <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add to Pending Cart</Button>
+              <Button className="mt-6 m-0 " size="sm" onClick={(e) => {addInPendingCart();}}>Add to Pending Cart</Button>
               <Button className="mt-6 m-0 " size="sm" onClick={(e) => { navigate("/") }}>Add</Button>
               <Button className="btn btn-primary" type="primary" onClick={(e) => setPrintCart(true)}>
                 Print

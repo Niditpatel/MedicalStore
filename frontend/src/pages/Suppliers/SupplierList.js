@@ -84,7 +84,7 @@ export default function SupplierList() {
           <div className="flex justify-between items-center mb-3">
             <Typography> SupplierList</Typography>
             {/* <Button size="sm" className="mt-6" onClick={addFinalCart}>Add to cart</Button> */}
-            <Button size="sm" className="mt-6 m-0" onClick={(e) => { navigate("/add-supplier") }}>Add Supplier</Button>
+            <Button size="sm" className="mt-6 m-0" onClick={(e) => { navigate("/add-supplier") }}>Add</Button>
           </div>
           <div className="w-full flex gap-10 justify-between items-center">
             <Input

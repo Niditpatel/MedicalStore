@@ -6,10 +6,7 @@ const { default: mongoose } = require("mongoose");
 
 
 router.post("/pendingcart/new", async (req, res) => {
-    var d = new Date();
-    d.setDate(d.getDate() - 1);
-    const cartProducts = await Carts.find({ $and: [{ isDeleted: { $ne: true } }, { createdAt: { $lte: d } }] })
-    console.log(cartProducts)
+    const cartProducts = await Carts.find({isDeleted:{$ne:true}})
     if (cartProducts && cartProducts?.length > 0) {
         cartProducts.forEach(function (doc) {
             const newCart = new PendingCart({
@@ -26,6 +23,7 @@ router.post("/pendingcart/new", async (req, res) => {
             })
             newCart.save();
         });
+        await Carts.updateMany({isDeleted:{$ne:true}},{$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
         })
@@ -160,8 +158,8 @@ router.get("/pendingCart/search",
         const product = productName !== undefined ? productName : ''
         const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
         const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
-        const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
-        const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
+        // const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);
+        // const sort_field = ((sort_by !== undefined && sort_by.length > 0) ? sort_by : '_id');
         const filterQuery = {
             $and: [
                 { productName: { '$regex': product, '$options': 'i' } },

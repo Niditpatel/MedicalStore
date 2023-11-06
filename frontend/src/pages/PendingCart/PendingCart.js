@@ -137,7 +137,7 @@ const PendingCart = () => {
     }
     getData();
   }
-  const TABLE_HEAD = [ "Product Name", "Packing", "Supplier", "Delete"];
+  const TABLE_HEAD = [ "Product Name", "Packing", "Supplier","Date", "Delete"];
   const TABLE_HEAD_PRINT = ["Product Name", "Packing", "Supplier"];
   return (
 
@@ -258,6 +258,15 @@ const PendingCart = () => {
                               className="font-normal ml-4"
                             >
                               {item?.supplier?.map((x) => x.supplierName).join(',')}
+                            </Typography>
+                          </td>
+                          <td className={classes} >
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal ml-4"
+                            >
+                              {item?.createdAt ? new Date(item.createdAt).toLocaleString() :''}
                             </Typography>
                           </td>
                           <td className={classes}>
