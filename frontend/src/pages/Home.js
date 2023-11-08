@@ -123,7 +123,6 @@ const Home = () => {
         values
       );
       if (data.data.success) {
-        // navigate('/');
         window.location.reload();
         console.log('added in cart successfully');
       } else {
@@ -317,16 +316,16 @@ const Home = () => {
                   </div>
                 </CardHeader>
                 <CardBody className="p-4 overflow-hidden px-0 ">
-                  <table className="w-full min-w-max table-auto text-left">
+                  <table className="w-full  table-auto text-left">
                     <thead>
                       <tr>
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2 pl-5"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[5%]"
                         >
                           <Checkbox size={'small'} onChange={(e) => { addAll(e.target.checked) }} className="m-0 p-0 print:hidden" />
                         </th>
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 w-[25%]"
                         >
                           <Typography
                             variant="small"
@@ -336,7 +335,7 @@ const Home = () => {
                             Product Name
                           </Typography>
                         </th><th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 w-[8%]"
                         >
                           <Typography
                             variant="small"
@@ -347,7 +346,7 @@ const Home = () => {
                         </th>
 
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 w-[33%]"
                         >
                           <Typography
                             variant="small"
@@ -357,7 +356,7 @@ const Home = () => {
                           </Typography>
                         </th>
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 w-[10%]"
                         >
                           <Typography
                             variant="small"
@@ -367,7 +366,7 @@ const Home = () => {
                           </Typography>
                         </th>
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 w-[21%]"
                         >
                           <Typography
                             variant="small"

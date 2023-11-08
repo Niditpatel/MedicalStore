@@ -137,7 +137,6 @@ const PendingCart = () => {
     }
     getData();
   }
-  const TABLE_HEAD = [ "Product Name", "Packing","Quantity", "Supplier","Buyer","Date", "Delete"];
   const TABLE_HEAD_PRINT = ["Product Name", "Packing", "Supplier"];
   return (
 
@@ -202,9 +201,87 @@ const PendingCart = () => {
           </div>
         </CardHeader>
         <CardBody className="p-4 overflow-hidden px-0">
-          <table className="w-full min-w-max table-auto text-left">
+          <table className="w-full table-auto text-left">
             <thead>
               <tr>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[21%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70 pl-3"
+                  >
+                    Product Name
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[8%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Packing
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[7%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Quantity
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[23%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Supplier 
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[18%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Buyer
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[15%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Buyer Name
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[5%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70 text-right print:hidden pr-8"
+                  >
+                    Delete
+                  </Typography>
+                </th>
+                {/* </tr>
                 {TABLE_HEAD.map((head) => (
                   <th
                     key={head}
@@ -219,7 +296,7 @@ const PendingCart = () => {
                       {head}
                     </Typography>
                   </th>
-                ))}
+                ))} */}
               </tr>
             </thead>
             {loading === false ?
@@ -284,7 +361,7 @@ const PendingCart = () => {
                               color="blue-gray"
                               className="font-normal ml-4"
                             >
-                              {item?.createdAt ? new Date(item.createdAt).toLocaleString() :''}
+                              {item?.createdAt ? new Date(item.createdAt).toLocaleString() : ''}
                             </Typography>
                           </td>
                           <td className={classes}>

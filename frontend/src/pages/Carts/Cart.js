@@ -217,11 +217,11 @@ const Cart = () => {
           </div>
         </CardHeader>
         <CardBody className="p-4 overflow-hidden px-0">
-          <table className="w-full min-w-max table-auto text-left" id="section-to-print" >
+          <table className="w-full   table-auto text-left" id="section-to-print" >
             <thead >
               <tr>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[21%]"
                 >
                   <Typography
                     variant="small"
@@ -232,7 +232,7 @@ const Cart = () => {
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[8%]"
                 >
                   <Typography
                     variant="small"
@@ -243,7 +243,7 @@ const Cart = () => {
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[23%]"
                 >
                   <Typography
                     variant="small"
@@ -254,7 +254,7 @@ const Cart = () => {
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[8%]"
                 >
                   <Typography
                     variant="small"
@@ -265,7 +265,7 @@ const Cart = () => {
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[15%]"
                 >
                   <Typography
                     variant="small"
@@ -276,7 +276,7 @@ const Cart = () => {
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[5%]"
                 >
                   <Typography
                     variant="small"

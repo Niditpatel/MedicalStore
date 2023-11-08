@@ -429,7 +429,7 @@ const Report = () => {
                     </div>
                 </CardHeader>
                 <CardBody className="p-4 overflow-hidden px-0 ">
-                    <table className="w-full min-w-max table-auto text-left">
+                    <table className="w-full table-auto text-left">
                         <thead>
                             {reportType === 1 &&
                                 <tr>
@@ -486,13 +486,9 @@ const Report = () => {
                         {reportType === 1 &&
                             <tbody>
                                 {data?.map((item, index,) => {
-                                    const isLast = index === data.length - 1;
-                                    const classes = isLast
-                                        ? "py-1 px-2"
-                                        : "py-1 px-2 border-b border-blue-gray-50";
                                     return (
-                                        <tr className="h-4" key={index}>
-                                            <td className={classes}>
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index}>
+                                            <td className="py-1 px-2 w-[60%]">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
@@ -501,7 +497,7 @@ const Report = () => {
                                                     {item?.product}
                                                 </Typography>
                                             </td>
-                                            <td className={classes}>
+                                            <td className="py-1 px-2 w-[20%]">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
@@ -511,7 +507,7 @@ const Report = () => {
                                                 </Typography>
                                             </td>
 
-                                            <td className={classes} >
+                                            <td className="py-1 px-2" >
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
@@ -528,13 +524,9 @@ const Report = () => {
                         {reportType === 2 &&
                             <tbody>
                                 {data?.map((item, index,) => {
-                                    const isLast = index === data.length - 1;
-                                    const classes = isLast
-                                        ? "py-1 px-2"
-                                        : "py-1 px-2 border-b border-blue-gray-50";
                                     return (
-                                        <tr className="h-4" key={index}>
-                                        <td className={classes}>
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index}>
+                                        <td className="py-1 px-2 w-[60%]">
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
@@ -543,7 +535,7 @@ const Report = () => {
                                                 {item?.product}
                                             </Typography>
                                         </td>
-                                        <td className={classes}>
+                                        <td className="py-1 px-2 w-[20%]">
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
@@ -553,7 +545,7 @@ const Report = () => {
                                             </Typography>
                                         </td>
 
-                                        <td className={classes} >
+                                        <td className="py-1 px-2" >
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
@@ -570,26 +562,22 @@ const Report = () => {
                         {reportType === 3 &&
                             <tbody>
                                 {data?.map((item, index,) => {
-                                    const isLast = index === data.length - 1;
-                                    const classes = isLast
-                                        ? "py-1 px-2"
-                                        : "py-1 px-2 border-b border-blue-gray-50";
                                     return (
-                                        <tr className="h-4" key={index}>
-                                            <td className={classes}>
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index}>
+                                            <td className="py-1 px-2">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal ml-5 "
+                                                    className="font-normal ml-5 py-1 px-2 w-[60%]"
                                                 >
                                                     {item?.productName}
                                                 </Typography>
                                             </td>
-                                            <td className={classes}>
+                                            <td className="py-1 px-2">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
-                                                    className="font-normal ml-5"
+                                                    className="font-normal ml-5 py-1 px-2 w-[40%]"
                                                 >
                                                     {item?.packing}
                                                 </Typography>
@@ -661,7 +649,7 @@ const Report = () => {
                     </Button>
                 </DialogHeader>
                 <DialogBody divider className="padding-none">
-                    <table className="w-full min-w-max table-auto text-left bg-white" id="section-to-print" ref={componentRef}>
+                    <table className="w-full table-auto text-left bg-white" id="section-to-print" ref={componentRef}>
                       <thead> <tr><th colSpan={5} className="text-center py-2">{selectedId?.e?.label}</th></tr></thead>
                         <thead >
                             {reportType === 1 &&
@@ -722,8 +710,8 @@ const Report = () => {
                                         ? "p-1"
                                         : "p-1 border-b border-blue-gray-50";
                                     return (
-                                        <tr className="h-4" key={index}>
-                                        <td className={classes}>
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index}>
+                                        <td className="py-1 px-2">
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
@@ -732,7 +720,7 @@ const Report = () => {
                                                 {item?.product}
                                             </Typography>
                                         </td>
-                                        <td className={classes}>
+                                        <td className="py-1 px-2">
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
@@ -742,7 +730,7 @@ const Report = () => {
                                             </Typography>
                                         </td>
 
-                                        <td className={classes} >
+                                        <td className="py-1 px-2" >
                                             <Typography
                                                 variant="small"
                                                 color="blue-gray"
@@ -764,8 +752,8 @@ const Report = () => {
                                         ? "p-1"
                                         : "p-1 border-b border-blue-gray-50";
                                     return (
-                                        <tr className="h-4" key={index}>
-                                            <td className={classes}>
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index}>
+                                            <td className="py-1 px-2">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
@@ -774,7 +762,7 @@ const Report = () => {
                                                     {item?.product}
                                                 </Typography>
                                             </td>
-                                            <td className={classes}>
+                                            <td className="py-1 px-2">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
@@ -783,7 +771,7 @@ const Report = () => {
                                                     {item?.packing}
                                                 </Typography>
                                             </td>
-                                            <td className={classes} >
+                                            <td className="py-1 px-2" >
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
@@ -805,8 +793,8 @@ const Report = () => {
                                         ? "p-1"
                                         : "p-1 border-b border-blue-gray-50";
                                     return (
-                                        <tr className="h-4" key={index}>
-                                            <td className={classes}>
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index}>
+                                            <td className="py-1 px-2">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
@@ -815,7 +803,7 @@ const Report = () => {
                                                     {item?.productName}
                                                 </Typography>
                                             </td>
-                                            <td className={classes}>
+                                            <td className="py-1 px-2">
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
