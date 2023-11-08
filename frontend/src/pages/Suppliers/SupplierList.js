@@ -100,22 +100,22 @@ export default function SupplierList() {
           </div>
         </CardHeader>
         <CardBody className="p-4 overflow-hidden px-0">
-          <table className="w-full min-w-max table-auto text-left">
+          <table className="w-full table-auto text-left">
             <thead>
               <tr>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[60%]"
                 >
                   <Typography
                     variant="small"
                     color="blue-gray"
-                    className="font-normal leading-none opacity-70 pl-4"
+                    className="font-normal leading-none opacity-70 "
                   >
                     Name
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[30%]"
                 >
                   <Typography
                     variant="small"
@@ -126,7 +126,7 @@ export default function SupplierList() {
                   </Typography>
                 </th>
                 <th
-                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right pr-12"
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right w-[10%]"
                 >
                   <Typography
                     variant="small"
@@ -170,9 +170,9 @@ export default function SupplierList() {
                             </Typography>
                           </td>
                           <td className={classes}>
-                            <Box className={'text-right flex gap-2 justify-end'}>
+                            <Box className={'text-right flex justify-around'}>
                               <Button
-                                className="btn btn-sm btn-danger ms-1"
+                                className="btn btn-sm btn-danger"
                                 variant="gradient"
                                 color='blue'
                                 size="sm"
@@ -182,7 +182,7 @@ export default function SupplierList() {
                               </Button>
                               <Button
                                 variant="gradient"
-                                size="sm" color='red' className="btn btn-danger ms-4 mr-4"
+                                size="sm" color='red' className="btn btn-danger"
                                 onClick={(e) => setDialog({ open: true, item: item })}
                               >X
                               </Button>

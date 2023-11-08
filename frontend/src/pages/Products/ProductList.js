@@ -325,7 +325,7 @@ const ProductList = () => {
                                 </Typography>
                               </td>
                               <td className={classes}>
-                                <Box className={'text-right flex justify-between'}>
+                                <Box className={'text-right flex justify-around'}>
                                   <Button
                                     variant="gradient"
                                     color='blue'

@@ -99,22 +99,22 @@ const Buyer = () => {
             </div>
           </CardHeader>
           <CardBody className="py-4 overflow-hidden px-0">
-            <table className="w-full min-w-max table-auto text-left">
+            <table className="w-full table-auto text-left">
               <thead>
                 <tr>
                   <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[60%]"
                   >
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70 pl-4"
+                      className="font-normal leading-none opacity-70"
                     >
                       Name
                     </Typography>
                   </th>
                   <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 "
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[30%]"
                   >
                     <Typography
                       variant="small"
@@ -125,12 +125,12 @@ const Buyer = () => {
                     </Typography>
                   </th>
                   <th
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right "
+                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 text-right w-[10%]"
                   >
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70 mr-9"
+                      className="font-normal leading-none opacity-70"
                     >
                       Edit/Delete
                     </Typography>
@@ -168,9 +168,9 @@ const Buyer = () => {
                             </Typography>
                           </td>
                           <td className={classes}>
-                            <Box className={'text-right flex gap-2 justify-end'}>
+                            <Box className={'text-right flex justify-around'}>
                               <Button
-                                className="btn btn-sm btn-danger ms-1"
+                                className="btn btn-sm btn-danger "
                                 variant="gradient"
                                 size="sm"
                                 color='blue'
@@ -179,7 +179,7 @@ const Buyer = () => {
                                 &#x1F589;
                               </Button>
                               <Button
-                                className="btn btn-sm btn-danger ms-4 mr-8"
+                                className="btn btn-sm btn-danger"
                                 variant="gradient"
                                 size="sm"
                                 color='red'

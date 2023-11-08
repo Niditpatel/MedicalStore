@@ -172,7 +172,7 @@ const Store = () => {
                         </Typography>
                       </td> */}
                           <td className={classes}>
-                            <Box className={'text-right flex justify-between'}>
+                            <Box className={'text-right flex justify-around'}>
                               <Button
                                 className="btn btn-sm btn-danger"
                                 variant="gradient"
