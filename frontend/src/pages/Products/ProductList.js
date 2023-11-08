@@ -241,21 +241,21 @@ const ProductList = () => {
                   </div>
                 </CardHeader>
                 <CardBody className="p-4 overflow-hidden px-0 ">
-                  <table className="w-full min-w-max table-auto text-left">
+                  <table className="w-full table-auto text-left">
                     <thead >
                       <tr>
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 py-4"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 w-[35%]"
                         >
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal leading-none opacity-70 pl-7"
+                            className="font-normal leading-none opacity-70  "
                           >
                             Product Name
                           </Typography>
                         </th><th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-4  w-[20%]"
                         >
                           <Typography
                             variant="small"
@@ -266,7 +266,7 @@ const ProductList = () => {
                         </th>
 
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-4  w-[35%]"
                         >
                           <Typography
                             variant="small"
@@ -276,12 +276,12 @@ const ProductList = () => {
                           </Typography>
                         </th>
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-2"
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-4 w-[10%]"
                         >
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal leading-none opacity-70 text-right pr-8"
+                            className="font-normal leading-none opacity-70 text-right "
                           >Edit/Delete
                           </Typography>
                         </th>
@@ -292,15 +292,15 @@ const ProductList = () => {
                         {data?.map((item, index,) => {
                           const isLast = index === data.length - 1;
                           const classes = isLast
-                            ? "py-1 px-2"
-                            : "py-1 px-2 border-b border-blue-gray-50";
+                            ? "py-1 px-4"
+                            : "py-1 px-4 border-b border-blue-gray-50";
                           return (
                             <tr className="h-4" key={index}>
                               <td className={classes}>
                                 <Typography
                                   variant="small"
                                   color="blue-gray"
-                                  className="font-normal ml-5"
+                                  className="font-normal "
                                 >
                                   {item?.productName}
                                 </Typography>
@@ -325,7 +325,7 @@ const ProductList = () => {
                                 </Typography>
                               </td>
                               <td className={classes}>
-                                <Box className={'text-right'}>
+                                <Box className={'text-right flex justify-between'}>
                                   <Button
                                     variant="gradient"
                                     color='blue'
@@ -336,7 +336,7 @@ const ProductList = () => {
                                     &#x1F589;
                                   </Button>
                                   <Button
-                                    variant="gradient" size="sm" color='red' className="mr-4 btn btn-danger ms-6 print:hidden"
+                                    variant="gradient" size="sm" color='red' className=" btn btn-danger print:hidden"
                                     onClick={(e) => setDialog({ open: true, item: item })}
                                   >X
                                   </Button>
