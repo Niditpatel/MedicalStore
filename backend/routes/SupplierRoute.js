@@ -4,13 +4,13 @@ const Supplier = require("../models/SupplireSchema");
 
 
 router.post("/supplier/new",async (req, res) => {
-    const{supplierName,contactNumber,isDeleted} = req.body;
+    const{supplierName,store, contactNumber,isDeleted} = req.body;
     const supplier = await Supplier.create({
-        supplierName,contactNumber,isDeleted
+        supplierName,contactNumber,store, isDeleted
     });
     res.status(200).json({
         success: true,
-        supplier:supplier
+        supplier:supplier,
     })
 }
 );

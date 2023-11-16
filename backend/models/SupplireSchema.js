@@ -5,6 +5,7 @@ const supplierSchema = new mongoose.Schema({
         type: String,
         require: [true, "Please enter your Supplier name"],
     },
+    store: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Store', required: true }],
     contactNumber: {
         type: String,
         required: false,

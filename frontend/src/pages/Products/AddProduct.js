@@ -152,6 +152,11 @@ export default function AddProduct() {
                 onChange={(e)=>{
                   setData({...data,store:e?e.value:''})
                 }}
+                onBlur={(e)=>{
+                  e.preventDefault();
+                  const companySupplier =  suppliers.filter((item)=>item.store?.includes(data.store))
+                  setData({...data,supplier:companySupplier.map(item=>item._id)})
+                }}
                 noOptionsMessage={({ inputValue }) =>
                   !inputValue
                     ? "Start Typing to View Results"
@@ -175,6 +180,7 @@ export default function AddProduct() {
                   setData({...data,supplier:[]})
                  }
                 }}
+                value={suppliers?.filter(item=>data.supplier?.includes(item?._id))}
                 getOptionValue={(option) => option.value}
                 getOptionLabel={(option) => option.label}
                 noOptionsMessage={({ inputValue }) =>

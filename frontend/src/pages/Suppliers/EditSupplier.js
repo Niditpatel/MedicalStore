@@ -12,6 +12,7 @@ import {
 import { BASE_URL } from "../../Common";
 import moment from "moment/moment";
 import axios from "axios";
+import AsyncSelect from 'react-select/async';
 
 
 export default function EditSupplier() {
@@ -21,6 +22,7 @@ export default function EditSupplier() {
     supplierName: "",
     contactNumber: ""
   });
+  const [stores,setStores] = useState([]);
 
   const getData = async () => {
     try {
@@ -33,11 +35,47 @@ export default function EditSupplier() {
     } catch (error) {
       console.log(error);
     }
-    
   };
+
+  const getStores = async (inputValue,init) => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}storesSelect/?storeName=`+ inputValue
+      );
+      if(res.data.success){
+        const companies = res.data.stores?.map(item=>
+          {
+          return {...item,value:item?._id,label:item.storeName}
+        })
+        if(init){
+          setStores(companies)
+        }
+        if(res.data?.stores?.length >0){
+          return companies;
+        }else{
+          return [];
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const searchStore =  async (inputValue) => {
+    const res = await getStores(inputValue,false);
+    const institutes = res.map((val) => {
+      return { label: val.storeName, value: val._id };
+    });
+    if(institutes?.length >0){
+      return institutes;
+      }else{
+        return [];
+      }
+};
 
   useEffect(() => {
     getData();
+    getStores('',true);
   }, []);
 
   const handleChange = (e) =>
@@ -90,6 +128,32 @@ export default function EditSupplier() {
                 label="Contact Number"
                 value={data.contactNumber}
                 onChange={handleChange}
+              />
+               <AsyncSelect
+                cacheOptions
+                isMulti
+                defaultOptions={stores}
+                isClearable
+                placeholder="Select Companies"
+                loadOptions={searchStore}
+                onChange={(e)=>{
+                 if(e.length >0){
+                  const store = e.map(item=>item.value)
+                    setData({...data,store:store})
+                 }else{
+                  setData({...data,store:[]})
+                 }
+                }}
+                value={stores?.filter(item=>data.store?.includes(item?._id))}
+                getOptionValue={(option) => option.value}
+                getOptionLabel={(option) => option.label}
+                noOptionsMessage={({ inputValue }) =>
+                  !inputValue
+                    ? "Start Typing to View Results"
+                    : inputValue.length > 0
+                    ? "No Result Are Found Matching This Value"
+                    : "Type At Least Three Character to View Result"
+                }
               />
             </div>
             <div className="flex justify-evenly">
