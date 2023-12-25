@@ -98,5 +98,4 @@ if(supplier17){
                 })
         })
 }
-console.log(companies)
 fs.writeFileSync('companies', JSON.stringify(companies))

@@ -118,34 +118,34 @@ const Report = () => {
         return institutes;
     };
 
-    const getStores = async (inputValue, loadMode) => {
-        try {
-            const res = await axios.get(
-                `${BASE_URL}storesSelect/?storeName=` + inputValue
-            );
-            if (res.data.success) {
-                const stores = res.data.stores?.map(item => {
-                    return { ...item, value: item?._id, label: item.storeName }
-                })
-                if (!loadMode) {
-                    setStores(stores)
-                }
-                return stores
-            } else {
-                return null
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const getStores = async (inputValue, loadMode) => {
+    //     try {
+    //         const res = await axios.get(
+    //             `${BASE_URL}storesSelect/?storeName=` + inputValue
+    //         );
+    //         if (res.data.success) {
+    //             const stores = res.data.stores?.map(item => {
+    //                 return { ...item, value: item?._id, label: item.storeName }
+    //             })
+    //             if (!loadMode) {
+    //                 setStores(stores)
+    //             }
+    //             return stores
+    //         } else {
+    //             return null
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
-    const searchStore = async (inputValue) => {
-        const res = await getStores(inputValue, true);
-        const institutes = res.map((val) => {
-            return { label: val.storeName, value: val._id };
-        });
-        return institutes;
-    };
+    // const searchStore = async (inputValue) => {
+    //     const res = await getStores(inputValue, true);
+    //     const institutes = res.map((val) => {
+    //         return { label: val.storeName, value: val._id };
+    //     });
+    //     return institutes;
+    // };
     const getSuppliers = async (inputValue, loadMode) => {
         try {
             const res = await axios.get(
@@ -273,8 +273,8 @@ const Report = () => {
      {
         if( reportType === 1 )
        {
-        getCompanyWiseReport(selectedId?.e?._id)
-        getCompanyrWiseReportPrint(selectedId?.e?._id)
+        getCompanyWiseReport()
+        getCompanyrWiseReportPrint()
        }
         if( reportType === 2 ){
             getBuyerWiseReport(selectedId?.e?._id)
@@ -289,11 +289,18 @@ const Report = () => {
     }, [selectedId,startDate,endDate,page_Size,page_Index]);
 
     useEffect(() => {
-        getStores('', false)
+        // getStores('', false)
         getSuppliers('', false)
         getBuyers('', false)
     }, [])
 
+
+    useEffect(() => {
+        if(reportType ===1){
+            getCompanyWiseReport()
+            getCompanyrWiseReportPrint()
+        }
+    }, [reportType])
 
 
     const reportTypes = [
@@ -320,7 +327,7 @@ const Report = () => {
                             value={reportTypes.find(item => item.value === reportType)}
                         />
 
-                        {reportType === 1 &&
+                        {/* {reportType === 1 &&
                         <Box sx={{minWidth:'200px'}}>
                             <AsyncSelect
                                 cacheOptions
@@ -347,7 +354,7 @@ const Report = () => {
                                 }
                             />
                         </Box>
-                        }
+                        } */}
                         {reportType === 2 &&
                         <Box sx={{minWidth:'200px'}}>
                             <AsyncSelect
@@ -487,7 +494,14 @@ const Report = () => {
                             <tbody>
                                 {data?.map((item, index,) => {
                                     return (
-                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index}>
+                                       <>
+                                       {data.length>0 && item?.storeName != data[index-1]?.storeName &&
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index+'a'}>
+                                        <td colSpan={8} className="text-center bg-gray-300">{item?.storeName}</td>
+                                        </tr>
+                                       }
+                                       {console.log(item)}
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index+'b'}>
                                             <td className="py-1 px-2 w-[60%]">
                                                 <Typography
                                                     variant="small"
@@ -517,6 +531,7 @@ const Report = () => {
                                                 </Typography>
                                             </td>
                                         </tr>
+                                       </>
                                     );
                                 },
                                 )}
@@ -710,6 +725,12 @@ const Report = () => {
                                         ? "p-1"
                                         : "p-1 border-b border-blue-gray-50";
                                     return (
+                                        <>
+                                       {data?.length >0  && item?.storeName != data[index-1]?.storeName &&
+                                        <tr className="py-1 px-2 border-b border-blue-gray-50" key={index+'a'}>
+                                        <td colSpan={8} className="text-center bg-gray-300">{item?.storeName}</td>
+                                        </tr>
+                                       }
                                         <tr className="py-1 px-2 border-b border-blue-gray-50" key={index}>
                                         <td className="py-1 px-2">
                                             <Typography
@@ -740,6 +761,7 @@ const Report = () => {
                                             </Typography>
                                         </td>
                                     </tr>
+                                    </>
                                     );
                                 },
                                 )}

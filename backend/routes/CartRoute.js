@@ -63,11 +63,18 @@ router.post("/cart/new",async (req, res) => {
 router.get("/carts", async (req, res) => {
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
-    const carts = await Carts.find({isDeleted:{$ne:true}}).skip(pageNo*pageSize).limit(pageSize);
-    res.status(200).json({
-        success: true,
-        carts
-    })
+    try{
+        const carts = await Carts.find({isDeleted:{$ne:true}}).skip(pageNo*pageSize).limit(pageSize);
+        res.status(200).json({
+            success: true,
+            carts
+        })
+    }catch(e){
+        res.status(400).json({
+            success: false,
+            message:'error'
+        })
+    }
 });
 
 
@@ -82,6 +89,7 @@ router.get("/carts", async (req, res) => {
 
 router.delete("/cart/:id",
     async (req, res) => {
+try{
     const cart = await Carts.findById(req.params.id);
 
     if (!cart) {
@@ -96,6 +104,12 @@ router.delete("/cart/:id",
             message: `cart deleted succesfully `
         })
     }
+}catch(e){
+    res.status(400).json({
+        success: false,
+        message: `error `
+    })
+}
 });
 
 router.delete("/carts",
@@ -210,6 +224,8 @@ router.get("/cart/search",
         const storeFilterQuery =storeName? storeName : '' ;
         const buyerFilterQuery = buyerName? buyerName : '' ;
 
+        try{
+
     const data = await Carts.aggregate([
         { $match: filterQuery},
          ...lookupQuery1,
@@ -242,12 +258,20 @@ router.get("/cart/search",
             //     }
             // },
     ])
+    res.status(200).json({
+        success: true,
+        data:data,
+        total:0
+    })
+}catch(e){
+    res.status(400).json({
+        success: false,
+        message:'error'
+    })
+}
+
    
-        res.status(200).json({
-            success: true,
-            data:data,
-            total:0
-        })
+        
 });
 
 

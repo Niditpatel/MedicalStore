@@ -46,25 +46,29 @@ router.post("/pendingcart/forceSave", async (req, res) => {
         , isDeleted
         , createdAt,_id } = req.body;
         const productId = _id;
-    const pendingCarts = await PendingCart.create({
-        productId
-        ,productName
-        , packing
-        , store
-        , supplier
-        , buyer
-        , quantity
-        , isCart
-        , isDeleted
-        , createdAt
-    });
-    res.status(200).json({
-        success: true,
-        pendingCarts: pendingCarts
-    })
-
-
-
+        try{
+            const pendingCarts = await PendingCart.create({
+                productId
+                ,productName
+                , packing
+                , store
+                , supplier
+                , buyer
+                , quantity
+                , isCart
+                , isDeleted
+                , createdAt
+            });
+            res.status(200).json({
+                success: true,
+                pendingCarts: pendingCarts
+            })
+        }catch(e){
+            res.status(400).json({
+                success: false,
+                message:'error'
+            })
+        }
 }
 );
 router.put('/clearfromcart', async (req, res) => {
@@ -107,6 +111,7 @@ router.put('/clearfromcart', async (req, res) => {
 router.get("/pendingCarts", async (req, res) => {
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo) - 1 : 0
     const pageSize = req.query.pageSize ? req.query.pageSize : 15
+try{
     const pendingCart = await PendingCart.find({ isDeleted: { $ne: true } }).skip(pageNo * pageSize).limit(pageSize);
     const total = await PendingCart.find({ isDeleted: { $ne: true } }).count();
     res.status(200).json({
@@ -114,12 +119,18 @@ router.get("/pendingCarts", async (req, res) => {
         pendingCart,
         total
     })
+}catch(e){
+    res.status(200).json({
+        success: false,
+        message:'error'
+    })
+}
 });
-
 
 
 router.delete("/PendingCart/:id",
     async (req, res) => {
+       try{
         const pednidngCart = await PendingCart.findById(req.params.id);
 
         if (!pednidngCart) {
@@ -134,6 +145,12 @@ router.delete("/PendingCart/:id",
                 message: `item deleted succesfully `
             })
         }
+       }catch(e){
+        res.status(400).json({
+            success: false,
+            message: `error`
+        })
+       }
     });
 
 router.delete("/pendingCarts",
@@ -250,6 +267,8 @@ router.get("/pendingCart/search",
         const supplierFilterQuery = supplierName ? supplierName : ''
         const storeFilterQuery = storeName ? storeName : '';
         const buyerFilterQuery = buyerName ? buyerName : '';
+try{
+
 
         const data = await PendingCart.aggregate([
             { $match: filterQuery },
@@ -294,6 +313,15 @@ router.get("/pendingCart/search",
             // total: data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total : 0
             total:0
         })
+}
+catch(e){
+    res.status(400).json({
+        success: false,
+        message:'error'
+    })
+}
+
+       
     });
 
 router.get("/pendingCart/print",
@@ -438,7 +466,9 @@ router.get("/pendingCart/print",
 
 router.get('/companyreportprint', async (req, res) => {
 
-    const {company_id,start_date,end_date} = req.query
+    const {
+        // company_id,
+        start_date,end_date} = req.query
     const lookupQuery2 = [
         {
             $lookup: {
@@ -470,31 +500,53 @@ router.get('/companyreportprint', async (req, res) => {
     const match_query = 
     start_date ?
     {$and:[
-        {'store._id':new mongoose.Types.ObjectId(company_id)},
+        // {'store._id':new mongoose.Types.ObjectId(company_id)},
         { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
         ]} :
         {$and:[
             {'store._id':new mongoose.Types.ObjectId(company_id)},
             ]}
 
-    const companyreport = await PendingCart.aggregate(
-        [
-            ...lookupQuery2,
-            {$match:
-                match_query
-            },
-            {
-                $group: {
-                  _id: "$productId", // Group by the primary key of order_items
-                //   productName:'$productName',
-                  totalQuantity: { $sum: "$quantity" },
-                  product:{$first:'$productName'},
-                  packing:{$first:'$packing'}
-                }
-            }
-            
-        ]
-    )
+    let companyreport ;
+    if(start_date){
+        companyreport= await PendingCart.aggregate(
+            [
+                ...lookupQuery2,
+                {$match:
+                    match_query
+                },
+                {
+                    $group: {
+                     _id: {productId:"$productId"}, // Group by the primary key of order_items
+                    //   productName:'$productName',
+                      totalQuantity: { $sum: "$quantity" },
+                      product:{$first:'$productName'},
+                      packing:{$first:'$packing'},
+                      storeName:{$first:'$store.storeName'}
+                    }
+                },
+                {$sort: {storeName: 1}},
+            ]
+        )
+    }else{
+        companyreport= await PendingCart.aggregate(
+            [
+                ...lookupQuery2,
+                {
+                    $group: {
+                        _id: {productId:"$productId"},// Group by the primary key of order_items
+                    //   productName:'$productName',
+                      totalQuantity: { $sum: "$quantity" },
+                      product:{$first:'$productName'},
+                      packing:{$first:'$packing'},
+                      storeName:{$first:'$store.storeName'}
+                    }
+                },
+                {$sort: {storeName: 1}},
+            ]
+        )
+    }
+   
     res.status(200).json({
         companyreport,
         success:true
@@ -503,16 +555,20 @@ router.get('/companyreportprint', async (req, res) => {
 
 router.get('/companyreport', async (req, res) => {
 
-    const {company_id,offset,limit,start_date,end_date} = req.query
+    const {
+        // company_id,
+        offset,limit,start_date,end_date} = req.query
 
 console.log("start_date",start_date)
     const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
     const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
 
+    try{
+
     const match_query =
      start_date ?
     {$and:[
-        {'store._id':new mongoose.Types.ObjectId(company_id)},
+        // {'store._id':new mongoose.Types.ObjectId(company_id)},
         { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
         ]} :
         {$and:[
@@ -546,50 +602,98 @@ console.log("start_date",start_date)
         }
     ]
 
-    const companyreport = await PendingCart.aggregate(
-        [
-            ...lookupQuery2,
-            {$match:
-                match_query
-            },
-            {
-                $group: {
-                  _id: "$productId", // Group by the primary key of order_items
-                //   productName:'$productName',
-                  totalQuantity: { $sum: "$quantity" },
-                  product:{$first:'$productName'},
-                  packing:{$first:'$packing'}
-                }
-            },
-            { $skip: page_limit * page_no },
-            { $limit: page_limit },
-            
-        ]
-    )
+    let companyreport ;
+    let total;
+    if(start_date){
+        companyreport = await PendingCart.aggregate(
+            [
+                ...lookupQuery2,
+                {$match:
+                    match_query
+                },
+                {
+                    $group: {
+                        _id:{productId:"$productId"},
+                    //   _id: {productId:"$productId",storeName:'$store.storeName'}, // Group by the primary key of order_items
+                    //   productName:'$productName',
+                      totalQuantity: { $sum: "$quantity" },
+                      product:{$first:'$productName'},
+                      packing:{$first:'$packing'},
+                      storeName:{$first:'$store.storeName'}
+                    }
+                },
+                {$sort: {storeName: 1}},
+                { $skip: page_limit * page_no },
+                { $limit: page_limit },
+            ]
+        )
+        total = await PendingCart.aggregate(
+            [
+                ...lookupQuery2,
+                {$match:
+                    match_query
+                },
+                {
+                    $group: {
+                      _id: {productId:"$productId"}, // Group by the primary key of order_items
+                    //   productName:'$productName',
+                      totalQuantity: { $sum: "$quantity" },
+                      product:{$first:'$productName'},
+                      packing:{$first:'$packing'}
+                    }
+                },
+                {$count:'total'}
+            ]
+        )
+    }else{
+        companyreport = await PendingCart.aggregate(
+            [
+                ...lookupQuery2,
+                {
+                    $group: {
+                     _id:{productId:"$productId"}, // Group by the primary key of order_items
+                    //   productName:'$productName',
+                      totalQuantity: { $sum: "$quantity" },
+                      product:{$first:'$productName'},
+                      packing:{$first:'$packing'},
+                      storeName:{$first:'$store.storeName'}
+                    }
+                },
+                {$sort: {storeName: 1}},
+                { $skip: page_limit * page_no },
+                { $limit: page_limit },
+                
+            ]
+        )
+        total =  await PendingCart.aggregate(
+            [
+                ...lookupQuery2,
+                {
+                    $group: {
+                      _id: {productId:"$productId"}, // Group by the primary key of order_items
+                    //   productName:'$productName',
+                      totalQuantity: { $sum: "$quantity" },
+                      product:{$first:'$productName'},
+                      packing:{$first:'$packing'},
 
-    const total = await PendingCart.aggregate(
-        [
-            ...lookupQuery2,
-            {$match:
-                match_query
-            },
-            {
-                $group: {
-                  _id: "$productId", // Group by the primary key of order_items
-                //   productName:'$productName',
-                  totalQuantity: { $sum: "$quantity" },
-                  product:{$first:'$productName'},
-                  packing:{$first:'$packing'}
-                }
-            },
-            {$count:'total'}
-        ]
-    )
+                    }
+                },
+                {$count:'total'}
+            ]
+        )
+    }
     res.status(200).json({
         success:true,
         companyreport,
         total
     })
+}catch(e){
+    res.status(200).json({
+        success:false,
+        message:'error',
+    })
+}
+
 });
 
 router.get('/buyerreport', async (req, res) => {

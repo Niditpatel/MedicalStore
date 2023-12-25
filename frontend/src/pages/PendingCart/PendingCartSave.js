@@ -118,10 +118,11 @@ export default function AddPendingCart() {
       console.log(error);
     }
   };
+
   const searchProduct = async (inputValue) => {
-    const res = await getProducts(inputValue, true);
+    const res = await getProducts(inputValue, false);
     const institutes = res.map((val) => {
-      return { label: val.productName, value: val._id };
+      return { label: val.productName, value: val._id ,...val};
     });
     return institutes;
   };
@@ -154,11 +155,7 @@ export default function AddPendingCart() {
     getProducts('', false)
     getSuppliers('', false)
   }, [])
-  const storesName = stores.find((x) => x._id === data.store)
-  const supplierNames = data?.supplier?.map(supplierId => {
-    const foundSupplier = suppliers.find(supplier => supplier._id === supplierId);
-    return foundSupplier ? foundSupplier.supplierName : 'No Supplier';
-  });
+
   return (
     <div className="container">
       <div class="flex items-center justify-center">
@@ -181,7 +178,10 @@ export default function AddPendingCart() {
                   getOptionValue={(option) => option.value}
                   getOptionLabel={(option) => option.label}
                   onChange={(e) => {
+                    debugger
+                    if(e){
                     setData({ ...data, productName: e.productName, packing: e.packing, supplier: e.supplier, store: e.store ,_id:e._id})
+                    }
                   }}
                   noOptionsMessage={({ inputValue }) =>
                     !inputValue
@@ -199,7 +199,7 @@ export default function AddPendingCart() {
                   className="form-control"
                   name="storeName"
                   label="store"
-                  value={storesName?.storeName}
+                  value={stores?.find((x) => x._id === data.store)?.storeName}
                 />
                 <Input
                   size="sm"
@@ -208,7 +208,7 @@ export default function AddPendingCart() {
                   name="supplierName"
                   label="Supplier"
                   disabled
-                  value={supplierNames}
+                  value={suppliers?.filter(x=>data?.supplier?.includes(x._id)).map(x=>x.supplierName).join(', ')}
                 />
                 <Input
                   size="sm"
