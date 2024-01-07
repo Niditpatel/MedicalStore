@@ -146,7 +146,7 @@ const Cart = () => {
     }
     getData();
   }
-  const TABLE_HEAD = ["Product Name", "Packing", "Supplier", "Delete"];
+  const TABLE_HEAD = ["Product Name", "Packing", "Supplier", "Scheme","Delete"];
 
   useEffect(() => {
     getData();
@@ -261,6 +261,17 @@ const Cart = () => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
+                    Scheme
+                  </Typography>
+                </th>
+                <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[8%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
                     Quantity
                   </Typography>
                 </th>
@@ -324,6 +335,15 @@ const Cart = () => {
                               className="font-normal ml-4"
                             >
                               {item?.supplier?.map((x) => x.supplierName).join(',')}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal ml-4"
+                            >
+                              {item?.scheme}
                             </Typography>
                           </td>
                           <td className={classes} >

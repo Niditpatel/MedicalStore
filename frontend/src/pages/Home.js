@@ -37,6 +37,7 @@ const Home = () => {
     _id: "",
     productName: "",
     packing: "",
+    scheme: "",
     store: {
       contactNumber: "",
       storeName: "",
@@ -356,6 +357,16 @@ const Home = () => {
                           </Typography>
                         </th>
                         <th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 w-[8%]"
+                        >
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >Scheme
+                          </Typography>
+                        </th>
+                        <th
                           className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 w-[10%]"
                         >
                           <Typography
@@ -428,6 +439,15 @@ const Home = () => {
                                 </Typography>
                               </td>
                               <td className={classes}>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal  overflow-hidden text-ellipsis"
+                                >
+                                  {item?.scheme}
+                                </Typography>
+                              </td>
+                              <td className={classes}>
                                 <TextField size="small"
                                   type="number"
                                   name={`data[${index}].quantity`}
@@ -451,7 +471,7 @@ const Home = () => {
                                  <AsyncSelect
 openMenuOnFocus={true}
               tabSelectsValue={true} 
-                                  className="pr-9"
+                                  className="pr-4 w-[200px]"
                                   cacheOptions
                                   menuPortalTarget={document.querySelector('body')}
                                   defaultOptions={buyers}

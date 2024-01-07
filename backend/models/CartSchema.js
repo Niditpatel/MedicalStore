@@ -9,6 +9,10 @@ const cartSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    scheme: {  
+        type: String,
+        required: false,
+    },
     quantity:{
         type:Number,
         required:false

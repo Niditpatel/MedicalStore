@@ -28,7 +28,7 @@ router.post("/products/new",async (req, res) => {
              const product = new Products({
                  productName:element.productName
                  ,packing:element.packing
-                 ,scheme:element.scheme
+                 ,scheme:element?.scheme
                  ,store:element.store
                  ,supplier:element.supplier
                  ,isDeleted:false

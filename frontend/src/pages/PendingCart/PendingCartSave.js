@@ -180,7 +180,7 @@ openMenuOnFocus={true}
                   getOptionValue={(option) => option.value}
                   getOptionLabel={(option) => option.label}
                   onChange={(e) => {
-                    debugger
+                    
                     if(e){
                     setData({ ...data, productName: e.productName, packing: e.packing, supplier: e.supplier, store: e.store ,_id:e._id})
                     }

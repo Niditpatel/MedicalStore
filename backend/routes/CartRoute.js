@@ -5,6 +5,7 @@ const Products = require("../models/ProductSchema")
 
 
 router.post("/cart/new",async (req, res) => {
+    console.log("req",req);
     const products = req.body;
     if(products && products?.length > 0){
        try{
@@ -131,8 +132,9 @@ router.delete("/carts",
 
 router.get("/cart/search",
     async (req, res) => {
-        const { productName,supplierName,storeName, offset, limit, sort_by, order,buyerName } = req.query;
-        const product = productName !== undefined ? productName :''
+        const { productName,scheme,supplierName,storeName, offset, limit, sort_by, order,buyerName } = req.query;
+        const product = productName !== undefined ? productName :'';
+        const schemeOfProduct = scheme !== undefined ? scheme :'';
         const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
         const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
         const sort_order = ((order !== undefined && order.length > 0) ? parseInt(order) : 1);

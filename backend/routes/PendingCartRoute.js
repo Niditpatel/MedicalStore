@@ -13,6 +13,7 @@ router.post("/pendingcart/new", async (req, res) => {
                  productId:doc._id
                 ,productName: doc.productName
                 , packing: doc.packing
+                , scheme: doc?.scheme
                 , store: doc.store
                 , supplier: doc.supplier
                 , buyer: doc.buyer
@@ -38,6 +39,7 @@ router.post("/pendingcart/new", async (req, res) => {
 router.post("/pendingcart/forceSave", async (req, res) => {
     const { productName
         , packing
+        , scheme
         , store
         , supplier
         , buyer
@@ -51,6 +53,7 @@ router.post("/pendingcart/forceSave", async (req, res) => {
                 productId
                 ,productName
                 , packing
+                , scheme
                 , store
                 , supplier
                 , buyer
@@ -525,6 +528,7 @@ router.get('/companyreportprint', async (req, res) => {
                       totalQuantity: { $sum: "$quantity" },
                       product:{$first:'$productName'},
                       packing:{$first:'$packing'},
+                      scheme:{$first:'$scheme'},
                       storeName:{$first:'$store.storeName'}
                     }
                 },
@@ -542,6 +546,7 @@ router.get('/companyreportprint', async (req, res) => {
                       totalQuantity: { $sum: "$quantity" },
                       product:{$first:'$productName'},
                       packing:{$first:'$packing'},
+                      scheme:{$first:'$scheme'},
                       storeName:{$first:'$store.storeName'}
                     }
                 },
@@ -621,6 +626,7 @@ router.get('/companyreport', async (req, res) => {
                       totalQuantity: { $sum: "$quantity" },
                       product:{$first:'$productName'},
                       packing:{$first:'$packing'},
+                      scheme:{$first:'$scheme'},
                       storeName:{$first:'$store.storeName'}
                     }
                 },
@@ -641,7 +647,8 @@ router.get('/companyreport', async (req, res) => {
                     //   productName:'$productName',
                       totalQuantity: { $sum: "$quantity" },
                       product:{$first:'$productName'},
-                      packing:{$first:'$packing'}
+                      packing:{$first:'$packing'},
+                      scheme:{$first:'$scheme'}
                     }
                 },
                 {$count:'total'}
@@ -658,6 +665,7 @@ router.get('/companyreport', async (req, res) => {
                       totalQuantity: { $sum: "$quantity" },
                       product:{$first:'$productName'},
                       packing:{$first:'$packing'},
+                      scheme:{$first:'$scheme'},
                       storeName:{$first:'$store.storeName'}
                     }
                 },
@@ -677,6 +685,7 @@ router.get('/companyreport', async (req, res) => {
                       totalQuantity: { $sum: "$quantity" },
                       product:{$first:'$productName'},
                       packing:{$first:'$packing'},
+                      scheme:{$first:'$scheme'},
 
                     }
                 },
@@ -752,7 +761,8 @@ router.get('/buyerreport', async (req, res) => {
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},
-                  packing:{$first:'$packing'}
+                  packing:{$first:'$packing'},
+                  scheme:{$first:'$scheme'},
                 }
             },
             { $skip: page_limit * page_no },
@@ -772,7 +782,8 @@ router.get('/buyerreport', async (req, res) => {
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},
-                  packing:{$first:'$packing'}
+                  packing:{$first:'$packing'},
+                  scheme:{$first:'$scheme'},
                 }
             },
             {$count:'total'}
@@ -837,7 +848,8 @@ router.get('/buyerreportprint', async (req, res) => {
                 //   productName:'$productName',
                   totalQuantity: { $sum: "$quantity" },
                   product:{$first:'$productName'},
-                  packing:{$first:'$packing'}
+                  packing:{$first:'$packing'},
+                  scheme:{$first:'$scheme'},
                 }
             }
         ]
