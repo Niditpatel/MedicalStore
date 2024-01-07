@@ -181,7 +181,7 @@ router.get("/pendingCart/search",
             $and: [
                 { productName: { '$regex': product, '$options': 'i' } },
                 { isDeleted: { $ne: true } },
-                { createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) } }
+                { creationDate: { $gte: new Date(start_date), $lte: new Date(end_date) } }
             ]
         }
         const lookupQuery1 = [
@@ -271,6 +271,9 @@ try{
 
 
         const data = await PendingCart.aggregate([
+            {$addFields:
+                { "creationDate":  {$dateToString:{format: "%Y-%m-%d", date: "$createdAt"}}}
+            },
             { $match: filterQuery },
             ...lookupQuery1,
             ...lookupQuery2,
@@ -559,7 +562,6 @@ router.get('/companyreport', async (req, res) => {
         // company_id,
         offset,limit,start_date,end_date} = req.query
 
-console.log("start_date",start_date)
     const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
     const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
 

@@ -271,11 +271,6 @@ const Report = () => {
     useEffect(() => {
     if(selectedId?.e?._id !== ''  && selectedId?.e?._id !== undefined && selectedId?.e?._id !==null)
      {
-        if( reportType === 1 )
-       {
-        getCompanyWiseReport()
-        getCompanyrWiseReportPrint()
-       }
         if( reportType === 2 ){
             getBuyerWiseReport(selectedId?.e?._id)
             getBuyerWiseReportPrint(selectedId?.e?._id)
@@ -300,7 +295,7 @@ const Report = () => {
             getCompanyWiseReport()
             getCompanyrWiseReportPrint()
         }
-    }, [reportType])
+    }, [reportType,startDate,endDate,page_Size,page_Index])
 
 
     const reportTypes = [
