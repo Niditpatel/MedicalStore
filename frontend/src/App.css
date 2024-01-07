@@ -3,6 +3,7 @@ body {
   height: 100%;
   background: radial-gradient(at 50% -20%, #59ffa0, #6f37ed) fixed;
   print-color-adjust:white !important;
+  /* cursor: url("./images/cursor.png"), auto; */
 }
 
 .App {
@@ -103,4 +104,8 @@ input::-webkit-inner-spin-button {
 .button:hover {
   background-size: 320%;
   background-position: right center;
+}
+tbody tr:hover {
+  background: radial-gradient(at 50% -20%, #59ffa0, #FFFDE7) fixed;
+  cursor: pointer;
 }
