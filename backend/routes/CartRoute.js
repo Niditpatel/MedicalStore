@@ -13,6 +13,7 @@ router.post("/cart/new",async (req, res) => {
                 productId:element._id
                 ,productName:element.productName
                 ,packing:element.packing
+                ,scheme:element?.scheme
                 ,store:element.store._id
                 ,buyer:element.buyerId
                 ,quantity:element.quantity

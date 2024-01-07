@@ -129,7 +129,9 @@ export default function EditSupplier() {
                 value={data.contactNumber}
                 onChange={handleChange}
               />
-               <AsyncSelect
+                <AsyncSelect
+openMenuOnFocus={true}
+              tabSelectsValue={true} 
                 cacheOptions
                 isMulti
                 defaultOptions={stores}

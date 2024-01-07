@@ -324,7 +324,9 @@ const Report = () => {
 
                         {/* {reportType === 1 &&
                         <Box sx={{minWidth:'200px'}}>
-                            <AsyncSelect
+                             <AsyncSelect
+openMenuOnFocus={true}
+              tabSelectsValue={true} 
                                 cacheOptions
                                 menuPortalTarget={document.body}
                                 defaultOptions={stores}
@@ -352,7 +354,9 @@ const Report = () => {
                         } */}
                         {reportType === 2 &&
                         <Box sx={{minWidth:'200px'}}>
-                            <AsyncSelect
+                             <AsyncSelect
+openMenuOnFocus={true}
+              tabSelectsValue={true} 
                                 cacheOptions
                                 menuPortalTarget={document.body}
                                 defaultOptions={buyers}
@@ -379,7 +383,9 @@ const Report = () => {
                         }
                         {reportType === 3 &&
                         <Box sx={{minWidth:'200px'}}>
-                            <AsyncSelect
+                             <AsyncSelect
+openMenuOnFocus={true}
+              tabSelectsValue={true} 
                                 cacheOptions
                                 menuPortalTarget={document.body}
                                 defaultOptions={suppliers}
@@ -602,7 +608,7 @@ const Report = () => {
                     </table>
                 </CardBody>
 
-                <CardFooter className="pt-0 print:hidden">
+                <CardFooter className="pt-0 pb-0 print:hidden">
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                       <Button variant="text" onClick={(e)=>{
@@ -624,7 +630,7 @@ const Report = () => {
                       </Button>
                     </Box>
                         <Select
-                            defaultValue={options[0]}
+                            defaultValue={options[1]}
                             onChange={(e) => {
                                 setPage_Size(parseInt(e?.value))
                                 setPage_Index(1)

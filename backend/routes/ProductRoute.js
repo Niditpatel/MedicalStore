@@ -8,9 +8,9 @@ const ObjectId = mongoose.Types.ObjectId
 
 
 router.post("/product/new",async (req, res) => {
-    const{productName,packing,store,supplier,isDeleted} = req.body;
+    const{productName,packing,store,scheme,supplier,isDeleted} = req.body;
     const product = await Products.create({
-        productName,packing,store,supplier,isDeleted
+        productName,packing,store,scheme,supplier,isDeleted
     });
     res.status(200).json({
         success: true,
@@ -28,6 +28,7 @@ router.post("/products/new",async (req, res) => {
              const product = new Products({
                  productName:element.productName
                  ,packing:element.packing
+                 ,scheme:element.scheme
                  ,store:element.store
                  ,supplier:element.supplier
                  ,isDeleted:false

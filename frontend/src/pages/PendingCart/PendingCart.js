@@ -387,7 +387,7 @@ const PendingCart = () => {
               : <>Wait </>}
           </table>
         </CardBody>
-        <CardFooter className="pt-0 print:hidden">
+        <CardFooter className="pt-0  pb-0 print:hidden">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Button variant="text" onClick={(e) => {
@@ -409,7 +409,7 @@ const PendingCart = () => {
               </Button>
             </Box>
             <Select
-              defaultValue={options[0]}
+              defaultValue={options[1]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
                 setPage_Index(1)

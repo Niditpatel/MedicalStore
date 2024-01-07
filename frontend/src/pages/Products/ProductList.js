@@ -36,6 +36,7 @@ const ProductList = () => {
     _id: "",
     productName: "",
     packing: "",
+    scheme: "",
     store: {
       contactNumber: "",
       storeName: "",
@@ -276,6 +277,16 @@ const ProductList = () => {
                           </Typography>
                         </th>
                         <th
+                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-4  w-[35%]"
+                        >
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                          >Scheme
+                          </Typography>
+                        </th>
+                        <th
                           className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-4 w-[10%]"
                         >
                           <Typography
@@ -314,6 +325,7 @@ const ProductList = () => {
                                   {item?.packing}
                                 </Typography>
                               </td>
+                             
 
                               <td className={classes} >
                                 <Typography
@@ -325,12 +337,21 @@ const ProductList = () => {
                                 </Typography>
                               </td>
                               <td className={classes}>
-                                <Box className={'text-right flex justify-around'}>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal overflow-hidden text-ellipsis"
+                                >
+                                  {item?.scheme}
+                                </Typography>
+                              </td>
+                              <td className={classes} >
+                                <Box className={'text-right flex justify-around P-2'}>
                                   <Button
                                     variant="gradient"
                                     color='blue'
                                     size="sm"
-                                    className="print:hidden"
+                                    className="print:hidden mr-2"
                                     onClick={() => handleEdit(item?._id)}
                                   >
                                     &#x1F589;
@@ -351,7 +372,7 @@ const ProductList = () => {
                   </table>
                 </CardBody>
 
-                <CardFooter className="pt-0 print:hidden">
+                <CardFooter className="pt-0 pb-0 print:hidden">
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                       <Button variant="text" onClick={(e)=>{
@@ -373,7 +394,7 @@ const ProductList = () => {
                       </Button>
                     </Box>
                     <Select
-                      defaultValue={options[0]}
+                      defaultValue={options[1]}
                       onChange={(e) => {
                         setPage_Size(parseInt(e?.value))
                         setPage_Index(1)

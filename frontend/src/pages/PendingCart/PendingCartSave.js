@@ -169,7 +169,9 @@ export default function AddPendingCart() {
                 <Typography className="text-2xl">Add entry to pending cart </Typography>
               </div>
               <div className="mb-4 flex flex-col gap-6">
-                <AsyncSelect
+                 <AsyncSelect
+openMenuOnFocus={true}
+              tabSelectsValue={true} 
                   cacheOptions
                   defaultOptions={product}
                   isClearable
@@ -219,7 +221,9 @@ export default function AddPendingCart() {
                   value={data.quantity}
                   onChange={handleChange}
                 />
-                <AsyncSelect
+                 <AsyncSelect
+openMenuOnFocus={true}
+              tabSelectsValue={true} 
                   cacheOptions
                   defaultOptions={buyers}
                   isClearable

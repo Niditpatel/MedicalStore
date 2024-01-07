@@ -18,6 +18,7 @@ export default function AddProduct() {
   const [data, setData] = useState({
     productName: "",
     packing: "",
+    scheme: "",
     store: '',
     supplier:[]
   });
@@ -141,7 +142,9 @@ export default function AddProduct() {
                 value={data.packing}
                 onChange={handleChange}
               />
-              <AsyncSelect
+               <AsyncSelect
+              openMenuOnFocus={true}
+              tabSelectsValue={true} 
                 cacheOptions
                 defaultOptions={stores}
                 isClearable
@@ -165,7 +168,9 @@ export default function AddProduct() {
                     : "Type At Least Three Character to View Result"
                 }
               />
-                <AsyncSelect
+                 <AsyncSelect
+openMenuOnFocus={true}
+              tabSelectsValue={true} 
                 cacheOptions
                 isMulti
                 defaultOptions={suppliers}
@@ -190,6 +195,15 @@ export default function AddProduct() {
                     ? "No Result Are Found Matching This Value"
                     : "Type At Least Three Character to View Result"
                 }
+              />
+               <Input
+                size="sm"
+                type="text"
+                className="form-control"
+                name="scheme"
+                label="Scheme"
+                value={data.scheme}
+                onChange={handleChange}
               />
             </div>
             <div className="flex justify-evenly">

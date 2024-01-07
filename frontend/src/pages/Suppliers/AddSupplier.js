@@ -114,7 +114,9 @@ getStores('',false);
                 value={data.email}
                 onChange={handleChange}
               />
-              <AsyncSelect
+               <AsyncSelect
+openMenuOnFocus={true}
+              tabSelectsValue={true} 
                 cacheOptions
                 isMulti
                 defaultOptions={stores}

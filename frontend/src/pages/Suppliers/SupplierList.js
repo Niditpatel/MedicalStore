@@ -221,7 +221,7 @@ export default function SupplierList() {
               </Button>
             </Box>
             <Select
-              defaultValue={options[0]}
+              defaultValue={options[1]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
                 setPage_Index(1)
