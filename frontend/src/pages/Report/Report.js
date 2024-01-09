@@ -55,7 +55,7 @@ const Report = () => {
     const [rsearchData, setrSearchData] = useState({ store: '', supplierName: '', productName: '' });
     const [totalData, setTotalData] = useState(0);
     const [page_Index, setPage_Index] = useState(1);
-    const [page_Size, setPage_Size] = useState(5);
+    const [page_Size, setPage_Size] = useState(10);
     const [reportType, setReportType] = useState(1);
     const [stores, setStores] = useState([]);
     const [printCart, setPrintCart] = useState(false);
@@ -630,7 +630,7 @@ openMenuOnFocus={true}
                       </Button>
                     </Box>
                         <Select
-                            defaultValue={options[1]}
+                            defaultValue={options[0]}
                             onChange={(e) => {
                                 setPage_Size(parseInt(e?.value))
                                 setPage_Index(1)

@@ -30,7 +30,7 @@ export default function SupplierList() {
   const [searchData, setSearchData] = useState({ supplierName: '' });
   const [totalSupplier, setTotalSupplier] = useState(0);
   const [page_Index, setPage_Index] = useState(1);
-  const [page_Size, setPage_Size] = useState(5);
+  const [page_Size, setPage_Size] = useState(10);
   const [dialog, setDialog] = useState({ open: false, item: {} })
   const getData = async () => {
     try {
@@ -221,7 +221,7 @@ export default function SupplierList() {
               </Button>
             </Box>
             <Select
-              defaultValue={options[1]}
+              defaultValue={options[0]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
                 setPage_Index(1)

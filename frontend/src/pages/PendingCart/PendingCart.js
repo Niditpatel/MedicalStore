@@ -53,7 +53,7 @@ const PendingCart = () => {
   const [printDialog, setPrintDialog] = useState(false);
   const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [endDate, setEndDate] = useState(new Date());
-  const [page_Size, setPage_Size] = useState(5);
+  const [page_Size, setPage_Size] = useState(10);
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -409,7 +409,7 @@ const PendingCart = () => {
               </Button>
             </Box>
             <Select
-              defaultValue={options[1]}
+              defaultValue={options[0]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
                 setPage_Index(1)

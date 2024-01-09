@@ -31,7 +31,7 @@ const Store = () => {
   const [page_Index, setPage_Index] = useState(1);
   const [dialog, setDialog] = useState({ open: false, item: {} })
   const [searchData, setSearchData] = useState({ storeName: '' });
-  const [page_Size, setPage_Size] = useState(5);
+  const [page_Size, setPage_Size] = useState(10);
 
   const getData = async () => {
     try {
@@ -225,7 +225,7 @@ const Store = () => {
               </Button>
             </Box>
               <Select
-                defaultValue={options[1]}
+                defaultValue={options[0]}
                 onChange={(e) => {
                   setPage_Size(parseInt(e?.value))
                   setPage_Index(1)

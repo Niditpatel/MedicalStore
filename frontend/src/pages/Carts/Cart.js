@@ -50,7 +50,7 @@ const Cart = () => {
   const [printCart, setPrintCart] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [page_Size, setPage_Size] = useState(5);
+  const [page_Size, setPage_Size] = useState(10);
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -411,7 +411,7 @@ const Cart = () => {
               </Button>
             </Box>
             <Select
-              defaultValue={options[1]}
+              defaultValue={options[0]}
               onChange={(e) => {
                 setPage_Size(parseInt(e?.value))
                 setPage_Index(1)
