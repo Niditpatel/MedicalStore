@@ -18,7 +18,6 @@ export default function AddProduct() {
   const [data, setData] = useState({
     productName: "",
     packing: "",
-    scheme: "",
     store: '',
     supplier:[]
   });
@@ -196,15 +195,7 @@ openMenuOnFocus={true}
                     : "Type At Least Three Character to View Result"
                 }
               />
-               <Input
-                size="sm"
-                type="text"
-                className="form-control"
-                name="scheme"
-                label="Scheme"
-                value={data.scheme}
-                onChange={handleChange}
-              />
+               {/* */}
             </div>
             <div className="flex justify-evenly">
               <Button size="sm" className="mt-6" type="submit">

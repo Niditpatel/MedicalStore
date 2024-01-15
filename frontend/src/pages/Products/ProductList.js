@@ -36,7 +36,6 @@ const ProductList = () => {
     _id: "",
     productName: "",
     packing: "",
-    scheme: "",
     store: {
       contactNumber: "",
       storeName: "",
@@ -277,16 +276,6 @@ const ProductList = () => {
                           </Typography>
                         </th>
                         <th
-                          className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-4  w-[35%]"
-                        >
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal leading-none opacity-70"
-                          >Scheme
-                          </Typography>
-                        </th>
-                        <th
                           className="border-y border-blue-gray-100 bg-blue-gray-50/50 px-4 w-[10%]"
                         >
                           <Typography
@@ -334,15 +323,6 @@ const ProductList = () => {
                                   className="font-normal"
                                 >
                                   {item?.supplier?.map((item) => item?.supplierName)?.join(', ')}
-                                </Typography>
-                              </td>
-                              <td className={classes}>
-                                <Typography
-                                  variant="small"
-                                  color="blue-gray"
-                                  className="font-normal overflow-hidden text-ellipsis"
-                                >
-                                  {item?.scheme}
                                 </Typography>
                               </td>
                               <td className={classes} >

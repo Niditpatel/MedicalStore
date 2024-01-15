@@ -37,6 +37,7 @@ router.post("/pendingcart/new", async (req, res) => {
 );
 
 router.post("/pendingcart/forceSave", async (req, res) => {
+    console.log("req",req);
     const { productName
         , packing
         , scheme

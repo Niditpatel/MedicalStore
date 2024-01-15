@@ -37,7 +37,6 @@ const Home = () => {
     _id: "",
     productName: "",
     packing: "",
-    scheme: "",
     store: {
       contactNumber: "",
       storeName: "",
@@ -460,13 +459,20 @@ const Home = () => {
                                 {/*  <ErrorMessage name={`data[${index}].quantity`} /> */}
                               </td>
                               <td className={classes}>
-                                <Typography
-                                  variant="small"
-                                  color="blue-gray"
-                                  className="font-normal  overflow-hidden text-ellipsis"
-                                >
-                                  {item?.scheme}
-                                </Typography>
+                              <TextField size="small"
+                              sx={{minWidth:'120px'}}
+                                  name={`data[${index}].scheme`}
+                                  value={values.data[index]?.scheme}
+                                  onChange={(e) => {
+                                    console.log("e",e);
+                                    setFieldValue(
+                                      `data[${index}].scheme`,
+                                      e.target.value ? e.target.value : "",
+                                      false
+                                    )
+                                  }}
+                                />
+                                
                               </td>
                               <td className={classes} >
                                  <AsyncSelect

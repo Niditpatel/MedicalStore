@@ -60,7 +60,6 @@ const PendingCart = () => {
   });
 
   const getData = async () => {
-
     try {
       const data = await axios.get(
         `${BASE_URL}pendingCart/search/?` + 'supplierName=' +
@@ -238,6 +237,17 @@ const PendingCart = () => {
                   </Typography>
                 </th>
                 <th
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[7%]"
+                >
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    Scheme
+                  </Typography>
+                </th>
+                <th
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50  p-4 w-[23%]"
                 >
                   <Typography
@@ -335,6 +345,15 @@ const PendingCart = () => {
                               className="font-normal ml-4"
                             >
                               {item?.quantity}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal ml-4"
+                            >
+                              {item?.scheme}
                             </Typography>
                           </td>
                           <td className={classes} >

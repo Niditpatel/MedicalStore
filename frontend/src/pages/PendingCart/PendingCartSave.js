@@ -18,6 +18,7 @@ export default function AddPendingCart() {
     packing: "",
     store: '',
     quantity: 0,
+    scheme: '',
     supplier: [],
     buyer: '',
     isDeleted: false,
@@ -219,6 +220,15 @@ openMenuOnFocus={true}
                   name="quantity"
                   label="quantity"
                   value={data.quantity}
+                  onChange={handleChange}
+                />
+                <Input
+                  size="sm"
+                  type="text"
+                  className="form-control"
+                  name="scheme"
+                  label="scheme"
+                  value={data.scheme}
                   onChange={handleChange}
                 />
                  <AsyncSelect
