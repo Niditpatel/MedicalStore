@@ -19,7 +19,6 @@ const Product = require("./routes/ProductRoute")
 const Carts = require("./routes/CartRoute")
 const PendingCart = require("./routes/PendingCartRoute")
 const Buyer = require("./routes/BuyerRoute");
-const compression = require("compression");
 
 app.use("/api/v1", Store)
 app.use("/api/v1", Buyer)

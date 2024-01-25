@@ -301,6 +301,7 @@ const Home = () => {
                       className="form-control border rounded"
                       label="Product Name"
                       name="productName"
+                      autoFocus
                       value={searchData.productName}
                       onChange={handleSearchChange}
                     />

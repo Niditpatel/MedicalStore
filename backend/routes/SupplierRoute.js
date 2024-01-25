@@ -4,6 +4,7 @@ const Supplier = require("../models/SupplireSchema");
 
 
 router.post("/supplier/new",async (req, res) => {
+try{
     const{supplierName,store, contactNumber,isDeleted} = req.body;
     const supplier = await Supplier.create({
         supplierName,contactNumber,store, isDeleted
@@ -12,10 +13,16 @@ router.post("/supplier/new",async (req, res) => {
         success: true,
         supplier:supplier,
     })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 }
 );
 
 router.get("/suppliers", async (req, res) => {
+try{
     const supplierName = req.query.supplierName?req.query.supplierName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
@@ -26,6 +33,11 @@ router.get("/suppliers", async (req, res) => {
         suppliers,
         total
     })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 });
 
 // router.get("/totalSupplier", async (req, res) => {
@@ -37,15 +49,22 @@ router.get("/suppliers", async (req, res) => {
 // });
 
 router.get("/suppliersSelect", async (req, res) => {
+try{
     const supplierName = req.query.supplierName?req.query.supplierName:''
     const suppliers = await Supplier.find({$and:[{supplierName:{'$regex':supplierName,'$options':'i'}},{isDeleted:{$ne:true}}]});
     res.status(200).json({
         success: true,
         suppliers
     })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 });
 
 router.put("/supplier/:id",async (req, res) => {
+try{
     let supplier = await Supplier.findById(req.params.id)
     if (!supplier) {
         return res.status(500).json({
@@ -60,9 +79,15 @@ router.put("/supplier/:id",async (req, res) => {
     res.status(200).json({
         success: true,
     })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 });
 
 router.get("/supplier/:id",async (req, res) => {
+try{
     let supplier = await Supplier.findById(req.params.id)
     if (!supplier) {
         return res.status(500).json({
@@ -75,10 +100,16 @@ router.get("/supplier/:id",async (req, res) => {
             supplier
         })
     }
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 
 });
 
 router.post("/suppliers/new", async (req, res) => {
+try{
     const dataAdd = req.body;
     if (dataAdd && dataAdd?.length > 0) {
         dataAdd.forEach(function (doc) {
@@ -96,10 +127,16 @@ router.post("/suppliers/new", async (req, res) => {
             success: false,
         })
     }
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 }
 );
 router.delete("/supplier/:id",
     async (req, res) => {
+try{
     const supplier = await Supplier.findById(req.params.id);
 
     if (!supplier) {
@@ -114,6 +151,12 @@ router.delete("/supplier/:id",
             message: `Supplier deleted succesfully `
         })
     }
+}catch(e){
+    res.status(400).json({
+        success: false,
+        message: `Something Went Wrong. `
+    })
+}
 });
 
 

@@ -8,6 +8,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 
 router.post("/product/new",async (req, res) => {
+   try{
     const{productName,packing,store,scheme,supplier,isDeleted} = req.body;
     const product = await Products.create({
         productName,packing,store,scheme,supplier,isDeleted
@@ -16,12 +17,16 @@ router.post("/product/new",async (req, res) => {
         success: true,
         product:product
     })
+   }catch(e){
+    res.status(400).json({
+        success: false,
+    })
+   }
 }
 );
 
 router.post("/products/new",async (req, res) => {
     const products= req.body;
-    console.log(products)
     if(products && products?.length > 0){
         try{
          products.forEach(element => {
@@ -43,10 +48,15 @@ router.post("/products/new",async (req, res) => {
         }catch(e){
          res.status(400).json({
              success:false,
-             message:'something was wromg.'
+             message:'something went wrong.'
          })
         }
-     }
+    }else{
+        res.status(400).json({
+            success:false,
+            message:'something went wrong.'
+        })
+    }
 }
 );
 
@@ -70,6 +80,7 @@ router.post("/products/new",async (req, res) => {
 // });
 
 router.put("/product/:id",async (req, res) => {
+   try{
     let product = await Products.findById(req.params.id)
     if (!product) {
         return res.status(500).json({
@@ -84,11 +95,17 @@ router.put("/product/:id",async (req, res) => {
     res.status(200).json({
         success: true,
     })
+   }catch(e){
+    res.status(400).json({
+        success: false,
+    })
+   }
 });
 
 
 router.get("/product/:id",async (req, res) => {
-    let product = await Products.findById(req.params.id)
+    try{
+        let product = await Products.findById(req.params.id)
     if (!product) {
         return res.status(500).json({
             success: false,
@@ -100,13 +117,17 @@ router.get("/product/:id",async (req, res) => {
             product
         })
     }
-    
-    
+    }catch(e){
+        res.status(400).json({
+            success: false,
+        })
+    }
 });
 
 router.delete("/product/:id",
     async (req, res) => {
-    const product = await Products.findById(req.params.id);
+    try{
+        const product = await Products.findById(req.params.id);
 
     if (!product) {
         res.status(200).json({
@@ -120,20 +141,33 @@ router.delete("/product/:id",
             message: `Product deleted succesfully `
         })
     }
+    }catch(e){
+        res.status(400).json({
+            success: true,
+            message: `Something Went Wrong `
+        })
+    }
 });
 
 router.get("/productSelect", async (req, res) => {
+ try{
     const productName = req.query.productName?req.query.productName:''
     const products = await Products.find({$and:[{productName:{'$regex':productName,'$options':'i'}},{isDeleted:{$ne:true}}]}).limit(10);
     res.status(200).json({
         success: true,
         products
     })
+ }catch(e){
+    res.status(400).json({
+        success: false,
+    })
+ }
 });
 router.get("/search",
     async (req, res) => {
         // const {productName,supplierName,storeName} = req.query;
-        const { productName,supplierName,storeName, offset, limit, sort_by, order } = req.query;
+        try{
+            const { productName,supplierName,storeName, offset, limit, sort_by, order } = req.query;
         const product = productName !== undefined ? productName :''
         const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
         const page_no = ((offset !== undefined && offset.length > 0) ? parseInt(offset) - 1 : 0);
@@ -207,6 +241,22 @@ router.get("/search",
         }},
         { $skip: page_limit * page_no },
         { $limit: page_limit },
+
+    ])
+        res.status(200).json({
+            success: true,
+            data:data,
+            total:500
+        })
+    }catch(e){
+        res.status(400).json({
+            success: false,
+        })
+    }
+    });
+    
+    // data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+    // data:data[0]?.data ? data[0]?.data :[],
     //         {
     //             $facet: {
     //                 // metadata: [
@@ -224,20 +274,10 @@ router.get("/search",
     //                 ]
     //             }
     //         },
-    ])
-   
-        res.status(200).json({
-            success: true,
-            // data:data[0]?.data ? data[0]?.data :[],
-            data:data,
-            total:500
-            // data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
-        })
-});
-
 
 router.get('/supplierreport',async (req,res)=>{
 
+try{
     const {supplier_id,offset,limit} = req.query
 
     const page_limit = ((limit !== undefined && limit.length > 0) ? parseInt(limit) : 5);
@@ -275,6 +315,24 @@ router.get('/supplierreport',async (req,res)=>{
         },
         { $skip: page_limit * page_no },
         { $limit: page_limit },
+
+    ])
+
+    res.status(200).json({
+        success: true,
+        data:data,
+        total:500
+    })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
+})
+
+// data:data[0]?.data ? data[0]?.data :[],
+// total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+
             // {
             //     $facet: {
             //         metadata: [
@@ -300,21 +358,11 @@ router.get('/supplierreport',async (req,res)=>{
                     
             //     }
             // },
-    ])
-
-    res.status(200).json({
-        success: true,
-        // data:data[0]?.data ? data[0]?.data :[],
-        data:data,
-        // total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
-        total:500
-    })
-})
-
 
 
 router.get('/supplierreportprint',async (req,res)=>{
 
+  try{
     const {supplier_id} = req.query
     const lookupQuery1 = [
         {
@@ -353,6 +401,11 @@ router.get('/supplierreportprint',async (req,res)=>{
         success: true,
         data:data,
     })
+  }catch(e){
+    res.status(400).json({
+        success: false,
+    })
+  }
 })
 
 

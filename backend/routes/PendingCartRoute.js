@@ -6,6 +6,7 @@ const { default: mongoose } = require("mongoose");
 
 
 router.post("/pendingcart/new", async (req, res) => {
+   try{
     const cartProducts = await Carts.find({isDeleted:{$ne:true}})
     if (cartProducts && cartProducts?.length > 0) {
         cartProducts.forEach(function (doc) {
@@ -33,23 +34,27 @@ router.post("/pendingcart/new", async (req, res) => {
             success: false,
         })
     }
+   }catch(e){
+    res.status(400).json({
+        success: false,
+    })
+   }
 }
 );
 
 router.post("/pendingcart/forceSave", async (req, res) => {
-    console.log("req",req);
-    const { productName
-        , packing
-        , scheme
-        , store
-        , supplier
-        , buyer
-        , quantity
-        , isCart
-        , isDeleted
-        , createdAt,_id } = req.body;
-        const productId = _id;
         try{
+            const { productName
+                , packing
+                , scheme
+                , store
+                , supplier
+                , buyer
+                , quantity
+                , isCart
+                , isDeleted
+                , createdAt,_id } = req.body;
+                const productId = _id;
             const pendingCarts = await PendingCart.create({
                 productId
                 ,productName
@@ -76,9 +81,9 @@ router.post("/pendingcart/forceSave", async (req, res) => {
 }
 );
 router.put('/clearfromcart', async (req, res) => {
-    var d = new Date();
-    d.setDate(d.getDate() - 1);
     try {
+        var d = new Date();
+        d.setDate(d.getDate() - 1);
         await Carts.updateMany({ $and: [{ isDeleted: { $ne: true } }, { createdAt: { $lte: d } }] }, { $set: { isDeleted: true } })
         res.status(200).json({
             success: true,

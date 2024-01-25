@@ -4,6 +4,7 @@ const Buyer = require("../models/BuyerSchema");
 
 
 router.post("/buyer/new",async (req, res) => {
+try{
     const{buyerName,contactNumber,isDeleted} = req.body;
     const buyer = await Buyer.create({
         buyerName,contactNumber,isDeleted
@@ -12,10 +13,17 @@ router.post("/buyer/new",async (req, res) => {
         success: true,
         buyer:buyer
     })
+}catch(e){
+    res.status(400).json({
+        success:false,
+        buyer:[]
+    })
+}
 }
 );
 
 router.get("/buyers", async (req, res) => {
+   try{
     const buyerName = req.query.buyerName?req.query.buyerName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:15
@@ -26,6 +34,11 @@ router.get("/buyers", async (req, res) => {
         buyers,
         total
     })
+   }catch(e){
+    res.status(400).json({
+        success: false
+    })
+   }
 });
 
 // router.get("/totalBuyers", async (req, res) => {
@@ -37,16 +50,23 @@ router.get("/buyers", async (req, res) => {
 // });
 
 router.get("/buyersSelect", async (req, res) => {
+try{
     const buyerName = req.query.buyerName?req.query.buyerName:''
     const buyers = await Buyer.find({$and:[{buyerName:{'$regex':buyerName,'$options':'i'}},{isDeleted:{$ne:true}}]}).limit(10);
     res.status(200).json({
         success: true,
         buyers
     })
+}catch(e){
+    res.status(400).json({
+        success: false
+    })
+}
 });
 
 router.put("/buyer/:id",async (req, res) => {
-    let buyer = await Buyer.findById(req.params.id)
+    try{
+        let buyer = await Buyer.findById(req.params.id)
     if (!buyer) {
         return res.status(500).json({
             success: false,
@@ -61,10 +81,16 @@ router.put("/buyer/:id",async (req, res) => {
         success: true,
         buyer:buyer
     })
+    }catch(e){
+        res.status(400).json({
+            success: false,
+        })
+    }
 });
 
 router.get("/buyer/:id",async (req, res) => {
-    let buyer = await Buyer.findById(req.params.id)
+    try{
+        let buyer = await Buyer.findById(req.params.id)
     if (!buyer) {
         return res.status(500).json({
             success: false,
@@ -76,10 +102,16 @@ router.get("/buyer/:id",async (req, res) => {
             buyer
         })
     }
+    }catch(e){
+        res.status(400).json({
+            success: false,
+        })
+    }
 });
 router.delete("/buyer/:id",
     async (req, res) => {
-    const buyer = await Buyer.findById(req.params.id);
+    try{
+        const buyer = await Buyer.findById(req.params.id);
 
     if (!buyer) {
         res.status(200).json({
@@ -90,6 +122,12 @@ router.delete("/buyer/:id",
         await Buyer.findByIdAndUpdate(req.params.id,{$set:{isDeleted:true}});
         res.status(200).json({
             success: true,
+            message: `Buyer deleted succesfully `
+        })
+    }
+    }catch(e){
+        res.status(400).json({
+            success: false,
             message: `Buyer deleted succesfully `
         })
     }

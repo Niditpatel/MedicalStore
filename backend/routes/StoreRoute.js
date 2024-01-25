@@ -4,6 +4,7 @@ const Store = require("../models/MedicalSchema");
 
 
 router.post("/store/new",async (req, res) => {
+try{
     const{storeName,contactNumber,isDeleted} = req.body;
     const store = await Store.create({
         storeName,contactNumber,isDeleted,
@@ -12,10 +13,16 @@ router.post("/store/new",async (req, res) => {
         success: true,
         store:store
     })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 }
 );
 
 router.post("/stores/new", async (req, res) => {
+try{
     const dataAdd = req.body;
     if (dataAdd && dataAdd?.length > 0) {
         dataAdd.forEach(function (doc) {
@@ -33,10 +40,16 @@ router.post("/stores/new", async (req, res) => {
             success: false,
         })
     }
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 }
 );
 
 router.get("/stores", async (req, res) => {
+try{
     const storeName = req.query.storeName?req.query.storeName:''
     const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
     const pageSize = req.query.pageSize?req.query.pageSize:5
@@ -47,15 +60,26 @@ router.get("/stores", async (req, res) => {
         stores,
         total
     })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 });
 
 router.get("/storesSelect", async (req, res) => {
-    const storeName = req.query.storeName?req.query.storeName:''
+ try{
+    const storeName = req.query.storeName?req.query.storeName:'';
     const stores = await Store.find({$and:[{storeName:{'$regex':storeName,'$options':'i'}},{isDeleted:{$ne:true}}]});
     res.status(200).json({
         success: true,
         stores
     })
+ }catch(e){
+    res.status(400).json({
+        success: false,
+    })
+ }
 });
 
 // router.get("/totalStores", async (req, res) => {
@@ -67,6 +91,7 @@ router.get("/storesSelect", async (req, res) => {
 // });
 
 router.put("/store/:id",async (req, res) => {
+try{
     let store = await Store.findById(req.params.id)
     if (!store) {
         return res.status(500).json({
@@ -81,9 +106,15 @@ router.put("/store/:id",async (req, res) => {
     res.status(200).json({
         success: true,
     })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 });
 
 router.get("/store/:id",async (req, res) => {
+try{
     let store = await Store.findById(req.params.id)
     if (!store) {
         return res.status(500).json({
@@ -95,10 +126,16 @@ router.get("/store/:id",async (req, res) => {
         success: true,
         store
     })
+}catch(e){
+    res.status(400).json({
+        success: false,
+    })
+}
 });
 
 router.delete("/store/:id",
     async (req, res) => {
+   try{
     const store = await Store.findById(req.params.id);
 
     if (!store) {
@@ -113,7 +150,12 @@ router.delete("/store/:id",
             message: `Company deleted succesfully `
         })
     }
+   }catch(e){
+    res.status(400).json({
+        success: false,
+        message: `Something Went Wrong.`
+    })
+   }
 });
-
 
 module.exports  = router;

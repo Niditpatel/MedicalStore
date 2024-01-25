@@ -5,7 +5,7 @@ const Products = require("../models/ProductSchema")
 
 
 router.post("/cart/new",async (req, res) => {
-    console.log("req",req);
+   try{
     const products = req.body;
     if(products && products?.length > 0){
        try{
@@ -31,12 +31,21 @@ router.post("/cart/new",async (req, res) => {
        }catch(e){
         res.status(400).json({
             success:false,
-            message:'something was wromg.'
+            message:'something went wrong.'
         })
        }
     }
+   }catch(e){
+    res.status(400).json({
+        success:false,
+        message:'something went wrong.'
+    })
+   }
+    
+}
+);
 
-    // const  cartProducts =  await  Products.find({_id:{$in:products}})
+// const  cartProducts =  await  Products.find({_id:{$in:products}})
     //    if(cartProducts && cartProducts?.length >0){
     //     cartProducts.forEach(function(doc){
     //         const newCart = new Carts({
@@ -58,14 +67,12 @@ router.post("/cart/new",async (req, res) => {
     //         success: false,
     //     })
     //    }
-    
-}
-);
+
 
 router.get("/carts", async (req, res) => {
-    const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
-    const pageSize = req.query.pageSize?req.query.pageSize:15
     try{
+        const pageNo = req.query.pageNo ? parseInt(req.query.pageNo)-1:0
+        const pageSize = req.query.pageSize?req.query.pageSize:15
         const carts = await Carts.find({isDeleted:{$ne:true}}).skip(pageNo*pageSize).limit(pageSize);
         res.status(200).json({
             success: true,
@@ -372,40 +379,46 @@ router.get("/cart/print",
         const storeFilterQuery =storeName? storeName : '' ;
         const buyerFilterQuery = buyerName? buyerName : '' ;
 
-    const data = await Carts.aggregate([
-        { $match: filterQuery},
-         ...lookupQuery1,
-         ...lookupQuery2,
-         ...lookupQuery3,
-         {$match:{$and:
-            [
-                {'supplier.supplierName': {'$regex':supplierFilterQuery ,'$options':'i'}},
-                {'store.storeName':{'$regex':storeFilterQuery,'$options':'i'}},
-                {'buyer.buyerName':{'$regex':buyerFilterQuery,'$options':'i'}}
-            ]
-        }},
-            // {
-            //     $facet: {
-            //         metadata: [
-            //             {
-            //                 $group: {
-            //                     _id: null,
-            //                     total: { $sum: 1 }
-            //                 }
-            //             },
-            //         ],
-            //         data: [
-            //             { $sort: { [sort_field]: sort_order } }
-            //         ]
-            //     }
-            // },
-    ])
-   
-        res.status(200).json({
-            success: true,
-            data:data,
-            // total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+    try{
+        const data = await Carts.aggregate([
+            { $match: filterQuery},
+             ...lookupQuery1,
+             ...lookupQuery2,
+             ...lookupQuery3,
+             {$match:{$and:
+                [
+                    {'supplier.supplierName': {'$regex':supplierFilterQuery ,'$options':'i'}},
+                    {'store.storeName':{'$regex':storeFilterQuery,'$options':'i'}},
+                    {'buyer.buyerName':{'$regex':buyerFilterQuery,'$options':'i'}}
+                ]
+            }},
+                // {
+                //     $facet: {
+                //         metadata: [
+                //             {
+                //                 $group: {
+                //                     _id: null,
+                //                     total: { $sum: 1 }
+                //                 }
+                //             },
+                //         ],
+                //         data: [
+                //             { $sort: { [sort_field]: sort_order } }
+                //         ]
+                //     }
+                // },
+        ])
+       
+            res.status(200).json({
+                success: true,
+                data:data,
+                // total:data[0]?.metadata[0]?.total ? data[0]?.metadata[0]?.total :0
+            })
+    }catch(e){
+        res.status(400).json({
+            success: false,
         })
+    }
 });
 
 
